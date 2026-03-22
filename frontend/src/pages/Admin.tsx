@@ -1,0 +1,373 @@
+import { useState, useEffect } from 'react';
+import { useShop } from '../context/ShopContext';
+import { useNavigate } from 'react-router-dom';
+
+const Admin = () => {
+  const { products, refreshProducts, isAdmin, isLoading } = useShop();
+  const navigate = useNavigate();
+  
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    price: '',
+    image: '',
+    galleryUrls: '',
+    category: ''
+  });
+
+  const [uploading, setUploading] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [isUpdatingCreds, setIsUpdatingCreds] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const uploadFileHandler = async (e: React.ChangeEvent<HTMLInputElement>, isPrimary: boolean) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const uploadData = new FormData();
+    uploadData.append('image', file);
+    setUploading(true);
+
+    try {
+      const res = await fetch('http://localhost:5000/api/upload', {
+        method: 'POST',
+        body: uploadData,
+        credentials: 'include'
+      });
+      const data = await res.json();
+      if (isPrimary) {
+        setFormData({...formData, image: data.url});
+      } else {
+        const current = formData.galleryUrls ? formData.galleryUrls + ', ' : '';
+        setFormData({...formData, galleryUrls: current + data.url});
+      }
+    } catch (err) {
+      console.error(err);
+      alert('File upload failed');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const uploadMultipleHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.length) return;
+    
+    const uploadData = new FormData();
+    Array.from(e.target.files).forEach(file => {
+      uploadData.append('images', file);
+    });
+    setUploading(true);
+    
+    try {
+      const res = await fetch('http://localhost:5000/api/upload/multiple', {
+        method: 'POST',
+        body: uploadData,
+        credentials: 'include'
+      });
+      const data = await res.json();
+      const current = formData.galleryUrls ? formData.galleryUrls + ', ' : '';
+      setFormData({...formData, galleryUrls: current + data.urls.join(', ')});
+    } catch (err) {
+      console.error(err);
+      alert('Gallery upload failed');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const [adminEmail, setAdminEmail] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [updateMsg, setUpdateMsg] = useState('');
+
+  const handleUpdateCredentials = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsUpdatingCreds(true);
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/update-credentials', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: adminEmail, password: currentPassword, newPassword }),
+        credentials: 'include'
+      });
+      const data = await res.json();
+      setUpdateMsg(data.message || (res.ok ? 'Success' : 'Failed'));
+      if (res.ok) {
+        setAdminEmail('');
+        setCurrentPassword('');
+        setNewPassword('');
+      }
+    } catch (err) {
+      setUpdateMsg('Network Error');
+    } finally {
+      setIsUpdatingCreds(false);
+    }
+  };
+
+  const [analytics, setAnalytics] = useState({
+    totalOrders: 0,
+    totalRevenue: 0,
+    totalCustomers: 0,
+    totalProducts: 0,
+    monthlyTraffic: 0
+  });
+
+  const fetchAnalytics = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/analytics', { credentials: 'include' });
+      if (res.ok) {
+        const data = await res.json();
+        setAnalytics(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const [orders, setOrders] = useState([]);
+  
+  const fetchOrders = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/orders', { credentials: 'include' });
+      if (res.ok) {
+        const data = await res.json();
+        setOrders(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    if (!isAdmin) {
+      navigate('/');
+    } else {
+      fetchAnalytics();
+      fetchOrders();
+    }
+  }, [isAdmin, navigate]);
+
+  const handleAddProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsAdding(true);
+    try {
+      await fetch('http://localhost:5000/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          price: Number(formData.price),
+          gallery: formData.galleryUrls.split(',').map(url => url.trim()).filter(url => url)
+        }),
+        credentials: 'include'
+      });
+      refreshProducts();
+      setFormData({ name: '', description: '', price: '', image: '', galleryUrls: '', category: '' });
+    } catch (error) {
+      console.error("Error adding product:", error);
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
+  const handleDeleteProduct = async (id: string) => {
+    setDeletingId(id);
+    try {
+      await fetch(`http://localhost:5000/api/products/${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      refreshProducts();
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col justify-center items-center min-h-[60vh] gap-4 fade-in">
+        <div className="w-16 h-16 border-4 border-gray-200 border-t-accent rounded-full animate-spin"></div>
+        <p className="text-gray-500 font-medium">Loading dashboard...</p>
+      </div>
+    );
+  }
+
+  if (!isAdmin) return null; // Prevent flicker
+
+  return (
+    <div className="p-8 max-w-7xl mx-auto fade-in">
+      <header className="flex flex-col sm:flex-row justify-between items-center mb-10 gap-4">
+        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+        <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
+          {showForm ? 'Cancel' : 'Add New Product'}
+        </button>
+      </header>
+      
+      {showForm && (
+        <form onSubmit={handleAddProduct} className="bg-white p-6 rounded-lg shadow-md mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input required type="text" placeholder="Name" className="border p-2 rounded" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+          <input required type="text" placeholder="Category" className="border p-2 rounded" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} />
+          <input required type="number" placeholder="Price" className="border p-2 rounded" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
+          
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-bold uppercase tracking-wider text-gray-500">Primary Image</label>
+            <div className="flex gap-2">
+              <input required type="text" placeholder="URL or Upload" className="border p-2 rounded flex-grow" value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} />
+              <input type="file" accept="image/*" id="primaryUpload" className="hidden" onChange={(e) => uploadFileHandler(e, true)} />
+              <label htmlFor="primaryUpload" className={`btn-primary cursor-pointer flex items-center justify-center min-w-[120px] ${uploading ? 'opacity-70' : ''}`}>
+                {uploading ? '...' : 'Upload File'}
+              </label>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1 md:col-span-2">
+            <label className="text-xs font-bold uppercase tracking-wider text-gray-500">Gallery Images</label>
+            <div className="flex gap-2">
+              <input type="text" placeholder="URLs (Comma Separated) or Upload" className="border p-2 rounded flex-grow" value={formData.galleryUrls} onChange={e => setFormData({...formData, galleryUrls: e.target.value})} />
+              <input type="file" accept="image/*" multiple id="galleryUpload" className="hidden" onChange={uploadMultipleHandler} />
+              <label htmlFor="galleryUpload" className={`btn-primary cursor-pointer flex items-center justify-center min-w-[120px] ${uploading ? 'opacity-70' : ''}`}>
+                {uploading ? '...' : 'Upload Files'}
+              </label>
+            </div>
+          </div>
+          
+          <textarea required placeholder="Description" className="border p-2 rounded md:col-span-2" rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
+          <button type="submit" disabled={isAdding} className={`btn-primary md:col-span-2 mt-2 ${isAdding ? 'opacity-70 cursor-not-allowed' : ''}`}>
+            {isAdding ? 'Submitting...' : 'Submit Product'}
+          </button>
+        </form>
+      )}
+
+      <div className="flex flex-col gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white p-6 rounded-lg shadow-sm text-center hover:-translate-y-1 transition-transform border border-gray-100 border-t-4 border-t-accent">
+            <h3 className="text-gray-500 font-medium tracking-widest text-xs uppercase mb-3">Total Orders</h3>
+            <p className="text-4xl font-bold text-gray-900">{analytics.totalOrders}</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-sm text-center hover:-translate-y-1 transition-transform border border-gray-100 border-t-4 border-t-emerald-400">
+            <h3 className="text-gray-500 font-medium tracking-widest text-xs uppercase mb-3">Turnover</h3>
+            <p className="text-4xl font-bold text-gray-900">${analytics.totalRevenue.toFixed(2)}</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-sm text-center hover:-translate-y-1 transition-transform border border-gray-100 border-t-4 border-t-blue-400">
+            <h3 className="text-gray-500 font-medium tracking-widest text-xs uppercase mb-3">Customer Demand</h3>
+            <p className="text-4xl font-bold text-gray-900">{analytics.totalCustomers}</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-sm text-center hover:-translate-y-1 transition-transform border border-gray-100 border-t-4 border-t-purple-400">
+            <h3 className="text-gray-500 font-medium tracking-widest text-xs uppercase mb-3">Monthly Traffic</h3>
+            <p className="text-4xl font-bold text-gray-900">{analytics.monthlyTraffic.toLocaleString()}</p>
+          </div>
+        </div>
+
+        <div className="bg-white p-8 rounded-lg shadow-sm overflow-x-auto">
+          <h2 className="text-xl font-bold mb-6">Manage Products</h2>
+          {products.length === 0 ? (
+            <p className="text-gray-500 text-center py-8">No products yet. Add some items to your database!</p>
+          ) : (
+            <table className="w-full text-left border-collapse min-w-[600px]">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-200">
+                  <th className="py-4 px-4 font-semibold text-gray-600">Image</th>
+                  <th className="py-4 px-4 font-semibold text-gray-600">Name</th>
+                  <th className="py-4 px-4 font-semibold text-gray-600">Category</th>
+                  <th className="py-4 px-4 font-semibold text-gray-600">Price</th>
+                  <th className="py-4 px-4 font-semibold text-gray-600">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map(product => (
+                  <tr key={product._id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
+                    <td className="py-4 px-4">
+                      <img src={product.image} alt={product.name} className="w-12 h-12 object-cover rounded" />
+                    </td>
+                    <td className="py-4 px-4 font-medium">{product.name}</td>
+                    <td className="py-4 px-4 text-gray-500 uppercase tracking-wider text-sm">{product.category}</td>
+                    <td className="py-4 px-4 font-medium text-accent">${product.price.toFixed(2)}</td>
+                    <td className="py-4 px-4">
+                      <div className="flex gap-2">
+                        <button disabled={deletingId === product._id} className={`px-4 py-2 bg-red-50 text-red-600 rounded font-medium hover:bg-red-100 transition-colors text-sm ${deletingId === product._id ? 'opacity-50 cursor-not-allowed' : ''}`} onClick={() => handleDeleteProduct(product._id)}>
+                          {deletingId === product._id ? 'Deleting...' : 'Delete'}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+
+        <div className="bg-white p-8 rounded-lg shadow-sm overflow-x-auto border border-gray-100">
+          <h2 className="text-xl font-bold mb-6">Recent Customer Orders</h2>
+          {orders.length === 0 ? (
+            <p className="text-gray-500 text-center py-8">No orders have been placed yet.</p>
+          ) : (
+            <table className="w-full text-left border-collapse min-w-[600px]">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-200">
+                  <th className="py-4 px-4 font-semibold text-gray-600">Order ID</th>
+                  <th className="py-4 px-4 font-semibold text-gray-600">Customer</th>
+                  <th className="py-4 px-4 font-semibold text-gray-600">Items Purchased</th>
+                  <th className="py-4 px-4 font-semibold text-gray-600">Total Paid</th>
+                  <th className="py-4 px-4 font-semibold text-gray-600">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map((order: any) => (
+                  <tr key={order._id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
+                    <td className="py-4 px-4 text-sm text-gray-500 font-mono">{order._id.substring(order._id.length - 6).toUpperCase()}</td>
+                    <td className="py-4 px-4 font-medium">{order.user?.name || 'Guest'} <br/><span className="text-xs text-gray-400 font-normal">{order.user?.email}</span></td>
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      <ul>
+                        {order.items.map((item: any, idx: number) => (
+                          <li key={idx} className="mb-2 pl-2 border-l-2 border-accent">
+                            <span className="font-bold">{item.quantity}x</span> {item.name} <br/>
+                            <span className="text-emerald-600/70 text-xs">${item.price.toFixed(2)} ea</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </td>
+                    <td className="py-4 px-4 font-bold text-emerald-600">${order.totalAmount.toFixed(2)}</td>
+                    <td className="py-4 px-4 text-sm text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+
+        <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
+          <h2 className="text-xl font-bold mb-2">Account Settings</h2>
+          <p className="text-gray-500 mb-6 text-sm">Update your administrator credentials securely.</p>
+          
+          {updateMsg && <div className={`p-4 rounded-sm text-sm font-medium mb-6 border ${updateMsg.includes('success') ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-600 border-red-100'}`}>{updateMsg}</div>}
+          
+          <form onSubmit={handleUpdateCredentials} className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+            <div className="md:col-span-2">
+              <label className="block text-gray-700 text-xs font-bold tracking-widest uppercase mb-2">New Email Address (Optional)</label>
+              <input type="email" placeholder="newadmin@royalweaves.com" className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:border-accent" value={adminEmail} onChange={e => setAdminEmail(e.target.value)} />
+            </div>
+            
+            <div>
+              <label className="block text-gray-700 text-xs font-bold tracking-widest uppercase mb-2">Current Password</label>
+              <input required type="password" placeholder="••••••••" className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:border-accent" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} />
+            </div>
+            
+            <div>
+              <label className="block text-gray-700 text-xs font-bold tracking-widest uppercase mb-2">New Password (Optional)</label>
+              <input type="password" placeholder="••••••••" className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:border-accent" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+            </div>
+            
+            <button type="submit" disabled={isUpdatingCreds} className={`md:col-span-2 btn-primary mt-2 uppercase tracking-widest w-full font-bold ${isUpdatingCreds ? 'opacity-70 cursor-not-allowed' : ''}`}>
+              {isUpdatingCreds ? 'Updating...' : 'Update Credentials'}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Admin;
