@@ -1,9 +1,10 @@
 import { useShop } from '../context/ShopContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { apiService } from '../services/api';
 
 const Cart = () => {
-  const { cart, removeFromCart, updateQuantity } = useShop();
+  const { cart, removeFromCart, updateQuantity, formatPrice } = useShop();
   const navigate = useNavigate();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
@@ -13,19 +14,14 @@ const Cart = () => {
     if (cart.length === 0) return;
     setIsCheckingOut(true);
     try {
-      const res = await fetch('http://localhost:5000/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: cart.map(item => ({
-            product: item.product._id,
-            name: item.product.name,
-            price: item.product.price,
-            quantity: item.quantity
-          })),
-          totalAmount
-        }),
-        credentials: 'include'
+      const res = await apiService.createOrder({
+        items: cart.map(item => ({
+          product: item.product._id,
+          name: item.product.name,
+          price: item.product.price,
+          quantity: item.quantity
+        })),
+        totalAmount
       });
       if (res.ok) {
         alert('Order placed successfully! Thank you for your purchase.');
@@ -61,7 +57,7 @@ const Cart = () => {
               <img src={item.product.image} alt={item.product.name} className="w-24 h-24 object-cover rounded-md" />
               <div className="flex-grow text-center sm:text-left">
                 <h3 className="text-xl font-medium mb-2">{item.product.name}</h3>
-                <p className="text-gray-500 mb-4">${item.product.price.toFixed(2)}</p>
+                <p className="text-gray-500 mb-4">{formatPrice(item.product.price)}</p>
                 <div className="flex items-center justify-center sm:justify-start gap-4 bg-gray-50 w-max mx-auto sm:mx-0 p-1 rounded-full">
                   <button 
                     className="w-8 h-8 rounded-full bg-white shadow-sm hover:bg-primary hover:text-white transition-colors flex items-center justify-center font-bold"
@@ -79,7 +75,7 @@ const Cart = () => {
                 </div>
               </div>
               <div className="text-center sm:text-right min-w-[120px]">
-                <p className="text-xl font-semibold mb-4">${(item.product.price * item.quantity).toFixed(2)}</p>
+                <p className="text-xl font-semibold mb-4">{formatPrice(item.product.price * item.quantity)}</p>
                 <button 
                   className="text-red-500 text-sm hover:text-red-700 underline transition-colors"
                   onClick={() => removeFromCart(item.product._id)}
@@ -95,7 +91,7 @@ const Cart = () => {
           <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
           <div className="flex justify-between mb-4 text-gray-600 pl-1">
             <span>Subtotal</span>
-            <span>${totalAmount.toFixed(2)}</span>
+            <span>{formatPrice(totalAmount)}</span>
           </div>
           <div className="flex justify-between mb-6 text-gray-600 pl-1">
             <span>Shipping</span>
@@ -103,7 +99,7 @@ const Cart = () => {
           </div>
           <div className="flex justify-between mt-6 pt-6 border-t border-gray-200 text-xl font-bold mb-8">
             <span>Total</span>
-            <span>${totalAmount.toFixed(2)}</span>
+            <span>{formatPrice(totalAmount)}</span>
           </div>
           <button 
             onClick={handleCheckout} 

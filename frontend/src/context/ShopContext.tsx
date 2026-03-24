@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
+import { apiService } from '../services/api';
 
 export interface Product {
   _id: string;
@@ -23,6 +24,9 @@ interface ShopContextType {
   isAuthenticated: boolean;
   isAuthChecking: boolean;
   isLoading: boolean;
+  currency: string;
+  setCurrency: (currency: string) => void;
+  formatPrice: (price: number) => string;
   setIsAdmin: (val: boolean) => void;
   setIsAuthenticated: (val: boolean) => void;
   addToCart: (product: Product) => void;
@@ -41,11 +45,33 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isAuthChecking, setIsAuthChecking] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [currency, setCurrency] = useState<string>('INR');
+
+  const EXCHANGE_RATES: Record<string, number> = {
+    USD: 1,
+    EUR: 0.92,
+    GBP: 0.79,
+    INR: 83.0,
+  };
+
+  const CURRENCY_SYMBOLS: Record<string, string> = {
+    USD: '$',
+    EUR: '€',
+    GBP: '£',
+    INR: '₹',
+  };
+
+  const formatPrice = (price: number) => {
+    if (!price) return `${CURRENCY_SYMBOLS[currency] || '$'}0.00`;
+    const rate = EXCHANGE_RATES[currency] || 1;
+    const symbol = CURRENCY_SYMBOLS[currency] || '$';
+    return `${symbol}${(price * rate).toFixed(2)}`;
+  };
 
   const fetchProducts = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/products');
+      const res = await apiService.getProducts();
       const data = await res.json();
       setProducts(data);
     } catch (error) {
@@ -57,9 +83,7 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const verifyAuth = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/auth/verify', {
-        credentials: 'include'
-      });
+      const res = await apiService.verifyAuth();
       if (res.ok) {
         const data = await res.json();
         setIsAuthenticated(true);
@@ -108,7 +132,7 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <ShopContext.Provider value={{ products, cart, isAdmin, isAuthenticated, isAuthChecking, isLoading, setIsAdmin, setIsAuthenticated, addToCart, removeFromCart, updateQuantity, refreshProducts, verifyAuth }}>
+    <ShopContext.Provider value={{ products, cart, isAdmin, isAuthenticated, isAuthChecking, isLoading, currency, setCurrency, formatPrice, setIsAdmin, setIsAuthenticated, addToCart, removeFromCart, updateQuantity, refreshProducts, verifyAuth }}>
       {children}
     </ShopContext.Provider>
   );

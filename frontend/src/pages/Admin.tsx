@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useShop } from '../context/ShopContext';
 import { useNavigate } from 'react-router-dom';
+import { apiService } from '../services/api';
 
 const Admin = () => {
-  const { products, refreshProducts, isAdmin, isLoading } = useShop();
+  const { products, refreshProducts, isAdmin, isLoading, formatPrice } = useShop();
   const navigate = useNavigate();
   
   const [showForm, setShowForm] = useState(false);
@@ -30,11 +31,7 @@ const Admin = () => {
     setUploading(true);
 
     try {
-      const res = await fetch('http://localhost:5000/api/upload', {
-        method: 'POST',
-        body: uploadData,
-        credentials: 'include'
-      });
+      const res = await apiService.upload(uploadData);
       const data = await res.json();
       if (isPrimary) {
         setFormData({...formData, image: data.url});
@@ -60,11 +57,7 @@ const Admin = () => {
     setUploading(true);
     
     try {
-      const res = await fetch('http://localhost:5000/api/upload/multiple', {
-        method: 'POST',
-        body: uploadData,
-        credentials: 'include'
-      });
+      const res = await apiService.uploadMultiple(uploadData);
       const data = await res.json();
       const current = formData.galleryUrls ? formData.galleryUrls + ', ' : '';
       setFormData({...formData, galleryUrls: current + data.urls.join(', ')});
@@ -85,12 +78,7 @@ const Admin = () => {
     e.preventDefault();
     setIsUpdatingCreds(true);
     try {
-      const res = await fetch('http://localhost:5000/api/auth/update-credentials', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: adminEmail, password: currentPassword, newPassword }),
-        credentials: 'include'
-      });
+      const res = await apiService.updateCredentials({ email: adminEmail, password: currentPassword, newPassword });
       const data = await res.json();
       setUpdateMsg(data.message || (res.ok ? 'Success' : 'Failed'));
       if (res.ok) {
@@ -115,7 +103,7 @@ const Admin = () => {
 
   const fetchAnalytics = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/analytics', { credentials: 'include' });
+      const res = await apiService.getAnalytics();
       if (res.ok) {
         const data = await res.json();
         setAnalytics(data);
@@ -126,13 +114,27 @@ const Admin = () => {
   };
 
   const [orders, setOrders] = useState([]);
+  const [siteContent, setSiteContent] = useState<any>(null);
+  const [isUpdatingContent, setIsUpdatingContent] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   
   const fetchOrders = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/orders', { credentials: 'include' });
+      const res = await apiService.getOrders();
       if (res.ok) {
         const data = await res.json();
         setOrders(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const fetchContent = async () => {
+    try {
+      const res = await apiService.getContent();
+      if (res.ok) {
+        setSiteContent(await res.json());
       }
     } catch (e) {
       console.error(e);
@@ -145,6 +147,7 @@ const Admin = () => {
     } else {
       fetchAnalytics();
       fetchOrders();
+      fetchContent();
     }
   }, [isAdmin, navigate]);
 
@@ -152,38 +155,92 @@ const Admin = () => {
     e.preventDefault();
     setIsAdding(true);
     try {
-      await fetch('http://localhost:5000/api/products', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          price: Number(formData.price),
-          gallery: formData.galleryUrls.split(',').map(url => url.trim()).filter(url => url)
-        }),
-        credentials: 'include'
-      });
+      // Convert INR input to USD base currency immediately before API submission (Rate: 83)
+      const priceInUSD = Number(formData.price) / 83.0;
+      
+      const payload = {
+        ...formData,
+        price: priceInUSD,
+        gallery: formData.galleryUrls.split(',').map(url => url.trim()).filter(url => url)
+      };
+
+      if (editingId) {
+        await apiService.updateProduct(editingId, payload);
+      } else {
+        await apiService.addProduct(payload);
+      }
+      
       refreshProducts();
       setFormData({ name: '', description: '', price: '', image: '', galleryUrls: '', category: '' });
+      setEditingId(null);
+      setShowForm(false);
     } catch (error) {
-      console.error("Error adding product:", error);
+      console.error("Error saving product:", error);
     } finally {
       setIsAdding(false);
     }
   };
 
+  const handleEditProduct = (product: any) => {
+    setEditingId(product._id);
+    setFormData({
+      name: product.name,
+      description: product.description,
+      price: Math.round(product.price * 83).toString(), // Convert back to INR for the form
+      image: product.image,
+      category: product.category,
+      galleryUrls: product.gallery ? product.gallery.join(', ') : ''
+    });
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const cancelForm = () => {
+    setShowForm(false);
+    setEditingId(null);
+    setFormData({ name: '', description: '', price: '', image: '', galleryUrls: '', category: '' });
+  };
+
   const handleDeleteProduct = async (id: string) => {
     setDeletingId(id);
     try {
-      await fetch(`http://localhost:5000/api/products/${id}`, {
-        method: 'DELETE',
-        credentials: 'include'
-      });
+      await apiService.deleteProduct(id);
       refreshProducts();
     } catch (error) {
       console.error("Error deleting product:", error);
     } finally {
       setDeletingId(null);
     }
+  };
+
+  const handleUpdateContent = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsUpdatingContent(true);
+    try {
+      const res = await apiService.updateContent(siteContent);
+      if (res.ok) {
+        alert('Website content updated successfully!');
+      } else {
+        alert('Failed to update content');
+      }
+    } catch (error) {
+      console.error("Error updating site content:", error);
+      alert('Error updating site content');
+    } finally {
+      setIsUpdatingContent(false);
+    }
+  };
+
+  const updateHeroSlide = (index: number, field: string, value: string) => {
+    const updated = { ...siteContent };
+    updated.heroSlides[index][field] = value;
+    setSiteContent(updated);
+  };
+
+  const updateCategory = (index: number, field: string, value: string) => {
+    const updated = { ...siteContent };
+    updated.featuredCategories[index][field] = value;
+    setSiteContent(updated);
   };
 
   if (isLoading) {
@@ -201,7 +258,7 @@ const Admin = () => {
     <div className="p-8 max-w-7xl mx-auto fade-in">
       <header className="flex flex-col sm:flex-row justify-between items-center mb-10 gap-4">
         <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-        <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
+        <button className="btn-primary" onClick={showForm ? cancelForm : () => setShowForm(true)}>
           {showForm ? 'Cancel' : 'Add New Product'}
         </button>
       </header>
@@ -210,7 +267,7 @@ const Admin = () => {
         <form onSubmit={handleAddProduct} className="bg-white p-6 rounded-lg shadow-md mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
           <input required type="text" placeholder="Name" className="border p-2 rounded" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
           <input required type="text" placeholder="Category" className="border p-2 rounded" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} />
-          <input required type="number" placeholder="Price" className="border p-2 rounded" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
+          <input required type="number" placeholder="Price (INR)" className="border p-2 rounded" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
           
           <div className="flex flex-col gap-1">
             <label className="text-xs font-bold uppercase tracking-wider text-gray-500">Primary Image</label>
@@ -236,7 +293,7 @@ const Admin = () => {
           
           <textarea required placeholder="Description" className="border p-2 rounded md:col-span-2" rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
           <button type="submit" disabled={isAdding} className={`btn-primary md:col-span-2 mt-2 ${isAdding ? 'opacity-70 cursor-not-allowed' : ''}`}>
-            {isAdding ? 'Submitting...' : 'Submit Product'}
+            {isAdding ? 'Saving...' : (editingId ? 'Update Product' : 'Submit Product')}
           </button>
         </form>
       )}
@@ -249,7 +306,7 @@ const Admin = () => {
           </div>
           <div className="bg-white p-6 rounded-lg shadow-sm text-center hover:-translate-y-1 transition-transform border border-gray-100 border-t-4 border-t-emerald-400">
             <h3 className="text-gray-500 font-medium tracking-widest text-xs uppercase mb-3">Turnover</h3>
-            <p className="text-4xl font-bold text-gray-900">${analytics.totalRevenue.toFixed(2)}</p>
+            <p className="text-4xl font-bold text-gray-900">{formatPrice(analytics.totalRevenue)}</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-sm text-center hover:-translate-y-1 transition-transform border border-gray-100 border-t-4 border-t-blue-400">
             <h3 className="text-gray-500 font-medium tracking-widest text-xs uppercase mb-3">Customer Demand</h3>
@@ -284,9 +341,12 @@ const Admin = () => {
                     </td>
                     <td className="py-4 px-4 font-medium">{product.name}</td>
                     <td className="py-4 px-4 text-gray-500 uppercase tracking-wider text-sm">{product.category}</td>
-                    <td className="py-4 px-4 font-medium text-accent">${product.price.toFixed(2)}</td>
+                    <td className="py-4 px-4 font-medium text-accent">{formatPrice(product.price)}</td>
                     <td className="py-4 px-4">
                       <div className="flex gap-2">
+                        <button className="px-4 py-2 bg-blue-50 text-blue-600 rounded font-medium hover:bg-blue-100 transition-colors text-sm" onClick={() => handleEditProduct(product)}>
+                          Edit
+                        </button>
                         <button disabled={deletingId === product._id} className={`px-4 py-2 bg-red-50 text-red-600 rounded font-medium hover:bg-red-100 transition-colors text-sm ${deletingId === product._id ? 'opacity-50 cursor-not-allowed' : ''}`} onClick={() => handleDeleteProduct(product._id)}>
                           {deletingId === product._id ? 'Deleting...' : 'Delete'}
                         </button>
@@ -299,7 +359,69 @@ const Admin = () => {
           )}
         </div>
 
-        <div className="bg-white p-8 rounded-lg shadow-sm overflow-x-auto border border-gray-100">
+        {/* CMS: Manage Website Content */}
+        {siteContent && (
+          <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+            <h2 className="text-xl font-bold mb-2">Manage Website Content</h2>
+            <p className="text-gray-500 mb-8 text-sm">Update the text and images shown on the public landing page instantly.</p>
+            
+            <form onSubmit={handleUpdateContent} className="flex flex-col gap-10">
+              
+              <div>
+                <h3 className="text-lg font-serif font-bold mb-4 text-gray-900 border-b pb-2">Hero Slider Images</h3>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {siteContent.heroSlides.map((slide: any, idx: number) => (
+                    <div key={`slide-${idx}`} className="bg-gray-50 p-4 rounded-sm border border-gray-100 flex flex-col gap-3">
+                      <div className="text-xs font-bold text-accent uppercase tracking-widest mb-2">Slide {idx + 1}</div>
+                      
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Image URL</label>
+                        <input required type="text" className="w-full text-sm border p-2 rounded" value={slide.image} onChange={(e) => updateHeroSlide(idx, 'image', e.target.value)} />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Subtitle / Tagline</label>
+                        <input required type="text" className="w-full text-sm border p-2 rounded" value={slide.subtitle} onChange={(e) => updateHeroSlide(idx, 'subtitle', e.target.value)} />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Main Title</label>
+                        <input required type="text" className="w-full text-sm border p-2 rounded font-serif font-bold" value={slide.title} onChange={(e) => updateHeroSlide(idx, 'title', e.target.value)} />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Description</label>
+                        <textarea required className="w-full text-sm border p-2 rounded" rows={3} value={slide.description} onChange={(e) => updateHeroSlide(idx, 'description', e.target.value)} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-serif font-bold mb-4 text-gray-900 border-b pb-2">Featured Category Links</h3>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {siteContent.featuredCategories.map((cat: any, idx: number) => (
+                    <div key={`cat-${idx}`} className="bg-gray-50 p-4 rounded-sm border border-gray-100 flex flex-col gap-3">
+                      <div className="text-xs font-bold text-accent uppercase tracking-widest mb-2">Feature Block {idx + 1}</div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Category Name</label>
+                        <input required type="text" className="w-full text-sm border p-2 rounded" value={cat.name} onChange={(e) => updateCategory(idx, 'name', e.target.value)} />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Image URL</label>
+                        <input required type="text" className="w-full text-sm border p-2 rounded" value={cat.image} onChange={(e) => updateCategory(idx, 'image', e.target.value)} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <button type="submit" disabled={isUpdatingContent} className={`btn-primary self-end px-12 ${isUpdatingContent ? 'opacity-70 cursor-not-allowed' : ''}`}>
+                {isUpdatingContent ? 'Saving...' : 'Save Live Content'}
+              </button>
+            </form>
+          </div>
+        )}
+
+        <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 overflow-x-auto">
           <h2 className="text-xl font-bold mb-6">Recent Customer Orders</h2>
           {orders.length === 0 ? (
             <p className="text-gray-500 text-center py-8">No orders have been placed yet.</p>
@@ -324,12 +446,12 @@ const Admin = () => {
                         {order.items.map((item: any, idx: number) => (
                           <li key={idx} className="mb-2 pl-2 border-l-2 border-accent">
                             <span className="font-bold">{item.quantity}x</span> {item.name} <br/>
-                            <span className="text-emerald-600/70 text-xs">${item.price.toFixed(2)} ea</span>
+                            <span className="text-emerald-600/70 text-xs">{formatPrice(item.price)} ea</span>
                           </li>
                         ))}
                       </ul>
                     </td>
-                    <td className="py-4 px-4 font-bold text-emerald-600">${order.totalAmount.toFixed(2)}</td>
+                    <td className="py-4 px-4 font-bold text-emerald-600">{formatPrice(order.totalAmount)}</td>
                     <td className="py-4 px-4 text-sm text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</td>
                   </tr>
                 ))}

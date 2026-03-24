@@ -21,6 +21,7 @@ app.use(cookieParser());
 import orderRoutes from "./routes/orderRoutes";
 import analyticsRoutes from "./routes/analyticsRoutes";
 import uploadRoutes from "./routes/uploadRoutes";
+import contentRoutes from "./routes/contentRoutes";
 import path from "path";
 
 // Expose static multipart binary dumps
@@ -31,6 +32,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/content", contentRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Backend running 🚀");

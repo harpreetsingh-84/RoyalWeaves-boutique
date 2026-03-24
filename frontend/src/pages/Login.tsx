@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { GoogleLogin } from '@react-oauth/google';
+import { apiService } from '../services/api';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -14,12 +15,7 @@ const Login = () => {
   const handleGoogleSuccess = async (credentialResponse: any) => {
     setIsLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/auth/google', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ credential: credentialResponse.credential }),
-        credentials: 'include'
-      });
+      const res = await apiService.googleAuth({ credential: credentialResponse.credential });
       const data = await res.json();
       if (res.ok) {
         setIsAuthenticated(true);
@@ -41,12 +37,7 @@ const Login = () => {
     setError('');
     setIsLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-        credentials: 'include'
-      });
+      const res = await apiService.login({ email, password });
       const data = await res.json();
       if (res.ok) {
         setIsAuthenticated(true);

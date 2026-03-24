@@ -55,7 +55,7 @@ router.post('/login', async (req, res): Promise<any> => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'User not found' });
     }
 
     if (!user.password) {
@@ -64,7 +64,7 @@ router.post('/login', async (req, res): Promise<any> => {
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Invalid password' });
     }
 
     const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET as string, { expiresIn: '1d' });

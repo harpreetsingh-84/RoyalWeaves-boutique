@@ -2,7 +2,7 @@ import { useShop } from '../context/ShopContext';
 import { Link } from 'react-router-dom';
 
 const Collection = () => {
-  const { products, isLoading } = useShop();
+  const { products, isLoading, formatPrice } = useShop();
 
   if (isLoading) {
     return (
@@ -53,7 +53,7 @@ const Collection = () => {
                 <div className="px-1 text-center">
                   <p className="text-gray-400 text-xs mb-2 uppercase tracking-widest font-medium">{product.category}</p>
                   <h3 className="text-lg font-serif text-gray-900 mb-2 group-hover:text-accent transition-colors truncate">{product.name}</h3>
-                  <p className="font-medium text-gray-900 tracking-wide">${product.price.toFixed(2)}</p>
+                  <p className="font-medium text-gray-900 tracking-wide">{formatPrice(product.price)}</p>
                 </div>
               </Link>
             ))}

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { GoogleLogin } from '@react-oauth/google';
+import { apiService } from '../services/api';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -15,12 +16,7 @@ const Register = () => {
   const handleGoogleSuccess = async (credentialResponse: any) => {
     setIsLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/auth/google', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ credential: credentialResponse.credential }),
-        credentials: 'include'
-      });
+      const res = await apiService.googleAuth({ credential: credentialResponse.credential });
       const data = await res.json();
       if (res.ok) {
         setIsAuthenticated(true);
@@ -42,12 +38,7 @@ const Register = () => {
     setError('');
     setIsLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
-        credentials: 'include'
-      });
+      const res = await apiService.register({ name, email, password });
       const data = await res.json();
       if (res.ok) {
         navigate('/login');

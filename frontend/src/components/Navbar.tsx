@@ -1,9 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { useState, useEffect } from 'react';
+import { apiService } from '../services/api';
 
 const Navbar = () => {
-  const { cart, isAdmin, isAuthenticated, setIsAdmin, setIsAuthenticated } = useShop();
+  const { cart, isAdmin, isAuthenticated, setIsAdmin, setIsAuthenticated, currency, setCurrency } = useShop();
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
 
@@ -20,7 +21,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch('http://localhost:5000/api/auth/logout', { method: 'POST', credentials: 'include' });
+      await apiService.logout();
       setIsAdmin(false);
       setIsAuthenticated(false);
     } catch (err) {
@@ -44,6 +45,19 @@ const Navbar = () => {
         </Link>
         <ul className={`flex gap-6 md:gap-8 items-center ${textClass}`}>
           
+          <li>
+            <select
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value)}
+              className="bg-transparent text-xs font-semibold tracking-wider outline-none cursor-pointer uppercase transition-colors hover:text-accent opacity-90"
+            >
+              <option value="USD" className="text-gray-900">USD</option>
+              <option value="EUR" className="text-gray-900">EUR</option>
+              <option value="GBP" className="text-gray-900">GBP</option>
+              <option value="INR" className="text-gray-900">INR</option>
+            </select>
+          </li>
+
           {isAuthenticated && (
             <>
               <li>

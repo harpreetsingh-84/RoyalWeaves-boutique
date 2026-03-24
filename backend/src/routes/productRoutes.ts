@@ -39,4 +39,18 @@ router.delete('/:id', verifyToken, requireAdmin, async (req: Request, res: Respo
   }
 });
 
+// PUT update a product (Protected Admin)
+router.put('/:id', verifyToken, requireAdmin, async (req: Request, res: Response) => {
+  try {
+    const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (product) {
+      res.json(product);
+    } else {
+      res.status(404).json({ message: 'Product not found' });
+    }
+  } catch (error) {
+    res.status(400).json({ message: 'Invalid product data' });
+  }
+});
+
 export default router;
