@@ -1,5 +1,4 @@
-const BASE_URL = 'https://royalweaves-boutique.onrender.com/api';
-
+const BASE_URL = import.meta.env.VITE_API_URL;
 const apiFetch = (endpoint: string, options: RequestInit = {}) => {
   return fetch(`${BASE_URL}${endpoint}`, {
     credentials: 'include',
