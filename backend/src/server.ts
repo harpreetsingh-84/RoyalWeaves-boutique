@@ -52,12 +52,20 @@ const seedAdmin = async () => {
 };
 
 // MongoDB connect
-mongoose.connect(process.env.MONGO_URI as string)
-.then(async () => {
-    console.log("MongoDB Connected");
-    await seedAdmin();
-})
-.catch(err => console.log(err));
+if (!process.env.MONGO_URI) {
+  console.error("❌ CRITICAL ERROR: MONGO_URI is missing from environment variables!");
+} else {
+  mongoose.connect(process.env.MONGO_URI as string)
+    .then(async () => {
+        console.log("✅ MongoDB Connected Successfully");
+        await seedAdmin();
+    })
+    .catch(err => {
+        console.error("\n❌ MongoDB Connection Error:");
+        console.error("If you are testing locally, make sure you allowed your CURRENT IP Address (or 0.0.0.0/0) in MongoDB Atlas Network Settings!");
+        console.error("Error details:", err.message, "\n");
+    });
+}
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
