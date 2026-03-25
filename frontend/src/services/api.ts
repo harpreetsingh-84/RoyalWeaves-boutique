@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:5000/api';
+const BASE_URL = 'https://royalweaves-boutique.onrender.com/api';
 
 const apiFetch = (endpoint: string, options: RequestInit = {}) => {
   return fetch(`${BASE_URL}${endpoint}`, {
