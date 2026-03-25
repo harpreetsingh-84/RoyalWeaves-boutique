@@ -55,7 +55,7 @@ const Login = () => {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center fade-in bg-gray-50 px-6">
-      <div className="max-w-md w-full bg-white p-8 md:p-12 rounded-sm shadow-xl border border-gray-100">
+      <div className="max-w-md w-full bg-white p-6 sm:p-8 md:p-12 rounded-sm shadow-xl border border-gray-100">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-serif text-gray-900 mb-2">Welcome Back</h2>
           <p className="text-gray-500 text-sm tracking-wide">Sign in to access your curated collection.</p>
@@ -63,7 +63,7 @@ const Login = () => {
         
         {error && <div className="bg-red-50 text-red-600 p-4 rounded-sm mb-6 text-sm font-medium border border-red-100">{error}</div>}
         
-        <div className="flex justify-center mb-4">
+        <div className="flex justify-center mb-4 w-full overflow-hidden">
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={() => setError('Google Login Failed natively')}
@@ -71,7 +71,6 @@ const Login = () => {
             shape="rectangular"
             text="signin_with"
             size="large"
-            width="300"
           />
         </div>
         
