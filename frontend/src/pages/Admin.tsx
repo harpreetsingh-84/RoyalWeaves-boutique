@@ -255,7 +255,7 @@ const Admin = () => {
   if (!isAdmin) return null; // Prevent flicker
 
   return (
-    <div className="p-8 max-w-7xl mx-auto fade-in">
+    <div className="px-4 py-8 sm:p-8 max-w-7xl mx-auto fade-in">
       <header className="flex flex-col sm:flex-row justify-between items-center mb-10 gap-4">
         <h1 className="text-3xl font-bold">Admin Dashboard</h1>
         <button className="btn-primary" onClick={showForm ? cancelForm : () => setShowForm(true)}>
@@ -264,7 +264,7 @@ const Admin = () => {
       </header>
       
       {showForm && (
-        <form onSubmit={handleAddProduct} className="bg-white p-6 rounded-lg shadow-md mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form onSubmit={handleAddProduct} className="bg-white p-4 sm:p-6 rounded-lg shadow-md mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
           <input required type="text" placeholder="Name" className="border p-2 rounded" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
           <input required type="text" placeholder="Category" className="border p-2 rounded" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} />
           <input required type="number" placeholder="Price (INR)" className="border p-2 rounded" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
@@ -318,7 +318,7 @@ const Admin = () => {
           </div>
         </div>
 
-        <div className="bg-white p-8 rounded-lg shadow-sm overflow-x-auto">
+        <div className="bg-white p-4 sm:p-8 rounded-lg shadow-sm overflow-x-auto">
           <h2 className="text-xl font-bold mb-6">Manage Products</h2>
           {products.length === 0 ? (
             <p className="text-gray-500 text-center py-8">No products yet. Add some items to your database!</p>
@@ -361,7 +361,7 @@ const Admin = () => {
 
         {/* CMS: Manage Website Content */}
         {siteContent && (
-          <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+          <div className="bg-white p-4 sm:p-8 rounded-lg shadow-sm border border-gray-100 overflow-hidden">
             <h2 className="text-xl font-bold mb-2">Manage Website Content</h2>
             <p className="text-gray-500 mb-8 text-sm">Update the text and images shown on the public landing page instantly.</p>
             
@@ -414,14 +414,14 @@ const Admin = () => {
                 </div>
               </div>
 
-              <button type="submit" disabled={isUpdatingContent} className={`btn-primary self-end px-12 ${isUpdatingContent ? 'opacity-70 cursor-not-allowed' : ''}`}>
+              <button type="submit" disabled={isUpdatingContent} className={`btn-primary w-full sm:w-auto self-end px-12 ${isUpdatingContent ? 'opacity-70 cursor-not-allowed' : ''}`}>
                 {isUpdatingContent ? 'Saving...' : 'Save Live Content'}
               </button>
             </form>
           </div>
         )}
 
-        <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 overflow-x-auto">
+        <div className="bg-white p-4 sm:p-8 rounded-lg shadow-sm border border-gray-100 overflow-x-auto">
           <h2 className="text-xl font-bold mb-6">Recent Customer Orders</h2>
           {orders.length === 0 ? (
             <p className="text-gray-500 text-center py-8">No orders have been placed yet.</p>
@@ -460,7 +460,7 @@ const Admin = () => {
           )}
         </div>
 
-        <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
+        <div className="bg-white p-4 sm:p-8 rounded-lg shadow-sm border border-gray-100">
           <h2 className="text-xl font-bold mb-2">Account Settings</h2>
           <p className="text-gray-500 mb-6 text-sm">Update your administrator credentials securely.</p>
           
