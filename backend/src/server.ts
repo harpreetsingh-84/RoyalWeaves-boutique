@@ -13,9 +13,9 @@ dotenv.config();
 const app = express();
 
 // middleware
-app.use(cors({ 
-  origin: [ 'http://localhost:5173', 'https://royal-weaves-boutique.vercel.app' ], 
-  credentials: true 
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://royal-weaves-boutique.vercel.app'],
+  credentials: true
 }));
 app.use(express.json());
 app.use(cookieParser());
@@ -43,29 +43,21 @@ app.get("/", (req: Request, res: Response) => {
 
 // Seed admin
 const seedAdmin = async () => {
-    const adminCount = await User.countDocuments({ isAdmin: true });
-    if (adminCount === 0) {
-        const hashedPassword = await bcrypt.hash('admin123', 10);
-        await User.create({ name: 'System Admin', email: 'admin@boutique.com', password: hashedPassword, isAdmin: true });
-        console.log("Seed: Default Admin Created (email: admin@boutique.com, password: admin123)");
-    }
+  const adminCount = await User.countDocuments({ isAdmin: true });
+  if (adminCount === 0) {
+    const hashedPassword = await bcrypt.hash('admin123', 10);
+    await User.create({ name: 'System Admin', email: 'admin@boutique.com', password: hashedPassword, isAdmin: true });
+    console.log("Seed: Default Admin Created (email: admin@boutique.com, password: admin123)");
+  }
 };
 
 // MongoDB connect
-if (!process.env.MONGO_URI) {
-  console.error("❌ CRITICAL ERROR: MONGO_URI is missing from environment variables!");
-} else {
-  mongoose.connect(process.env.MONGO_URI as string)
-    .then(async () => {
-        console.log("✅ MongoDB Connected Successfully");
-        await seedAdmin();
-    })
-    .catch(err => {
-        console.error("\n❌ MongoDB Connection Error:");
-        console.error("If you are testing locally, make sure you allowed your CURRENT IP Address (or 0.0.0.0/0) in MongoDB Atlas Network Settings!");
-        console.error("Error details:", err.message, "\n");
-    });
-}
+mongoose.connect(process.env.MONGO_URI as string)
+  .then(async () => {
+    console.log("MongoDB Connected");
+    await seedAdmin();
+  })
+  .catch(err => console.log(err));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

@@ -12,69 +12,69 @@ const apiFetch = (endpoint: string, options: RequestInit = {}) => {
 
 export const apiService = {
   // Auth
-  login: (data: any) => apiFetch('/auth/login', {
+  login: (data: any) => apiFetch('/api/auth/login', {
     method: 'POST',
     body: JSON.stringify(data),
   }),
-  register: (data: any) => apiFetch('/auth/register', {
+  register: (data: any) => apiFetch('/api/auth/register', {
     method: 'POST',
     body: JSON.stringify(data),
   }),
-  googleAuth: (data: any) => apiFetch('/auth/google', {
+  googleAuth: (data: any) => apiFetch('/api/auth/google', {
     method: 'POST',
     body: JSON.stringify(data),
   }),
-  logout: () => fetch(`${BASE_URL}/auth/logout`, { // Special case for cookies sometimes needed
+  logout: () => fetch(`${BASE_URL}/api/auth/logout`, { // Special case for cookies sometimes needed
     method: 'POST',
     credentials: 'include'
   }),
-  verifyAuth: () => fetch(`${BASE_URL}/auth/verify`, {
+  verifyAuth: () => fetch(`${BASE_URL}/api/auth/verify`, {
     credentials: 'include'
   }),
-  updateCredentials: (data: any) => apiFetch('/auth/update-credentials', {
+  updateCredentials: (data: any) => apiFetch('/api/auth/update-credentials', {
     method: 'PUT',
     body: JSON.stringify(data),
     credentials: 'include'
   }),
 
   // Products
-  getProducts: () => fetch(`${BASE_URL}/products`),
-  addProduct: (productData: any) => apiFetch('/products', {
+  getProducts: () => fetch(`${BASE_URL}/api/products`),
+  addProduct: (productData: any) => apiFetch('/api/products', {
     method: 'POST',
     body: JSON.stringify(productData)
   }),
-  updateProduct: (id: string, productData: any) => apiFetch(`/products/${id}`, {
+  updateProduct: (id: string, productData: any) => apiFetch(`/api/products/${id}`, {
     method: 'PUT',
     body: JSON.stringify(productData)
   }),
-  deleteProduct: (id: string) => apiFetch(`/products/${id}`, {
+  deleteProduct: (id: string) => apiFetch(`/api/products/${id}`, {
     method: 'DELETE'
   }),
 
   // Orders & Analytics
-  getOrders: () => fetch(`${BASE_URL}/orders`, { credentials: 'include' }),
-  createOrder: (data: any) => apiFetch('/orders', {
+  getOrders: () => fetch(`${BASE_URL}/api/orders`, { credentials: 'include' }),
+  createOrder: (data: any) => apiFetch('/api/orders', {
     method: 'POST',
     body: JSON.stringify(data),
     credentials: 'include'
   }),
-  getAnalytics: () => fetch(`${BASE_URL}/analytics`, { credentials: 'include' }),
+  getAnalytics: () => fetch(`${BASE_URL}/api/analytics`, { credentials: 'include' }),
 
   // Upload
-  upload: (formData: FormData) => fetch(`${BASE_URL}/upload`, {
+  upload: (formData: FormData) => fetch(`${BASE_URL}/api/upload`, {
     method: 'POST',
     body: formData,
     credentials: 'include'
   }),
-  uploadMultiple: (formData: FormData) => fetch(`${BASE_URL}/upload/multiple`, {
+  uploadMultiple: (formData: FormData) => fetch(`${BASE_URL}/api/upload/multiple`, {
     method: 'POST',
     body: formData,
     credentials: 'include'
   }),
 
   // CMS Content Management
-  getContent: () => fetch(`${BASE_URL}/content`),
-  updateContent: (data: any) => apiFetch('/content', {
+  getContent: () => fetch(`${BASE_URL}/api/content`),
+  updateContent: (data: any) => apiFetch('/api/content', {
     method: 'PUT',
     body: JSON.stringify(data)
   }),
