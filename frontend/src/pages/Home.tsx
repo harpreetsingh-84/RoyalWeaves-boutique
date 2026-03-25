@@ -62,7 +62,7 @@ const Home = () => {
           <span className="block text-accent font-medium tracking-widest uppercase text-xs md:text-sm mb-4 animate-in slide-in-from-bottom-4 fade-in duration-700 delay-100 fill-mode-both" key={`sub-${currentSlide}`}>
             {content.heroSlides[currentSlide].subtitle}
           </span>
-          <h1 className="text-6xl md:text-8xl font-serif mb-6 tracking-wide drop-shadow-2xl font-normal animate-in slide-in-from-bottom-6 fade-in duration-1000 delay-300 fill-mode-both" key={`title-${currentSlide}`}>
+          <h1 className="text-5xl sm:text-6xl md:text-8xl font-serif mb-6 tracking-wide drop-shadow-2xl font-normal animate-in slide-in-from-bottom-6 fade-in duration-1000 delay-300 fill-mode-both" key={`title-${currentSlide}`}>
             {content.heroSlides[currentSlide].title}
           </h1>
           <p className="text-lg md:text-xl font-light max-w-2xl mx-auto mb-10 drop-shadow-md text-gray-200 animate-in slide-in-from-bottom-8 fade-in duration-1000 delay-500 fill-mode-both" key={`desc-${currentSlide}`}>

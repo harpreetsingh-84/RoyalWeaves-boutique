@@ -54,7 +54,7 @@ const Register = () => {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center fade-in bg-gray-50 px-6 mt-10 mb-10">
-      <div className="max-w-md w-full bg-white p-8 md:p-12 rounded-sm shadow-xl border border-gray-100">
+      <div className="max-w-md w-full bg-white p-6 sm:p-8 md:p-12 rounded-sm shadow-xl border border-gray-100">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-serif text-gray-900 mb-2">Join RoyalWeaves</h2>
           <p className="text-gray-500 text-sm tracking-wide">Create an account for exclusive access.</p>
@@ -62,7 +62,7 @@ const Register = () => {
         
         {error && <div className="bg-red-50 text-red-600 p-4 rounded-sm mb-6 text-sm font-medium border border-red-100">{error}</div>}
         
-        <div className="flex justify-center mb-4">
+        <div className="flex justify-center mb-4 w-full overflow-hidden">
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={() => setError('Google Registration Failed natively')}
@@ -70,7 +70,6 @@ const Register = () => {
             shape="rectangular"
             text="signup_with"
             size="large"
-            width="300"
           />
         </div>
         

@@ -23,7 +23,7 @@ const Collection = () => {
         </div>
         
         {/* Sort and Filter could go here later */}
-        <div className="flex flex-col md:flex-row justify-between items-end border-b border-gray-200 pb-4 mb-10 mt-10">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-gray-200 pb-4 mb-10 mt-10">
           <span className="text-gray-900 font-semibold tracking-widest text-sm uppercase mb-2 md:mb-0">Latest Arrivals</span>
           <span className="text-gray-500 font-medium tracking-widest text-xs uppercase">Showing {products.length} Items</span>
         </div>
