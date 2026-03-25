@@ -1,48 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useShop } from '../context/ShopContext';
 
-const GlobalLoader = ({ children }: { children: React.ReactNode }) => {
-  const [activeRequests, setActiveRequests] = useState(0);
+interface GlobalLoaderProps {
+  children: React.ReactNode;
+}
 
-  useEffect(() => {
-    // Intercept native window.fetch to trigger global loader everywhere
-    const originalFetch = window.fetch;
+const GlobalLoader: React.FC<GlobalLoaderProps> = ({ children }) => {
+  const { isAuthChecking } = useShop();
 
-    window.fetch = async (...args) => {
-      // Small delay prevents flickering for extremely fast API calls (<100ms)
-      let isFast = true;
-      const t = setTimeout(() => {
-        if (!isFast) setActiveRequests((prev) => prev + 1);
-      }, 100);
-      
-      isFast = false;
+  if (isAuthChecking) {
+    return (
+      <div className="fixed inset-0 flex flex-col items-center justify-center bg-white/90 z-50 backdrop-blur-sm">
+        <div className="w-12 h-12 border-4 border-gray-200 border-t-black rounded-full animate-spin mb-4"></div>
+        <p className="text-gray-600 font-medium tracking-wide animate-pulse">Loading...</p>
+      </div>
+    );
+  }
 
-      try {
-        const response = await originalFetch(...args);
-        return response;
-      } finally {
-        clearTimeout(t);
-        setActiveRequests((prev) => Math.max(0, prev - 1));
-      }
-    };
-
-    return () => {
-      window.fetch = originalFetch;
-    };
-  }, []);
-
-  const isApiLoading = activeRequests > 0;
-
-  return (
-    <>
-      {children}
-      {isApiLoading && (
-        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white/50 backdrop-blur-md animate-in fade-in duration-500 pointer-events-auto">
-          <div className="w-16 h-16 border-[3px] border-gray-100 border-t-gray-900 rounded-full animate-spin shadow-2xl"></div>
-          <p className="mt-6 text-xs font-semibold tracking-[0.3em] text-gray-900 uppercase">Please wait</p>
-        </div>
-      )}
-    </>
-  );
+  return <>{children}</>;
 };
 
 export default GlobalLoader;
