@@ -5,7 +5,8 @@ import User from '../models/User';
 import { verifyToken, requireAdmin, AuthRequest } from '../middleware/authMiddleware';
 import { OAuth2Client } from 'google-auth-library';
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID || 'dummy');
+const GOOGLE_CLIENT_ID = '916276338437-19l89gnho1p0pkng56el1e7c2j8mq7ut.apps.googleusercontent.com';
+const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 const router = express.Router();
 
@@ -100,7 +101,7 @@ router.post('/google', async (req: any, res: any) => {
 
     const ticket = await client.verifyIdToken({
       idToken: credential,
-      audience: process.env.GOOGLE_CLIENT_ID || 'dummy'
+      audience: GOOGLE_CLIENT_ID
     });
     
     const payload = ticket.getPayload();
