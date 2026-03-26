@@ -14,8 +14,8 @@ const app = express();
 
 const allowedOrigins = [
   'http://localhost:5173',
-  process.env.FRONTEND_URL || 'https://royalweaves-boutique.vercel.app',
-  'https://royalweaves-boutique.netlify.app'
+  process.env.FRONTEND_URL || 'https://royal-weaves-boutique.vercel.app',
+   
 ];
 
 app.use(cors({ 
