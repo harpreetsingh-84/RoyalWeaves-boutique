@@ -5,7 +5,7 @@ import User from '../models/User';
 import { verifyToken, requireAdmin, AuthRequest } from '../middleware/authMiddleware';
 import { OAuth2Client } from 'google-auth-library';
 
-const GOOGLE_CLIENT_ID = '581880857756-or60uq4fh1c6011uvfb3opjdket9nluq.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '581880857756-9ihlrh7b4mll0i2dngbqk4e9guj2qcu3.apps.googleusercontent.com';
 const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 const router = express.Router();
