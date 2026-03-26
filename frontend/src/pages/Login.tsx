@@ -20,7 +20,6 @@ const Login = () => {
       if (res.ok) {
         setIsAuthenticated(true);
         setIsAdmin(data.isAdmin);
-        await verifyAuth();
         navigate('/');
       } else {
         setError(data.message || 'Google login failed');
