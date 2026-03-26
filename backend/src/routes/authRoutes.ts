@@ -130,9 +130,9 @@ router.post('/google', async (req: any, res: any) => {
     });
 
     res.json({ message: 'Google login successful', isAdmin: user.isAdmin, user: { name: user.name, email: user.email } });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Google auth failed. Missing Client ID?' });
+  } catch (err: any) {
+    console.error('Google Auth Error:', err);
+    res.status(500).json({ message: err.message || 'Google auth failed internally' });
   }
 });
 
