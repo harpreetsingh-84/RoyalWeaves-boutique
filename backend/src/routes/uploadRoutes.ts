@@ -42,7 +42,11 @@ router.post('/', verifyToken, requireAdmin, (req: any, res: any) => {
     if (!req.file) {
       return res.status(400).json({ message: 'No file received' });
     }
-    res.json({ url: `http://localhost:5000/uploads/${req.file.filename}` });
+    
+    // Automatically use Render production URL or fallback to localhost locally
+    const baseUrl = process.env.RENDER_EXTERNAL_URL || `${req.protocol}://${req.get('host')}`;
+      
+    res.json({ url: `${baseUrl}/uploads/${req.file.filename}` });
   });
 });
 
@@ -55,7 +59,10 @@ router.post('/multiple', verifyToken, requireAdmin, (req: any, res: any) => {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ message: 'No files received' });
     }
-    const urls = req.files.map((file: any) => `http://localhost:5000/uploads/${file.filename}`);
+    
+    const baseUrl = process.env.RENDER_EXTERNAL_URL || `${req.protocol}://${req.get('host')}`;
+      
+    const urls = req.files.map((file: any) => `${baseUrl}/uploads/${file.filename}`);
     res.json({ urls });
   });
 });
