@@ -9,7 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { setIsAdmin, setIsAuthenticated, verifyAuth } = useShop();
+  const { setIsAdmin, setIsAuthenticated } = useShop();
   const navigate = useNavigate();
 
   const handleGoogleSuccess = async (credentialResponse: any) => {
