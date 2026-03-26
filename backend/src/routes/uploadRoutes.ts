@@ -14,7 +14,24 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage });
+const checkFileType = (file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+  const filetypes = /jpg|jpeg|png|webp/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
+
+  if (extname && mimetype) {
+    return cb(null, true);
+  } else {
+    cb(new Error('Images only! Allowed extensions: .jpg, .jpeg, .png, .webp'));
+  }
+};
+
+const upload = multer({ 
+  storage,
+  fileFilter: function(req, file, cb) {
+    checkFileType(file, cb);
+  }
+});
 
 router.post('/', verifyToken, requireAdmin, (req: any, res: any) => {
   upload.single('image')(req, res, (err: any) => {
