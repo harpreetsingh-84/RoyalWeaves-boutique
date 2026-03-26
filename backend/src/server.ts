@@ -12,10 +12,20 @@ dotenv.config();
 
 const app = express();
 
-// middleware
-app.use(cors({
-  origin: ['http://localhost:5173', 'https://royalweaves-boutique.netlify.app'],
-  credentials: true
+const allowedOrigins = [
+  'http://localhost:5173',
+  process.env.FRONTEND_URL || 'https://royalweaves-boutique.vercel.app'
+];
+
+app.use(cors({ 
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (!origin || allowedOrigins.includes(origin) || origin.includes('vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }, 
+  credentials: true 
 }));
 app.use(express.json());
 app.use(cookieParser());
