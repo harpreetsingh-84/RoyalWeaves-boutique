@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import bcrypt from "bcryptjs";
 import productRoutes from "./routes/productRoutes";
+import categoryRoutes from "./routes/categoryRoutes";
 import authRoutes from "./routes/authRoutes";
 import User from "./models/User";
 
@@ -43,6 +44,7 @@ import path from "path";
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.use("/api/products", productRoutes);
+app.use("/api/categories", categoryRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/analytics", analyticsRoutes);

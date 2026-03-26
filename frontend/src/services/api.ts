@@ -51,6 +51,14 @@ export const apiService = {
     method: 'DELETE'
   }),
 
+  // Categories
+  getCategories: () => fetch(`${BASE_URL}/api/categories`),
+  addCategory: (data: any) => apiFetch('/api/categories', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    credentials: 'include'
+  }),
+
   // Orders & Analytics
   getOrders: () => fetch(`${BASE_URL}/api/orders`, { credentials: 'include' }),
   createOrder: (data: any) => apiFetch('/api/orders', {

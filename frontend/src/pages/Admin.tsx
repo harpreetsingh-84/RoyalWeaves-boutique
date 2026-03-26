@@ -21,6 +21,10 @@ const Admin = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [isUpdatingCreds, setIsUpdatingCreds] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [categories, setCategories] = useState<{_id: string, name: string}[]>([]);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [showCategoryInput, setShowCategoryInput] = useState(false);
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
 
   const uploadFileHandler = async (e: React.ChangeEvent<HTMLInputElement>, isPrimary: boolean) => {
     const file = e.target.files?.[0];
@@ -141,6 +145,17 @@ const Admin = () => {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const res = await apiService.getCategories();
+      if (res.ok) {
+        setCategories(await res.json());
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   useEffect(() => {
     if (!isAdmin) {
       navigate('/');
@@ -148,8 +163,32 @@ const Admin = () => {
       fetchAnalytics();
       fetchOrders();
       fetchContent();
+      fetchCategories();
     }
   }, [isAdmin, navigate]);
+
+  const handleCreateCategory = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!newCategoryName.trim()) return;
+    setIsAddingCategory(true);
+    try {
+      const res = await apiService.addCategory({ name: newCategoryName });
+      if (res.ok) {
+        const created = await res.json();
+        setCategories([...categories, created]);
+        setFormData({ ...formData, category: created.name });
+        setNewCategoryName('');
+        setShowCategoryInput(false);
+      } else {
+        const err = await res.json();
+        alert(err.message || 'Failed to add category');
+      }
+    } catch (error) {
+      console.error("Error adding category:", error);
+    } finally {
+      setIsAddingCategory(false);
+    }
+  };
 
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -266,7 +305,49 @@ const Admin = () => {
       {showForm && (
         <form onSubmit={handleAddProduct} className="bg-white p-4 sm:p-6 rounded-lg shadow-md mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
           <input required type="text" placeholder="Name" className="border p-2 rounded" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
-          <input required type="text" placeholder="Category" className="border p-2 rounded" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} />
+          
+          <div className="flex flex-col gap-1">
+            <div className="flex gap-2">
+              {!showCategoryInput ? (
+                <select 
+                  required 
+                  className="border p-2 rounded flex-grow" 
+                  value={formData.category} 
+                  onChange={e => setFormData({...formData, category: e.target.value})}
+                >
+                  <option value="">Select Category</option>
+                  {categories.map(cat => (
+                    <option key={cat._id} value={cat.name}>{cat.name}</option>
+                  ))}
+                </select>
+              ) : (
+                <input 
+                  type="text" 
+                  placeholder="New Category Name" 
+                  className="border p-2 rounded flex-grow" 
+                  value={newCategoryName} 
+                  onChange={e => setNewCategoryName(e.target.value)} 
+                />
+              )}
+              <button 
+                type="button"
+                className="btn-primary text-xs px-3" 
+                onClick={showCategoryInput ? handleCreateCategory : () => setShowCategoryInput(true)}
+                disabled={isAddingCategory}
+              >
+                {showCategoryInput ? (isAddingCategory ? '...' : 'Save') : '+ New'}
+              </button>
+              {showCategoryInput && (
+                <button 
+                  type="button"
+                  className="px-3 border rounded text-xs hover:bg-gray-50"
+                  onClick={() => setShowCategoryInput(false)}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
           <input required type="number" placeholder="Price (INR)" className="border p-2 rounded" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
           
           <div className="flex flex-col gap-1">
