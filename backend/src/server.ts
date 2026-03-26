@@ -14,12 +14,14 @@ const app = express();
 
 const allowedOrigins = [
   'http://localhost:5173',
-  process.env.FRONTEND_URL || 'https://royalweaves-boutique.vercel.app'
+  process.env.FRONTEND_URL || 'https://royalweaves-boutique.vercel.app',
+  'https://royalweaves-boutique.netlify.app'
 ];
 
 app.use(cors({ 
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-    if (!origin || allowedOrigins.includes(origin) || origin.includes('vercel.app')) {
+    // Allow if no origin (e.g. mobile apps, curl), or if exactly in array, or if it matches common deployment domains
+    if (!origin || allowedOrigins.includes(origin) || origin.includes('vercel.app') || origin.includes('netlify.app')) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
