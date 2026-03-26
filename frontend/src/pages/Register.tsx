@@ -5,9 +5,6 @@ import { GoogleLogin } from '@react-oauth/google';
 import { apiService } from '../services/api';
 
 const Register = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { setIsAdmin, setIsAuthenticated, verifyAuth } = useShop();
@@ -33,25 +30,6 @@ const Register = () => {
     }
   };
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
-    try {
-      const res = await apiService.register({ name, email, password });
-      const data = await res.json();
-      if (res.ok) {
-        navigate('/login');
-      } else {
-        setError(data.message || 'Registration failed');
-      }
-    } catch (err) {
-      setError('Network error. Is the server running?');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-[80vh] flex items-center justify-center fade-in bg-gray-50 px-6 mt-10 mb-10">
       <div className="max-w-md w-full bg-white p-6 sm:p-8 md:p-12 rounded-sm shadow-xl border border-gray-100">
@@ -72,30 +50,6 @@ const Register = () => {
             size="large"
           />
         </div>
-        
-        <div className="relative flex py-4 items-center">
-          <div className="flex-grow border-t border-gray-200"></div>
-          <span className="flex-shrink-0 mx-4 text-gray-400 text-xs font-bold tracking-widest uppercase">Or email</span>
-          <div className="flex-grow border-t border-gray-200"></div>
-        </div>
-
-        <form onSubmit={handleRegister} className="flex flex-col gap-6">
-          <div>
-            <label className="block text-gray-700 text-xs font-bold tracking-widest uppercase mb-2">Full Name</label>
-            <input type="text" required value={name} onChange={e => setName(e.target.value)} className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:border-accent transition-colors bg-gray-50 focus:bg-white" placeholder="Jane Doe" />
-          </div>
-          <div>
-            <label className="block text-gray-700 text-xs font-bold tracking-widest uppercase mb-2">Email Address</label>
-            <input type="email" required value={email} onChange={e => setEmail(e.target.value)} className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:border-accent transition-colors bg-gray-50 focus:bg-white" placeholder="you@example.com" />
-          </div>
-          <div>
-            <label className="block text-gray-700 text-xs font-bold tracking-widest uppercase mb-2">Password</label>
-            <input type="password" required value={password} onChange={e => setPassword(e.target.value)} className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:border-accent transition-colors bg-gray-50 focus:bg-white" placeholder="••••••••" />
-          </div>
-          <button type="submit" disabled={isLoading} className={`w-full bg-gray-900 text-white font-bold py-4 rounded-sm hover:bg-accent transition-colors tracking-widest uppercase text-sm mt-4 shadow-md ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}>
-            {isLoading ? 'Creating Account...' : 'Create Account'}
-          </button>
-        </form>
         <p className="mt-8 text-center text-gray-500 text-sm">
           Already have an account? <Link to="/login" className="text-accent font-semibold hover:underline">Sign in</Link>
         </p>
