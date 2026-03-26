@@ -31,7 +31,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center fade-in bg-gray-50 px-6 mt-10 mb-10">
+    <div className={`min-h-[80vh] flex items-center justify-center fade-in bg-gray-50 px-6 mt-10 mb-10 ${isLoading ? 'opacity-60 pointer-events-none' : ''}`}>
       <div className="max-w-md w-full bg-white p-6 sm:p-8 md:p-12 rounded-sm shadow-xl border border-gray-100">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-serif text-gray-900 mb-2">Join RoyalWeaves</h2>
@@ -40,15 +40,22 @@ const Register = () => {
         
         {error && <div className="bg-red-50 text-red-600 p-4 rounded-sm mb-6 text-sm font-medium border border-red-100">{error}</div>}
         
-        <div className="flex justify-center mb-4 w-full overflow-hidden">
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={() => setError('Google Registration Failed natively')}
-            theme="filled_black"
-            shape="rectangular"
-            text="signup_with"
-            size="large"
-          />
+        <div className="flex flex-col items-center justify-center mb-4 w-full overflow-hidden">
+          {isLoading ? (
+            <div className="flex items-center gap-3 text-accent font-medium p-3">
+              <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
+              <span>Authenticating...</span>
+            </div>
+          ) : (
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError('Google Registration Failed natively')}
+              theme="filled_black"
+              shape="rectangular"
+              text="signup_with"
+              size="large"
+            />
+          )}
         </div>
         <p className="mt-8 text-center text-gray-500 text-sm">
           Already have an account? <Link to="/login" className="text-accent font-semibold hover:underline">Sign in</Link>
