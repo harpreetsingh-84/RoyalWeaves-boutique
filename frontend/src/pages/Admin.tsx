@@ -271,10 +271,10 @@ const Admin = () => {
           
           <div className="flex flex-col gap-1">
             <label className="text-xs font-bold uppercase tracking-wider text-gray-500">Primary Image</label>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <input required type="text" placeholder="URL or Upload" className="border p-2 rounded flex-grow" value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} />
               <input type="file" accept="image/*" id="primaryUpload" className="hidden" onChange={(e) => uploadFileHandler(e, true)} />
-              <label htmlFor="primaryUpload" className={`btn-primary cursor-pointer flex items-center justify-center min-w-[120px] ${uploading ? 'opacity-70' : ''}`}>
+              <label htmlFor="primaryUpload" className={`btn-primary cursor-pointer flex items-center justify-center min-w-[120px] ${uploading ? 'opacity-70' : ''} text-sm sm:text-base`}>
                 {uploading ? '...' : 'Upload File'}
               </label>
             </div>
@@ -282,10 +282,10 @@ const Admin = () => {
 
           <div className="flex flex-col gap-1 md:col-span-2">
             <label className="text-xs font-bold uppercase tracking-wider text-gray-500">Gallery Images</label>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <input type="text" placeholder="URLs (Comma Separated) or Upload" className="border p-2 rounded flex-grow" value={formData.galleryUrls} onChange={e => setFormData({...formData, galleryUrls: e.target.value})} />
               <input type="file" accept="image/*" multiple id="galleryUpload" className="hidden" onChange={uploadMultipleHandler} />
-              <label htmlFor="galleryUpload" className={`btn-primary cursor-pointer flex items-center justify-center min-w-[120px] ${uploading ? 'opacity-70' : ''}`}>
+              <label htmlFor="galleryUpload" className={`btn-primary cursor-pointer flex items-center justify-center min-w-[120px] ${uploading ? 'opacity-70' : ''} text-sm sm:text-base`}>
                 {uploading ? '...' : 'Upload Files'}
               </label>
             </div>
