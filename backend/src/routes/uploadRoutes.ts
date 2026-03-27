@@ -1,68 +1,62 @@
 import express from 'express';
 import multer from 'multer';
-import path from 'path';
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import { verifyToken, requireAdmin } from '../middleware/authMiddleware';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const router = express.Router();
 
-const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    cb(null, 'uploads/');
+// Cloudinary Configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: async (req, file) => {
+    return {
+      folder: 'boutique-products',
+      allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+      public_id: `img-${Date.now()}`
+    };
   },
-  filename(req, file, cb) {
-    cb(null, `img-${Date.now()}${path.extname(file.originalname || '')}`);
-  }
 });
 
-const checkFileType = (file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  const filetypes = /jpg|jpeg|png|webp/;
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = filetypes.test(file.mimetype);
+const upload = multer({ storage });
 
-  if (extname && mimetype) {
-    return cb(null, true);
-  } else {
-    cb(new Error('Images only! Allowed extensions: .jpg, .jpeg, .png, .webp'));
-  }
-};
-
-const upload = multer({ 
-  storage,
-  fileFilter: function(req, file, cb) {
-    checkFileType(file, cb);
-  }
-});
-
+// POST a single image
 router.post('/', verifyToken, requireAdmin, (req: any, res: any) => {
   upload.single('image')(req, res, (err: any) => {
     if (err) {
-      console.error("Multer single error:", err);
+      console.error("Cloudinary upload error:", err);
       return res.status(400).json({ message: err.message || 'Upload failed natively' });
     }
     if (!req.file) {
       return res.status(400).json({ message: 'No file received' });
     }
     
-    // Automatically use Render production URL or fallback to localhost locally
-    const baseUrl = process.env.RENDER_EXTERNAL_URL || `${req.protocol}://${req.get('host')}`;
-      
-    res.json({ url: `${baseUrl}/uploads/${req.file.filename}` });
+    // Cloudinary provides the direct URL in req.file.path
+    res.json({ url: req.file.path });
   });
 });
 
+// POST multiple images
 router.post('/multiple', verifyToken, requireAdmin, (req: any, res: any) => {
   upload.array('images', 8)(req, res, (err: any) => {
     if (err) {
-      console.error("Multer array error:", err);
+      console.error("Cloudinary multi-upload error:", err);
       return res.status(400).json({ message: err.message || 'Gallery upload failed natively' });
     }
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ message: 'No files received' });
     }
     
-    const baseUrl = process.env.RENDER_EXTERNAL_URL || `${req.protocol}://${req.get('host')}`;
-      
-    const urls = req.files.map((file: any) => `${baseUrl}/uploads/${file.filename}`);
+    const urls = (req.files as any[]).map(file => file.path);
     res.json({ urls });
   });
 });
