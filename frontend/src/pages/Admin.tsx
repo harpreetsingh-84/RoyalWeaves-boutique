@@ -229,7 +229,7 @@ const Admin = () => {
       price: Math.round(product.price * 83).toString(), // Convert back to INR for the form
       image: product.image,
       category: product.category,
-      galleryUrls: product.gallery ? product.gallery.join(', ') : '',
+      galleryUrls: Array.isArray(product.gallery) ? product.gallery.join(', ') : '',
       quantity: product.quantity ? product.quantity.toString() : '0'
     });
     setShowForm(true);
