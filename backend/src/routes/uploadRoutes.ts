@@ -10,15 +10,20 @@ dotenv.config();
 const router = express.Router();
 
 // Cloudinary Configuration
-if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
-  console.error("CRITICAL: Cloudinary credentials missing in environment variables!");
+if (process.env.CLOUDINARY_URL) {
+  // If CLOUDINARY_URL is present, the SDK handles it automatically if we don't override,
+  // but we'll be explicit for clarity.
+  cloudinary.config(); 
+} else {
+  if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+    console.error("CRITICAL: Cloudinary credentials missing in environment variables!");
+  }
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+  });
 }
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
