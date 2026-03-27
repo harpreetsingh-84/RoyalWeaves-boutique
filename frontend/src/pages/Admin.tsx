@@ -14,7 +14,8 @@ const Admin = () => {
     price: '',
     image: '',
     galleryUrls: '',
-    category: ''
+    category: '',
+    quantity: ''
   });
 
   const [uploading, setUploading] = useState(false);
@@ -210,7 +211,7 @@ const Admin = () => {
       }
       
       refreshProducts();
-      setFormData({ name: '', description: '', price: '', image: '', galleryUrls: '', category: '' });
+      setFormData({ name: '', description: '', price: '', image: '', galleryUrls: '', category: '', quantity: '' });
       setEditingId(null);
       setShowForm(false);
     } catch (error) {
@@ -228,7 +229,8 @@ const Admin = () => {
       price: Math.round(product.price * 83).toString(), // Convert back to INR for the form
       image: product.image,
       category: product.category,
-      galleryUrls: product.gallery ? product.gallery.join(', ') : ''
+      galleryUrls: product.gallery ? product.gallery.join(', ') : '',
+      quantity: product.quantity ? product.quantity.toString() : '0'
     });
     setShowForm(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -237,7 +239,7 @@ const Admin = () => {
   const cancelForm = () => {
     setShowForm(false);
     setEditingId(null);
-    setFormData({ name: '', description: '', price: '', image: '', galleryUrls: '', category: '' });
+    setFormData({ name: '', description: '', price: '', image: '', galleryUrls: '', category: '', quantity: '' });
   };
 
   const handleDeleteProduct = async (id: string) => {
@@ -349,6 +351,7 @@ const Admin = () => {
             </div>
           </div>
           <input required type="number" placeholder="Price (INR)" className="border p-2 rounded" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
+          <input required type="number" placeholder="Stock Quantity" className="border p-2 rounded" value={formData.quantity} onChange={e => setFormData({...formData, quantity: e.target.value})} />
           
           <div className="flex flex-col gap-1">
             <label className="text-xs font-bold uppercase tracking-wider text-gray-500">Primary Image</label>
@@ -411,6 +414,7 @@ const Admin = () => {
                   <th className="py-4 px-4 font-semibold text-gray-600">Name</th>
                   <th className="py-4 px-4 font-semibold text-gray-600">Category</th>
                   <th className="py-4 px-4 font-semibold text-gray-600">Price</th>
+                  <th className="py-4 px-4 font-semibold text-gray-600">Stock</th>
                   <th className="py-4 px-4 font-semibold text-gray-600">Actions</th>
                 </tr>
               </thead>
@@ -423,6 +427,11 @@ const Admin = () => {
                     <td className="py-4 px-4 font-medium">{product.name}</td>
                     <td className="py-4 px-4 text-gray-500 uppercase tracking-wider text-sm">{product.category}</td>
                     <td className="py-4 px-4 font-medium text-accent">{formatPrice(product.price)}</td>
+                    <td className="py-4 px-4">
+                      <span className={`px-2 py-1 rounded-full text-xs font-bold ${product.quantity > 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'}`}>
+                        {product.quantity > 0 ? `${product.quantity} in stock` : 'Out of Stock'}
+                      </span>
+                    </td>
                     <td className="py-4 px-4">
                       <div className="flex gap-2">
                         <button className="px-4 py-2 bg-blue-50 text-blue-600 rounded font-medium hover:bg-blue-100 transition-colors text-sm" onClick={() => handleEditProduct(product)}>

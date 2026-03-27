@@ -198,20 +198,25 @@ const ItemDetails = () => {
               
               <p className="text-2xl font-light text-gray-600 mb-10 font-serif italic flex items-center gap-4">
                 {formatPrice(product.price)}
-                <span className="text-xs font-sans not-italic font-medium text-gray-400 tracking-widest uppercase bg-gray-100 px-3 py-1 rounded-full">In Stock</span>
+                <span className={`text-xs font-sans not-italic font-medium tracking-widest uppercase px-3 py-1 rounded-full ${product.quantity > 0 ? 'text-gray-400 bg-gray-100' : 'text-red-600 bg-red-50'}`}>
+                  {product.quantity > 0 ? `${product.quantity} In Stock` : 'Out of Stock'}
+                </span>
               </p>
 
               {/* Add to Cart - Premium Button */}
               <button 
                 onClick={handleAddToCart}
-                className="relative group overflow-hidden bg-gray-900 text-white w-full py-5 mb-12 shadow-2xl shadow-gray-900/20 active:scale-[0.98] transition-all duration-500 block"
+                disabled={product.quantity <= 0}
+                className={`relative group overflow-hidden ${product.quantity > 0 ? 'bg-gray-900' : 'bg-gray-400 cursor-not-allowed'} text-white w-full py-5 mb-12 shadow-2xl shadow-gray-900/20 active:scale-[0.98] transition-all duration-500 block`}
               >
                 <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out"></div>
                 <span className="relative z-10 flex items-center justify-center gap-4 text-xs font-bold tracking-[0.2em] uppercase">
-                  Add to Bag
-                  <span className="group-hover:translate-x-2 transition-transform duration-500">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                  </span>
+                  {product.quantity > 0 ? 'Add to Bag' : 'Sold Out'}
+                  {product.quantity > 0 && (
+                    <span className="group-hover:translate-x-2 transition-transform duration-500">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                    </span>
+                  )}
                 </span>
               </button>
 

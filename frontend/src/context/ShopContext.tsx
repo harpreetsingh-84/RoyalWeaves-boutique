@@ -10,6 +10,7 @@ export interface Product {
   image: string;
   category: string;
   gallery?: string[];
+  quantity: number;
 }
 
 export interface CartItem {
@@ -109,9 +110,18 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const addToCart = (product: Product) => {
+    if (product.quantity <= 0) {
+      alert('This product is out of stock');
+      return;
+    }
+
     setCart((prevCart) => {
       const existing = prevCart.find(item => item.product._id === product._id);
       if (existing) {
+        if (existing.quantity >= product.quantity) {
+          alert(`Only ${product.quantity} items available in stock`);
+          return prevCart;
+        }
         return prevCart.map(item =>
           item.product._id === product._id ? { ...item, quantity: item.quantity + 1 } : item
         );
@@ -126,6 +136,13 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const updateQuantity = (productId: string, quantity: number) => {
     if (quantity < 1) return;
+    
+    const product = products.find(p => p._id === productId);
+    if (product && quantity > product.quantity) {
+      alert(`Only ${product.quantity} items available in stock`);
+      return;
+    }
+
     setCart((prevCart) => prevCart.map(item =>
       item.product._id === productId ? { ...item, quantity } : item
     ));
