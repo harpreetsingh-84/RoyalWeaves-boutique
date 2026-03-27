@@ -10,20 +10,44 @@ dotenv.config();
 const router = express.Router();
 
 // Cloudinary Configuration
-if (process.env.CLOUDINARY_URL) {
-  // If CLOUDINARY_URL is present, the SDK handles it automatically if we don't override,
-  // but we'll be explicit for clarity.
-  cloudinary.config(); 
+const CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME?.trim();
+const API_KEY = process.env.CLOUDINARY_API_KEY?.trim();
+const API_SECRET = process.env.CLOUDINARY_API_SECRET?.trim();
+const CLOUD_URL = process.env.CLOUDINARY_URL?.trim();
+
+if (CLOUD_URL) {
+  cloudinary.config({ cloudinary_url: CLOUD_URL });
 } else {
-  if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
-    console.error("CRITICAL: Cloudinary credentials missing in environment variables!");
-  }
   cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
+    cloud_name: CLOUD_NAME,
+    api_key: API_KEY,
+    api_secret: API_SECRET
   });
 }
+
+// Admin test route to verify Cloudinary connection
+router.get('/test-cloudinary', verifyToken, requireAdmin, async (req: any, res: any) => {
+  try {
+    const result = await cloudinary.api.ping();
+    res.json({ 
+      status: 'success', 
+      message: 'Cloudinary is connected!', 
+      ping: result,
+      config: {
+        cloud_name: cloudinary.config().cloud_name,
+        api_key: cloudinary.config().api_key,
+        hasSecret: !!cloudinary.config().api_secret
+      }
+    });
+  } catch (error: any) {
+    console.error("Cloudinary connection test failed:", error);
+    res.status(500).json({ 
+      status: 'error', 
+      message: error.message,
+      error: error
+    });
+  }
+});
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
