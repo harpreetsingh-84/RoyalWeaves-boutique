@@ -39,7 +39,10 @@ const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
 export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    const savedCart = localStorage.getItem('royalweaves_cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isAuthChecking, setIsAuthChecking] = useState<boolean>(true);
@@ -85,6 +88,11 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     fetchProducts();
     verifyAuth();
   }, []);
+
+  // Persist cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('royalweaves_cart', JSON.stringify(cart));
+  }, [cart]);
 
   const refreshProducts = () => {
     fetchProducts();

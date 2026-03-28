@@ -60,8 +60,9 @@ const Checkout = () => {
       
       if (res.ok) {
         alert('Order placed successfully! Thank you for your purchase.');
+        localStorage.removeItem('royalweaves_cart');
         navigate('/');
-        window.location.reload(); // Quick hack to clear the state/cart
+        window.location.reload(); 
       } else {
         alert('Failed to place order. Please try again.');
       }
