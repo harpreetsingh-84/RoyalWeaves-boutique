@@ -461,6 +461,7 @@ const Admin = () => {
                   <th className="py-4 px-4 font-semibold text-gray-600">Items</th>
                   <th className="py-4 px-4 font-semibold text-gray-600">Total</th>
                   <th className="py-4 px-4 font-semibold text-gray-600">Status</th>
+                  <th className="py-4 px-4 font-semibold text-gray-600">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -508,6 +509,11 @@ const Admin = () => {
                       <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-bold tracking-wide uppercase">
                         {order.status || 'Paid'}
                       </span>
+                    </td>
+                    <td className="py-4 px-4">
+                      <button onClick={() => navigate(`/admin/order/${order._id}`)} className="text-sm font-medium text-accent hover:underline">
+                        View Details
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -591,6 +597,7 @@ const Admin = () => {
                   <th className="py-4 px-4 font-semibold text-gray-600">Items Purchased</th>
                   <th className="py-4 px-4 font-semibold text-gray-600">Total Paid</th>
                   <th className="py-4 px-4 font-semibold text-gray-600">Date</th>
+                  <th className="py-4 px-4 font-semibold text-gray-600">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -610,6 +617,11 @@ const Admin = () => {
                     </td>
                     <td className="py-4 px-4 font-bold text-emerald-600">{formatPrice(order.totalAmount)}</td>
                     <td className="py-4 px-4 text-sm text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</td>
+                    <td className="py-4 px-4">
+                      <button onClick={() => navigate(`/admin/order/${order._id}`)} className="text-sm font-medium text-accent hover:underline">
+                        View Details
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

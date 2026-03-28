@@ -56,4 +56,54 @@ router.get('/', verifyToken, requireAdmin, async (req, res) => {
   }
 });
 
+// Get single order by ID (Authenticated User)
+router.get('/:id', verifyToken, async (req: AuthRequest, res: any): Promise<any> => {
+  try {
+    const order = await Order.findById(req.params.id)
+      .populate('user', 'name email')
+      .populate('items.product', 'image category');
+    
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    // Ensure user owns the order or is admin
+    if (order.user._id.toString() !== req.user?.id && !req.user?.isAdmin) {
+      return res.status(403).json({ message: 'Forbidden. You do not have access to this order.' });
+    }
+
+    res.json(order);
+  } catch (error) {
+    console.error("Error fetching order:", error);
+    res.status(500).json({ message: 'Error fetching order details' });
+  }
+});
+
+// Update order status (Admin only)
+router.put('/:id/status', verifyToken, requireAdmin, async (req, res) => {
+  try {
+    const { status } = req.body;
+    if (!status) {
+      return res.status(400).json({ message: 'Status is required' });
+    }
+
+    const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    )
+      .populate('user', 'name email')
+      .populate('items.product', 'image category');
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    res.json(order);
+  } catch (error) {
+    console.error("Error updating order status:", error);
+    res.status(500).json({ message: 'Error updating order status' });
+  }
+});
+
 export default router;
