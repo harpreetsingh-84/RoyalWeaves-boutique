@@ -29,7 +29,33 @@ if (CLOUD_URL) {
 router.get('/public-test', (req, res) => {
   res.json({ 
     message: "Upload routes are reachable!",
-    envKeys: Object.keys(process.env).filter(key => key.includes('CLOUDINARY'))
+    envKeys: Object.keys(process.env).filter(key => key.includes('CLOUDINARY')),
+    cloudinaryConfigURL: process.env.CLOUDINARY_URL,
+    parsedConfig: cloudinary.config()
+  });
+});
+
+// Debug signature generation
+router.get('/debug-signature', (req, res) => {
+  const timestamp = Math.round((new Date).getTime() / 1000);
+  const api_secret = cloudinary.config().api_secret;
+  
+  if (!api_secret) {
+     return res.status(400).json({ error: "No API secret found in Cloudinary config" });
+  }
+
+  const paramsToSign = {
+    folder: 'boutique-products',
+    timestamp: timestamp
+  };
+
+  const expectedSignature = cloudinary.utils.api_sign_request(paramsToSign, api_secret);
+  
+  res.json({
+    paramsSigned: paramsToSign,
+    api_secret_used: `starts with ${api_secret.substring(0, 3)}... ends with ${api_secret.substring(api_secret.length - 3)}`,
+    expectedSignature: expectedSignature,
+    timestamp: timestamp
   });
 });
 
