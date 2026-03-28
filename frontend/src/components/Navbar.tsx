@@ -36,7 +36,7 @@ const Navbar = () => {
     : 'bg-white/95 backdrop-blur-md shadow-sm py-4 border-b border-gray-100';
 
   const textClass = isHome && !scrolled ? 'text-white drop-shadow-sm' : 'text-gray-900';
-  const logoAccentClass = isHome && !scrolled ? 'text-yellow-400' : 'text-accent';
+
   const cartBadgeClass = isHome && !scrolled ? 'bg-white text-gray-900' : 'bg-accent text-white';
 
   const closeMenu = () => setIsMenuOpen(false);
@@ -44,8 +44,8 @@ const Navbar = () => {
   return (
     <nav className={`fixed w-full top-0 transition-all duration-500 z-50 ${navClass}`}>
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-        <Link to="/" className={`text-2xl font-bold tracking-tight ${textClass}`} onClick={closeMenu}>
-          Woven Wonder <span className={`font-light ${logoAccentClass}`}>Creation</span>
+        <Link to="/" onClick={closeMenu} className="flex items-center">
+          <img src="/logo.png" alt="Woven Wonder Creation" className="h-[4.5rem] w-auto object-contain scale-[1.3] transform origin-left md:scale-[1.5]" />
         </Link>
         
         {/* Desktop Menu */}
