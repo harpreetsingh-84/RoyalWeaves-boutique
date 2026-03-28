@@ -60,7 +60,7 @@ const Checkout = () => {
       
       if (res.ok) {
         alert('Order placed successfully! Thank you for your purchase.');
-        localStorage.removeItem('royalweaves_cart');
+        localStorage.removeItem('wovenwonder_cart');
         navigate('/');
         window.location.reload(); 
       } else {

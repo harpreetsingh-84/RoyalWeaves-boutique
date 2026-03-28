@@ -34,7 +34,7 @@ const Register = () => {
     <div className={`min-h-[80vh] flex items-center justify-center fade-in bg-gray-50 px-6 mt-10 mb-10 ${isLoading ? 'opacity-60 pointer-events-none' : ''}`}>
       <div className="max-w-md w-full bg-white p-6 sm:p-8 md:p-12 rounded-sm shadow-xl border border-gray-100">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-serif text-gray-900 mb-2">Join RoyalWeaves</h2>
+          <h2 className="text-3xl font-serif text-gray-900 mb-2">Join Woven Wonder Creation</h2>
           <p className="text-gray-500 text-sm tracking-wide">Create an account for exclusive access.</p>
         </div>
         

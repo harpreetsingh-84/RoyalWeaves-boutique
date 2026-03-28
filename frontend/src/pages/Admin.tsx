@@ -638,7 +638,7 @@ const Admin = () => {
           <form onSubmit={handleUpdateCredentials} className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
             <div className="md:col-span-2">
               <label className="block text-gray-700 text-xs font-bold tracking-widest uppercase mb-2">New Email Address (Optional)</label>
-              <input type="email" placeholder="newadmin@royalweaves.com" className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:border-accent" value={adminEmail} onChange={e => setAdminEmail(e.target.value)} />
+              <input type="email" placeholder="newadmin@wovenwonder.com" className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:border-accent" value={adminEmail} onChange={e => setAdminEmail(e.target.value)} />
             </div>
             
             <div>
