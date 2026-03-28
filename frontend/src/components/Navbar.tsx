@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { apiService } from '../services/api';
 
 const Navbar = () => {
-  const { cart, isAdmin, isAuthenticated, setIsAdmin, setIsAuthenticated, currency, setCurrency } = useShop();
+  const { cart, isAdmin, isAuthenticated, setIsAdmin, setIsAuthenticated } = useShop();
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -50,19 +50,6 @@ const Navbar = () => {
         
         {/* Desktop Menu */}
         <ul className={`hidden md:flex gap-6 md:gap-8 items-center ${textClass}`}>
-          <li>
-            <select
-              value={currency}
-              onChange={(e) => setCurrency(e.target.value)}
-              className="bg-transparent text-xs font-semibold tracking-wider outline-none cursor-pointer uppercase transition-colors hover:text-accent opacity-90"
-            >
-              <option value="USD" className="text-gray-900">USD</option>
-              <option value="EUR" className="text-gray-900">EUR</option>
-              <option value="GBP" className="text-gray-900">GBP</option>
-              <option value="INR" className="text-gray-900">INR</option>
-            </select>
-          </li>
-
           {isAuthenticated && (
             <>
               <li>
@@ -144,20 +131,6 @@ const Navbar = () => {
       {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
         <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-xl border-t border-gray-100 py-4 px-6 flex flex-col gap-4 text-gray-900 z-40">
-          <div className="flex justify-between items-center pb-3 border-b border-gray-50">
-            <span className="text-xs font-bold tracking-widest uppercase text-gray-500">Currency</span>
-            <select
-              value={currency}
-              onChange={(e) => setCurrency(e.target.value)}
-              className="bg-gray-50 px-3 py-1 rounded-sm text-sm font-semibold tracking-wider outline-none cursor-pointer uppercase text-gray-900 border border-gray-200"
-            >
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="GBP">GBP</option>
-              <option value="INR">INR</option>
-            </select>
-          </div>
-
           {isAuthenticated ? (
             <div className="flex flex-col gap-2">
               <Link to="/collection" onClick={closeMenu} className="font-medium hover:bg-gray-50 transition-colors tracking-wide text-sm uppercase py-3 border-b border-gray-50">Collection</Link>

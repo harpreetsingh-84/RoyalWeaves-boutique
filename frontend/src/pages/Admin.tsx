@@ -195,12 +195,9 @@ const Admin = () => {
     e.preventDefault();
     setIsAdding(true);
     try {
-      // Convert INR input to USD base currency immediately before API submission (Rate: 83)
-      const priceInUSD = Number(formData.price) / 83.0;
-      
       const payload = {
         ...formData,
-        price: priceInUSD,
+        price: Number(formData.price),
         gallery: formData.galleryUrls.split(',').map(url => url.trim()).filter(url => url)
       };
 
@@ -226,7 +223,7 @@ const Admin = () => {
     setFormData({
       name: product.name,
       description: product.description,
-      price: Math.round(product.price * 83).toString(), // Convert back to INR for the form
+      price: product.price.toString(),
       image: product.image,
       category: product.category,
       galleryUrls: Array.isArray(product.gallery) ? product.gallery.join(', ') : '',
