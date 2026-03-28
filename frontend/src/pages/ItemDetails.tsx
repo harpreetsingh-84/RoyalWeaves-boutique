@@ -237,17 +237,6 @@ const ItemDetails = () => {
                       <span className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900 scale-x-100 origin-left transition-transform duration-300"></span>
                     )}
                   </button>
-                  <button 
-                    onClick={() => setActiveTab('details')} 
-                    className={`pb-4 text-[11px] font-bold uppercase tracking-[0.15em] transition-all duration-300 relative ${
-                      activeTab === 'details' ? 'text-gray-900' : 'text-gray-400 hover:text-gray-600'
-                    }`}
-                  >
-                    Specifications
-                    {activeTab === 'details' && (
-                      <span className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900 scale-x-100 origin-left transition-transform duration-300"></span>
-                    )}
-                  </button>
                 </div>
                 
                 <div className="min-h-[120px]">
@@ -256,31 +245,6 @@ const ItemDetails = () => {
                       <p className="text-gray-600 leading-relaxed font-light text-[15px]">
                         {product.description}
                       </p>
-                    </div>
-                  )}
-                  {activeTab === 'details' && (
-                    <div className="animate-in fade-in duration-700">
-                      <ul className="space-y-4 text-sm text-gray-600 font-light">
-                        <li className="flex items-center justify-between border-b border-gray-100 pb-3">
-                          <span className="text-gray-400 tracking-wider text-xs uppercase">Origin</span> 
-                          <span className="text-gray-900">Imported Quality</span>
-                        </li>
-                        <li className="flex items-center justify-between border-b border-gray-100 pb-3">
-                          <span className="text-gray-400 tracking-wider text-xs uppercase">Care Info</span> 
-                          <span className="text-gray-900">Dry Clean Only</span>
-                        </li>
-                        <li className="flex items-center justify-between border-b border-gray-100 pb-3">
-                          <span className="text-gray-400 tracking-wider text-xs uppercase">Authenticity</span> 
-                          <span className="text-gray-900 flex items-center gap-2">
-                             <svg className="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                             100% Guaranteed
-                          </span>
-                        </li>
-                        <li className="flex items-center justify-between pb-3">
-                          <span className="text-gray-400 tracking-wider text-xs uppercase">Product Code</span> 
-                          <span className="text-gray-900 font-mono text-xs bg-gray-100 px-2 py-1 rounded">{product._id.substring(0,8).toUpperCase()}</span>
-                        </li>
-                      </ul>
                     </div>
                   )}
                 </div>
