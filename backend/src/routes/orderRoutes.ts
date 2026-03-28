@@ -8,7 +8,7 @@ const router = express.Router();
 // Create order (Authenticated User)
 router.post('/', verifyToken, async (req: AuthRequest, res: any): Promise<any> => {
   try {
-    const { items, totalAmount } = req.body;
+    const { items, totalAmount, shippingDetails } = req.body;
     if (!items || items.length === 0) {
       return res.status(400).json({ message: 'Cart is empty' });
     }
@@ -27,7 +27,8 @@ router.post('/', verifyToken, async (req: AuthRequest, res: any): Promise<any> =
     const order = new Order({
       user: req.user.id,
       items,
-      totalAmount
+      totalAmount,
+      shippingDetails
     });
     
     await order.save();

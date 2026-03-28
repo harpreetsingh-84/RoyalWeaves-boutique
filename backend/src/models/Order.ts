@@ -11,6 +11,14 @@ const orderSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   items: [orderItemSchema],
   totalAmount: { type: Number, required: true },
+  shippingDetails: {
+    name: { type: String, required: true },
+    phone: { type: String, required: true },
+    address: { type: String, required: true },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    pincode: { type: String, required: true }
+  },
   status: { type: String, default: 'Paid' },
   createdAt: { type: Date, default: Date.now }
 });
