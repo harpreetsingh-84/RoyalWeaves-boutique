@@ -446,6 +446,76 @@ const Admin = () => {
           )}
         </div>
 
+        {/* Orders Table */}
+        <div className="bg-white p-4 sm:p-8 rounded-lg shadow-sm overflow-x-auto mt-8">
+          <h2 className="text-xl font-bold mb-6">Incoming Orders</h2>
+          {orders.length === 0 ? (
+            <p className="text-gray-500 text-center py-8">No orders yet.</p>
+          ) : (
+            <table className="w-full text-left border-collapse min-w-[800px]">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-200">
+                  <th className="py-4 px-4 font-semibold text-gray-600">Date/ID</th>
+                  <th className="py-4 px-4 font-semibold text-gray-600">Customer</th>
+                  <th className="py-4 px-4 font-semibold text-gray-600">Shipping Details</th>
+                  <th className="py-4 px-4 font-semibold text-gray-600">Items</th>
+                  <th className="py-4 px-4 font-semibold text-gray-600">Total</th>
+                  <th className="py-4 px-4 font-semibold text-gray-600">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map((order: any) => (
+                  <tr key={order._id} className="border-b border-gray-100 align-top hover:bg-gray-50/50 transition-colors">
+                    <td className="py-4 px-4 text-sm">
+                      <div className="font-medium">{new Date(order.createdAt).toLocaleDateString()}</div>
+                      <div className="text-xs text-gray-400 mt-1">{order._id.substring(order._id.length - 6).toUpperCase()}</div>
+                    </td>
+                    <td className="py-4 px-4">
+                      {order.user ? (
+                        <>
+                          <div className="font-medium">{order.user.name}</div>
+                          <div className="text-xs text-gray-500">{order.user.email}</div>
+                        </>
+                      ) : (
+                        <span className="text-gray-400 italic">Guest</span>
+                      )}
+                    </td>
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      {order.shippingDetails ? (
+                        <>
+                          <div className="font-medium text-gray-800">{order.shippingDetails.name}</div>
+                          <div>{order.shippingDetails.phone}</div>
+                          <div className="mt-1">{order.shippingDetails.address}</div>
+                          <div>{order.shippingDetails.city}, {order.shippingDetails.state} - {order.shippingDetails.pincode}</div>
+                        </>
+                      ) : (
+                        <span className="text-gray-400 italic">Not Provided</span>
+                      )}
+                    </td>
+                    <td className="py-4 px-4 text-sm">
+                      <ul className="list-disc pl-4 space-y-1 text-gray-700">
+                        {order.items.map((item: any) => (
+                          <li key={item._id}>
+                            <span className="font-medium">{item.quantity}x</span> {item.name}
+                          </li>
+                        ))}
+                      </ul>
+                    </td>
+                    <td className="py-4 px-4 font-medium text-accent">
+                      {formatPrice(order.totalAmount)}
+                    </td>
+                    <td className="py-4 px-4">
+                      <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-bold tracking-wide uppercase">
+                        {order.status || 'Paid'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+
         {/* CMS: Manage Website Content */}
         {siteContent && (
           <div className="bg-white p-4 sm:p-8 rounded-lg shadow-sm border border-gray-100 overflow-hidden">
