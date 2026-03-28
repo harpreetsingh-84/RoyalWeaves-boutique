@@ -1,40 +1,15 @@
 import { useShop } from '../context/ShopContext';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { apiService } from '../services/api';
 
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity, formatPrice } = useShop();
   const navigate = useNavigate();
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const totalAmount = cart.reduce((total, item) => total + (item.product.price * item.quantity), 0);
 
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
     if (cart.length === 0) return;
-    setIsCheckingOut(true);
-    try {
-      const res = await apiService.createOrder({
-        items: cart.map(item => ({
-          product: item.product._id,
-          name: item.product.name,
-          price: item.product.price,
-          quantity: item.quantity
-        })),
-        totalAmount
-      });
-      if (res.ok) {
-        alert('Order placed successfully! Thank you for your purchase.');
-        navigate('/');
-        window.location.reload();
-      } else {
-        alert('Failed to place order.');
-      }
-    } catch (error) {
-      alert('Network error during checkout.');
-    } finally {
-      setIsCheckingOut(false);
-    }
+    navigate('/checkout');
   };
 
   if (cart.length === 0) {
@@ -103,10 +78,9 @@ const Cart = () => {
           </div>
           <button 
             onClick={handleCheckout} 
-            disabled={isCheckingOut}
-            className={`btn-primary w-full py-4 text-lg ${isCheckingOut ? 'opacity-70 cursor-not-allowed' : ''}`}
+            className="btn-primary w-full py-4 text-lg"
           >
-            {isCheckingOut ? 'Processing...' : 'Proceed to Checkout'}
+            Proceed to Checkout
           </button>
         </div>
       </div>
