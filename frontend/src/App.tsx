@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import OrderDetails from './pages/OrderDetails';
 import AdminOrderDetails from './pages/AdminOrderDetails';
+import MyOrders from './pages/MyOrders';
 import ProtectedRoute from './components/ProtectedRoute';
 import GlobalLoader from './components/GlobalLoader';
 
@@ -31,6 +32,7 @@ function App() {
             <Route path="/item/:id" element={<ProtectedRoute><ItemDetails /></ProtectedRoute>} />
             <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
             <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+            <Route path="/myorders" element={<ProtectedRoute><MyOrders /></ProtectedRoute>} />
             <Route path="/order/:id" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
             <Route path="/admin/order/:id" element={<ProtectedRoute><AdminOrderDetails /></ProtectedRoute>} />

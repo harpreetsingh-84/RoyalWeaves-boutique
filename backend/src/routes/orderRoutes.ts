@@ -55,6 +55,18 @@ router.get('/', verifyToken, requireAdmin, async (req, res) => {
     res.status(500).json({ message: 'Error fetching orders' });
   }
 });
+// Get logged in user orders
+router.get('/myorders', verifyToken, async (req: AuthRequest, res: any): Promise<any> => {
+  try {
+    const orders = await Order.find({ user: req.user.id })
+      .populate('items.product', 'name image price')
+      .sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (error) {
+    console.error("Error fetching user orders:", error);
+    res.status(500).json({ message: 'Error fetching your orders' });
+  }
+});
 
 // Get single order by ID (Authenticated User)
 router.get('/:id', verifyToken, async (req: AuthRequest, res: any): Promise<any> => {

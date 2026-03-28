@@ -63,6 +63,10 @@ const Navbar = () => {
               )}
               
               <li>
+                <Link to="/myorders" className="font-medium hover:text-accent transition-colors tracking-wide text-sm uppercase">My Orders</Link>
+              </li>
+
+              <li>
                 <Link to="/cart" className="flex items-center gap-2 font-medium hover:text-accent transition-colors tracking-wide text-sm uppercase">
                   Cart
                   {cartCount > 0 && (
@@ -137,6 +141,7 @@ const Navbar = () => {
               {isAdmin && (
                 <Link to="/admin" onClick={closeMenu} className="font-medium hover:bg-gray-50 transition-colors tracking-wide text-sm uppercase py-3 border-b border-gray-50">Admin Panel</Link>
               )}
+              <Link to="/myorders" onClick={closeMenu} className="font-medium hover:text-accent transition-colors tracking-wide text-sm uppercase py-3 border-b border-gray-50">My Orders</Link>
               <Link to="/cart" onClick={closeMenu} className="flex items-center justify-between font-medium hover:text-accent transition-colors tracking-wide text-sm uppercase pt-3 border-b border-gray-50 pb-3">
                 Cart
                 {cartCount > 0 && (
