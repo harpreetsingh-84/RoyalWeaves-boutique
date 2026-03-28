@@ -83,55 +83,75 @@ router.get('/test-cloudinary', async (req: any, res: any) => {
   }
 });
 
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'boutique-products',
-  } as any,
-});
+// Use memory storage for direct Cloudinary upload_stream handling (more reliable than CloudinaryStorage for arrays)
+const storage = multer.memoryStorage();
 
 const upload = multer({ 
   storage,
   limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
 });
 
+// Helper for direct buffer stream upload
+const streamUpload = (buffer: Buffer): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    let stream = cloudinary.uploader.upload_stream(
+      { folder: 'boutique-products' },
+      (error, result) => {
+        if (result) {
+          resolve(result);
+        } else {
+          reject(error);
+        }
+      }
+    );
+    stream.end(buffer);
+  });
+};
+
 // POST a single image
-router.post('/', verifyToken, requireAdmin, (req: any, res: any) => {
-  upload.single('image')(req, res, (err: any) => {
-    if (err) {
-      console.error("Cloudinary single upload error:", err);
-      return res.status(400).json({ 
-        message: err.message || 'Upload failed',
-        error: process.env.NODE_ENV === 'development' ? err : undefined 
-      });
-    }
+router.post('/', verifyToken, requireAdmin, upload.single('image'), async (req: any, res: any) => {
+  try {
     if (!req.file) {
       console.error("No file in request");
       return res.status(400).json({ message: 'No file received' });
     }
     
-    res.json({ url: req.file.path });
-  });
+    // Upload buffer directly to Cloudinary
+    const result = await streamUpload(req.file.buffer);
+    res.json({ url: result.secure_url });
+
+  } catch (err: any) {
+    console.error("Cloudinary single upload error:", err);
+    res.status(400).json({ 
+      message: err.message || 'Upload failed',
+      error: process.env.NODE_ENV === 'development' ? err : undefined 
+    });
+  }
 });
 
 // POST multiple images
-router.post('/multiple', verifyToken, requireAdmin, (req: any, res: any) => {
-  upload.array('images', 8)(req, res, (err: any) => {
-    if (err) {
-      console.error("Cloudinary multi-upload error:", err);
-      return res.status(400).json({ 
-        message: err.message || 'Gallery upload failed',
-        error: process.env.NODE_ENV === 'development' ? err : undefined 
-      });
-    }
+router.post('/multiple', verifyToken, requireAdmin, upload.array('images', 8), async (req: any, res: any) => {
+  try {
     if (!req.files || req.files.length === 0) {
       console.error("No files in multi-upload request");
       return res.status(400).json({ message: 'No files received' });
     }
     
-    const urls = (req.files as any[]).map(file => file.path);
+    // Concurrently upload all buffers to Cloudinary
+    const uploadPromises = (req.files as any[]).map(file => streamUpload(file.buffer));
+    const results = await Promise.all(uploadPromises);
+    
+    // Extract secure URLs
+    const urls = results.map(result => result.secure_url);
     res.json({ urls });
-  });
+
+  } catch (err: any) {
+    console.error("Cloudinary multi-upload error:", err);
+    res.status(500).json({ 
+      message: err.message || 'Gallery upload failed. Is a file too large?',
+      error: process.env.NODE_ENV === 'development' ? err : undefined 
+    });
+  }
 });
 
 export default router;
