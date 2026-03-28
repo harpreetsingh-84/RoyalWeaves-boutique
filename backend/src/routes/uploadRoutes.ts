@@ -1,7 +1,6 @@
 import express from 'express';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import { verifyToken, requireAdmin } from '../middleware/authMiddleware';
 import dotenv from 'dotenv';
 
@@ -24,64 +23,6 @@ if (CLOUD_URL) {
     api_secret: API_SECRET
   });
 }
-
-// PUBLIC test route to verify reachability
-router.get('/public-test', (req, res) => {
-  res.json({ 
-    message: "Upload routes are reachable!",
-    envKeys: Object.keys(process.env).filter(key => key.includes('CLOUDINARY')),
-    cloudinaryConfigURL: process.env.CLOUDINARY_URL,
-    parsedConfig: cloudinary.config()
-  });
-});
-
-// Debug signature generation
-router.get('/debug-signature', (req, res) => {
-  const timestamp = Math.round((new Date).getTime() / 1000);
-  const api_secret = cloudinary.config().api_secret;
-  
-  if (!api_secret) {
-     return res.status(400).json({ error: "No API secret found in Cloudinary config" });
-  }
-
-  const paramsToSign = {
-    folder: 'boutique-products',
-    timestamp: timestamp
-  };
-
-  const expectedSignature = cloudinary.utils.api_sign_request(paramsToSign, api_secret);
-  
-  res.json({
-    paramsSigned: paramsToSign,
-    api_secret_used: `starts with ${api_secret.substring(0, 3)}... ends with ${api_secret.substring(api_secret.length - 3)}`,
-    expectedSignature: expectedSignature,
-    timestamp: timestamp
-  });
-});
-
-// Test route to verify Cloudinary connection (temporarily removed auth for debug)
-router.get('/test-cloudinary', async (req: any, res: any) => {
-  try {
-    const result = await cloudinary.api.ping();
-    res.json({ 
-      status: 'success', 
-      message: 'Cloudinary is connected!', 
-      ping: result,
-      config: {
-        cloud_name: cloudinary.config().cloud_name,
-        api_key: cloudinary.config().api_key,
-        hasSecret: !!cloudinary.config().api_secret
-      }
-    });
-  } catch (error: any) {
-    console.error("Cloudinary connection test failed:", error);
-    res.status(500).json({ 
-      status: 'error', 
-      message: error.message,
-      error: error
-    });
-  }
-});
 
 // Use memory storage for direct Cloudinary upload_stream handling (more reliable than CloudinaryStorage for arrays)
 const storage = multer.memoryStorage();
