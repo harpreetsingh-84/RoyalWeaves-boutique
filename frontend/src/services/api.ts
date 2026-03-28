@@ -63,9 +63,9 @@ export const apiService = {
   getOrders: () => fetch(`${BASE_URL}/api/orders`, { credentials: 'include' }),
   getMyOrders: () => fetch(`${BASE_URL}/api/orders/myorders`, { credentials: 'include' }),
   getOrderById: (id: string) => fetch(`${BASE_URL}/api/orders/${id}`, { credentials: 'include' }),
-  updateOrderStatus: (id: string, status: string) => apiFetch(`/api/orders/${id}/status`, {
+  updateOrderStatus: (id: string, statuses: {status?: string, paymentStatus?: string, orderStatus?: string}) => apiFetch(`/api/orders/${id}/status`, {
     method: 'PUT',
-    body: JSON.stringify({ status }),
+    body: JSON.stringify(statuses),
     credentials: 'include'
   }),
   createOrder: (data: any) => apiFetch('/api/orders', {

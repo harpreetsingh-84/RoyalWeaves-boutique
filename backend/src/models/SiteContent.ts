@@ -14,7 +14,9 @@ const categorySchema = new mongoose.Schema({
 
 const siteContentSchema = new mongoose.Schema({
   heroSlides: [slideSchema],
-  featuredCategories: [categorySchema]
+  featuredCategories: [categorySchema],
+  upiId: { type: String, default: '8824656153@axl' },
+  upiQrCode: { type: String, default: '' }
 }, { timestamps: true });
 
 const SiteContent = mongoose.model('SiteContent', siteContentSchema);

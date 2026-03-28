@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useShop } from '../context/ShopContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { apiService } from '../services/api';
@@ -18,7 +18,30 @@ const Checkout = () => {
     saveAddress: false,
   });
 
+  const [transactionId, setTransactionId] = useState('');
+  const [screenshotFile, setScreenshotFile] = useState<File | null>(null);
+  const [upiConfig, setUpiConfig] = useState<{upiId: string, upiQrCode: string} | null>(null);
+  
   const totalAmount = cart.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const res = await apiService.getContent();
+        if (res.ok) {
+          const data = await res.json();
+          setUpiConfig({
+            upiId: data.upiId || '8824656153@axl',
+            upiQrCode: data.upiQrCode || ''
+          });
+        }
+      } catch (err) {
+        console.error("Failed to load UPI config", err);
+        setUpiConfig({ upiId: '8824656153@axl', upiQrCode: '' });
+      }
+    };
+    fetchContent();
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -34,12 +57,29 @@ const Checkout = () => {
 
     // Basic Validation
     if (!formData.name || !formData.phone || !formData.address || !formData.city || !formData.state || !formData.pincode) {
-      alert('Please fill out all required fields.');
+      alert('Please fill out all delivery fields.');
+      return;
+    }
+    
+    if (!transactionId || transactionId.trim().length < 10) {
+      alert('Missing or invalid Transaction ID (UTR). Please enter a valid 12-digit UTR from your UPI app.');
       return;
     }
 
     setIsPlacingOrder(true);
     try {
+      let uploadedScreenshotUrl = '';
+      
+      if (screenshotFile) {
+        const uploadData = new FormData();
+        uploadData.append('image', screenshotFile);
+        const uploadRes = await apiService.upload(uploadData);
+        if (uploadRes.ok) {
+          const ud = await uploadRes.json();
+          uploadedScreenshotUrl = ud.url;
+        }
+      }
+
       const res = await apiService.createOrder({
         items: cart.map(item => ({
           product: item.product._id,
@@ -55,21 +95,26 @@ const Checkout = () => {
           city: formData.city,
           state: formData.state,
           pincode: formData.pincode
-        }
+        },
+        transactionId: transactionId.trim(),
+        paymentScreenshot: uploadedScreenshotUrl
       });
       
       if (res.ok) {
-        alert('Order placed successfully! Thank you for your purchase.');
+        const orderData = await res.json();
         localStorage.removeItem('wovenwonder_cart');
-        navigate('/');
+        // Redirect to live order status pinging page
+        navigate(`/admin/order/${orderData._id}`); // wait, we must create a consumer view. For now, /admin/order/ checks auth. Wait! Normal users can't view /admin/order/. We need a general order status route. We'll use /order/:id or similar.
+        navigate(`/order/${orderData._id}`); 
         window.location.reload(); 
       } else {
-        alert('Failed to place order. Please try again.');
+        const err = await res.json();
+        alert(err.message || 'Failed to place order. Please try again.');
+        setIsPlacingOrder(false);
       }
     } catch (error) {
       console.error("Checkout error:", error);
       alert('Network error during checkout.');
-    } finally {
       setIsPlacingOrder(false);
     }
   };
@@ -84,15 +129,16 @@ const Checkout = () => {
     );
   }
 
+  const isButtonDisabled = isPlacingOrder || !transactionId || transactionId.trim().length < 10;
+
   return (
     <div className="p-8 max-w-6xl mx-auto fade-in">
       <h1 className="text-4xl font-bold mb-10 pb-4 border-b border-gray-200">Checkout</h1>
       
       <div className="flex flex-col lg:flex-row gap-12">
-        {/* Shipping Form */}
         <div className="lg:w-2/3">
-          <h2 className="text-2xl font-bold mb-6">Delivery Details</h2>
-          <form id="checkout-form" onSubmit={handlePlaceOrder} className="bg-white p-8 rounded-lg shadow-sm space-y-6">
+          <h2 className="text-2xl font-bold mb-6">1. Delivery Details</h2>
+          <form id="checkout-form" onSubmit={handlePlaceOrder} className="bg-white p-8 rounded-lg shadow-sm space-y-6 mb-10">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
@@ -171,26 +217,72 @@ const Checkout = () => {
                 />
               </div>
             </div>
-
-            <div className="flex items-center gap-3 pt-4">
-              <input
-                type="checkbox"
-                id="saveAddress"
-                name="saveAddress"
-                checked={formData.saveAddress}
-                onChange={handleInputChange}
-                className="w-4 h-4 text-accent border-gray-300 rounded focus:ring-accent"
-              />
-              <label htmlFor="saveAddress" className="text-sm text-gray-600">
-                Save this address for future purchases (Optional)
-              </label>
-            </div>
           </form>
+
+          {/* Manual UPI Payment Section */}
+          <h2 className="text-2xl font-bold mb-6">2. Payment (UPI)</h2>
+          <div className="bg-white p-8 rounded-lg shadow-sm space-y-6 border border-gray-200 relative overflow-hidden">
+            {!upiConfig && (
+               <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-10 backdrop-blur-sm">
+                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+               </div>
+            )}
+            
+            <div className="flex flex-col sm:flex-row gap-8 items-start">
+              {/* QR Code Display */}
+              <div className="w-full sm:w-1/3 flex flex-col items-center justify-center bg-gray-50 p-4 border rounded-xl">
+                 {upiConfig?.upiQrCode ? (
+                   <img src={upiConfig.upiQrCode} alt="UPI QR Code" className="w-full max-w-[200px] h-auto object-contain mb-3 drop-shadow-sm mix-blend-multiply" />
+                 ) : (
+                   <div className="w-[180px] h-[180px] bg-white border-2 border-dashed border-gray-300 flex items-center justify-center mb-3">
+                     <span className="text-gray-400 text-sm">Scan to Pay</span>
+                   </div>
+                 )}
+                 <p className="text-xs font-bold text-gray-500 tracking-wider">UPI ID</p>
+                 <p className="font-mono font-bold text-gray-900 bg-gray-200 px-3 py-1 rounded text-sm mt-1 select-all">{upiConfig?.upiId || 'Pending...'}</p>
+                 <span className="text-xs font-semibold text-purple-700 mt-2 tracking-wide uppercase">Accepted Here</span>
+              </div>
+              
+              {/* Payment Verification Form */}
+              <div className="w-full sm:w-2/3 space-y-5">
+                 <div className="bg-blue-50 text-blue-800 p-4 rounded-lg text-sm mb-4 border border-blue-100">
+                   <strong>Secure Payment Step:</strong> Open your UPI app (GPay, PhonePe, Paytm), scan the QR code to the left or copy the UPI ID, and pay exactly <strong>{formatPrice(totalAmount)}</strong>. Enter the 12-digit UTR Transaction ID below after paying.
+                 </div>
+
+                 <div>
+                  <label className="block text-sm font-bold text-gray-900 mb-2">Transaction ID (UTR) <span className="text-red-500">*</span></label>
+                  <input
+                    type="text"
+                    required
+                    form="checkout-form"
+                    disabled={isPlacingOrder}
+                    value={transactionId}
+                    onChange={(e) => setTransactionId(e.target.value)}
+                    className="w-full px-4 py-3 bg-white border border-gray-300 text-gray-900 font-mono tracking-wider rounded-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent uppercase"
+                    placeholder="e.g. 312345678901"
+                    maxLength={20}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Found in your UPI app's payment history (usually 12 digits).</p>
+                 </div>
+
+                 <div>
+                  <label className="block text-sm font-bold text-gray-900 mb-2">Payment Screenshot (Optional)</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    disabled={isPlacingOrder}
+                    onChange={(e) => setScreenshotFile(e.target.files?.[0] || null)}
+                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 transition-colors"
+                  />
+                 </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Order Summary Sidebar */}
         <div className="lg:w-1/3">
-          <div className="bg-white p-8 rounded-lg shadow-md sticky top-32">
+          <div className="bg-white p-8 rounded-lg shadow-md sticky top-32 border border-gray-100">
             <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
             
             <div className="space-y-4 mb-6 max-h-64 overflow-y-auto pr-2">
@@ -202,7 +294,7 @@ const Checkout = () => {
                       {item.product.name}
                     </span>
                   </div>
-                  <span className="text-gray-700">{formatPrice(item.product.price * item.quantity)}</span>
+                  <span className="text-gray-700 font-medium">{formatPrice(item.product.price * item.quantity)}</span>
                 </div>
               ))}
             </div>
@@ -216,26 +308,27 @@ const Checkout = () => {
               <span className="text-green-600 font-medium">Free</span>
             </div>
             
-            <div className="flex justify-between mt-6 pt-6 border-t border-gray-200 text-xl font-bold mb-8">
-              <span>Total</span>
-              <span>{formatPrice(totalAmount)}</span>
+            <div className="flex justify-between mt-6 pt-6 border-t border-gray-200 text-2xl font-black text-gray-900 mb-8 bg-gray-50 -mx-8 px-8 pb-4">
+              <span>Total Pay</span>
+              <span className="text-green-700">{formatPrice(totalAmount)}</span>
             </div>
             
             <button 
               type="submit"
               form="checkout-form"
-              disabled={isPlacingOrder}
-              className={`btn-primary w-full py-4 text-lg flex items-center justify-center gap-2 ${isPlacingOrder ? 'opacity-70 cursor-not-allowed' : ''}`}
+              disabled={isButtonDisabled}
+              className={`btn-primary w-full py-4 text-lg font-bold flex items-center justify-center gap-3 transition-all duration-300
+                ${isButtonDisabled ? 'opacity-50 bg-gray-400 cursor-not-allowed hover:bg-gray-400' : 'bg-green-600 hover:bg-green-700 shadow-xl shadow-green-600/20'}`}
             >
               {isPlacingOrder ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Processing...
+                  <div className="w-5 h-5 border-2 border-white border-b-transparent rounded-full animate-spin"></div>
+                  Verifying your payment...
                 </>
-              ) : 'Place Order'}
+              ) : 'I have paid'}
             </button>
-            <p className="text-xs text-center text-gray-400 mt-4 px-4">
-              By placing your order, you agree to our Terms of Service and Privacy Policy. Checkouts are simulated without payment currently.
+            <p className="text-xs text-center text-gray-400 font-medium mt-4">
+              Your order will be confirmed after your payment is verified by our team (usually within 10-30 minutes).
             </p>
           </div>
         </div>

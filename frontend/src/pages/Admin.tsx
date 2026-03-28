@@ -281,6 +281,25 @@ const Admin = () => {
     setSiteContent(updated);
   };
 
+  const uploadUpiQr = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const uploadData = new FormData();
+    uploadData.append('image', file);
+    setUploading(true);
+    try {
+      const res = await apiService.upload(uploadData);
+      if (res.ok) {
+        const data = await res.json();
+        setSiteContent({...siteContent, upiQrCode: data.url});
+      }
+    } catch (err) {
+      alert('Upload failed');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-col justify-center items-center min-h-[60vh] gap-4 fade-in">
@@ -446,81 +465,7 @@ const Admin = () => {
           )}
         </div>
 
-        {/* Orders Table */}
-        <div className="bg-white p-4 sm:p-8 rounded-lg shadow-sm overflow-x-auto mt-8">
-          <h2 className="text-xl font-bold mb-6">Incoming Orders</h2>
-          {orders.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">No orders yet.</p>
-          ) : (
-            <table className="w-full text-left border-collapse min-w-[800px]">
-              <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="py-4 px-4 font-semibold text-gray-600">Date/ID</th>
-                  <th className="py-4 px-4 font-semibold text-gray-600">Customer</th>
-                  <th className="py-4 px-4 font-semibold text-gray-600">Shipping Details</th>
-                  <th className="py-4 px-4 font-semibold text-gray-600">Items</th>
-                  <th className="py-4 px-4 font-semibold text-gray-600">Total</th>
-                  <th className="py-4 px-4 font-semibold text-gray-600">Status</th>
-                  <th className="py-4 px-4 font-semibold text-gray-600">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orders.map((order: any) => (
-                  <tr key={order._id} className="border-b border-gray-100 align-top hover:bg-gray-50/50 transition-colors">
-                    <td className="py-4 px-4 text-sm">
-                      <div className="font-medium">{new Date(order.createdAt).toLocaleDateString()}</div>
-                      <div className="text-xs text-gray-400 mt-1">{order._id.substring(order._id.length - 6).toUpperCase()}</div>
-                    </td>
-                    <td className="py-4 px-4">
-                      {order.user ? (
-                        <>
-                          <div className="font-medium">{order.user.name}</div>
-                          <div className="text-xs text-gray-500">{order.user.email}</div>
-                        </>
-                      ) : (
-                        <span className="text-gray-400 italic">Guest</span>
-                      )}
-                    </td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
-                      {order.shippingDetails ? (
-                        <>
-                          <div className="font-medium text-gray-800">{order.shippingDetails.name}</div>
-                          <div>{order.shippingDetails.phone}</div>
-                          <div className="mt-1">{order.shippingDetails.address}</div>
-                          <div>{order.shippingDetails.city}, {order.shippingDetails.state} - {order.shippingDetails.pincode}</div>
-                        </>
-                      ) : (
-                        <span className="text-gray-400 italic">Not Provided</span>
-                      )}
-                    </td>
-                    <td className="py-4 px-4 text-sm">
-                      <ul className="list-disc pl-4 space-y-1 text-gray-700">
-                        {order.items.map((item: any) => (
-                          <li key={item._id}>
-                            <span className="font-medium">{item.quantity}x</span> {item.name}
-                          </li>
-                        ))}
-                      </ul>
-                    </td>
-                    <td className="py-4 px-4 font-medium text-accent">
-                      {formatPrice(order.totalAmount)}
-                    </td>
-                    <td className="py-4 px-4">
-                      <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-bold tracking-wide uppercase">
-                        {order.status || 'Paid'}
-                      </span>
-                    </td>
-                    <td className="py-4 px-4">
-                      <button onClick={() => navigate(`/admin/order/${order._id}`)} className="text-sm font-medium text-accent hover:underline">
-                        View Details
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
+
 
         {/* CMS: Manage Website Content */}
         {siteContent && (
@@ -530,6 +475,27 @@ const Admin = () => {
             
             <form onSubmit={handleUpdateContent} className="flex flex-col gap-10">
               
+              <div className="bg-blue-50 border border-blue-200 p-6 rounded-lg shadow-sm">
+                <h3 className="text-lg font-serif font-bold mb-4 text-blue-900 border-b border-blue-200 pb-2">UPI Payment Configuration</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-bold text-blue-800 uppercase tracking-widest">Store UPI ID</label>
+                    <input type="text" className="w-full text-sm border border-blue-200 p-3 rounded bg-white text-gray-900 font-mono tracking-wider" value={siteContent.upiId || ''} onChange={(e) => setSiteContent({...siteContent, upiId: e.target.value})} placeholder="e.g. 8824656153@axl" />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-bold text-blue-800 uppercase tracking-widest">QR Code Image URL / Upload</label>
+                    <div className="flex gap-2">
+                       <input type="text" className="flex-1 text-sm border border-blue-200 p-3 rounded bg-white" value={siteContent.upiQrCode || ''} onChange={(e) => setSiteContent({...siteContent, upiQrCode: e.target.value})} placeholder="URL or Upload" />
+                       <input type="file" accept="image/*" id="qrUpload" className="hidden" onChange={uploadUpiQr} />
+                       <label htmlFor="qrUpload" className="btn-primary cursor-pointer flex items-center bg-blue-600 hover:bg-blue-700">
+                          {uploading ? '...' : 'Upload'}
+                       </label>
+                    </div>
+                    {siteContent.upiQrCode && <div className="mt-2"><img src={siteContent.upiQrCode} alt="QR Preview" className="h-20 object-contain border bg-white p-1 rounded"/></div>}
+                  </div>
+                </div>
+              </div>
+
               <div>
                 <h3 className="text-lg font-serif font-bold mb-4 text-gray-900 border-b pb-2">Hero Slider Images</h3>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -603,23 +569,32 @@ const Admin = () => {
               <tbody>
                 {orders.map((order: any) => (
                   <tr key={order._id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
-                    <td className="py-4 px-4 text-sm text-gray-500 font-mono">{order._id.substring(order._id.length - 6).toUpperCase()}</td>
-                    <td className="py-4 px-4 font-medium">{order.user?.name || 'Guest'} <br/><span className="text-xs text-gray-400 font-normal">{order.user?.email}</span></td>
-                    <td className="py-4 px-4 text-sm text-gray-600">
+                    <td className="py-2 px-4 text-sm text-gray-500 font-mono flex flex-col items-start gap-1">
+                      {order._id.substring(order._id.length - 6).toUpperCase()}
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest mt-1
+                        ${order.paymentStatus === 'paid' ? 'bg-green-100 text-green-700' : 
+                          order.paymentStatus === 'failed' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700 animate-pulse'}`}>
+                        {order.paymentStatus || 'pending'}
+                      </span>
+                    </td>
+                    <td className="py-2 px-4 font-medium">{order.user?.name || 'Guest'} <br/><span className="text-xs text-gray-400 font-normal">{order.user?.email}</span></td>
+                    <td className="py-2 px-4 text-sm text-gray-600">
                       <ul>
-                        {order.items.map((item: any, idx: number) => (
-                          <li key={idx} className="mb-2 pl-2 border-l-2 border-accent">
-                            <span className="font-bold">{item.quantity}x</span> {item.name} <br/>
-                            <span className="text-emerald-600/70 text-xs">{formatPrice(item.price)} ea</span>
+                        {order.items?.map((item: any, idx: number) => (
+                          <li key={idx} className="mb-1 pl-2 border-l-2 border-accent">
+                            <span className="font-bold">{item.quantity}x</span> {item.name}
                           </li>
                         ))}
                       </ul>
                     </td>
-                    <td className="py-4 px-4 font-bold text-emerald-600">{formatPrice(order.totalAmount)}</td>
-                    <td className="py-4 px-4 text-sm text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</td>
-                    <td className="py-4 px-4">
-                      <button onClick={() => navigate(`/admin/order/${order._id}`)} className="text-sm font-medium text-accent hover:underline">
-                        View Details
+                    <td className="py-2 px-4">
+                       <div className="font-bold text-emerald-600">{formatPrice(order.totalAmount)}</div>
+                       <div className="text-[10px] text-gray-400 font-mono mt-1 break-all uppercase" title="Transaction ID / UTR">{order.transactionId ? order.transactionId : 'N/A'}</div>
+                    </td>
+                    <td className="py-2 px-4 text-sm text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</td>
+                    <td className="py-2 px-4">
+                      <button onClick={() => navigate(`/admin/order/${order._id}`)} className="text-sm font-medium text-white bg-black px-3 py-1.5 rounded hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
+                        Verify & Manage
                       </button>
                     </td>
                   </tr>

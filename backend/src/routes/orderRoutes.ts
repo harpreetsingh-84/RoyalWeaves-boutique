@@ -8,9 +8,12 @@ const router = express.Router();
 // Create order (Authenticated User)
 router.post('/', verifyToken, async (req: AuthRequest, res: any): Promise<any> => {
   try {
-    const { items, totalAmount, shippingDetails } = req.body;
+    const { items, totalAmount, shippingDetails, transactionId, paymentScreenshot } = req.body;
     if (!items || items.length === 0) {
       return res.status(400).json({ message: 'Cart is empty' });
+    }
+    if (!transactionId || transactionId.trim().length < 10) {
+      return res.status(400).json({ message: 'Valid Transaction ID (UTR) is required for UPI payments' });
     }
 
     // 1. Validate Stock
@@ -28,7 +31,12 @@ router.post('/', verifyToken, async (req: AuthRequest, res: any): Promise<any> =
       user: req.user.id,
       items,
       totalAmount,
-      shippingDetails
+      shippingDetails,
+      transactionId,
+      paymentScreenshot,
+      paymentMethod: 'UPI',
+      paymentStatus: 'pending',
+      orderStatus: 'pending'
     });
     
     await order.save();
@@ -92,16 +100,22 @@ router.get('/:id', verifyToken, async (req: AuthRequest, res: any): Promise<any>
 });
 
 // Update order status (Admin only)
-router.put('/:id/status', verifyToken, requireAdmin, async (req, res) => {
+router.put('/:id/status', verifyToken, requireAdmin, async (req: AuthRequest, res: any): Promise<any> => {
   try {
-    const { status } = req.body;
-    if (!status) {
-      return res.status(400).json({ message: 'Status is required' });
+    const { status, paymentStatus, orderStatus } = req.body;
+    
+    const updatePayload: any = {};
+    if (status) updatePayload.status = status; // legacy backwards compatibility
+    if (paymentStatus) updatePayload.paymentStatus = paymentStatus;
+    if (orderStatus) updatePayload.orderStatus = orderStatus;
+
+    if (Object.keys(updatePayload).length === 0) {
+      return res.status(400).json({ message: 'At least one status field is required' });
     }
 
     const order = await Order.findByIdAndUpdate(
       req.params.id,
-      { status },
+      updatePayload,
       { new: true }
     )
       .populate('user', 'name email')

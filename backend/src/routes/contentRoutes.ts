@@ -53,12 +53,14 @@ router.get('/', async (req, res) => {
 // Update content (Admin only)
 router.put('/', verifyToken, requireAdmin, async (req, res) => {
   try {
-    const { heroSlides, featuredCategories } = req.body;
+    const { heroSlides, featuredCategories, upiId, upiQrCode } = req.body;
     let content = await getOrCreateContent();
     
     // Update fields if provided
     if (heroSlides) content.heroSlides = heroSlides;
     if (featuredCategories) content.featuredCategories = featuredCategories;
+    if (upiId !== undefined) content.upiId = upiId;
+    if (upiQrCode !== undefined) content.upiQrCode = upiQrCode;
     
     await content.save();
     res.json({ message: 'Site content updated successfully', content });
