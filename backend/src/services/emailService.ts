@@ -8,10 +8,14 @@ const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
   secure: false, // Use STARTTLS on port 587
+  requireTLS: true,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
 });
 
 // Verify connection configuration
@@ -24,6 +28,14 @@ transporter.verify(function (error, success) {
 });
 
 export const sendOtpEmail = async (to: string, otp: string, roleAction: 'update' | 'add') => {
+  if (!process.env.SMTP_USER || process.env.SMTP_USER === 'your-email@gmail.com') {
+    console.warn('⚠️ SMTP settings are missing or incomplete. Redirecting to console-only mode.');
+    console.log(`\n================================`);
+    console.log(`🔐 OTP Generated for ${to}: ${otp} (No email sent)`);
+    console.log(`================================\n`);
+    return true; // Pretend it succeeded so the OTP logic continues in development
+  }
+
   const subject = roleAction === 'update' 
     ? 'Woven Wonder: Verify Your Admin Email Update'
     : 'Woven Wonder: Grant New Admin Access Request';
