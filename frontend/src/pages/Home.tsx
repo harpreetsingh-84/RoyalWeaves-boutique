@@ -63,16 +63,16 @@ const Home = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/30 z-10 pointer-events-none"></div>
         
         <div className="relative z-20 text-center text-white px-6 mt-16 max-w-4xl">
-          <span className="block text-accent font-medium tracking-widest uppercase text-xs md:text-sm mb-4 animate-in slide-in-from-bottom-4 fade-in duration-700 delay-100 fill-mode-both" key={`sub-${currentSlide}`}>
+          <span className="block text-accent font-medium tracking-widest uppercase text-[10px] md:text-sm mb-4 animate-in slide-in-from-bottom-4 fade-in duration-700 delay-100 fill-mode-both" key={`sub-${currentSlide}`}>
             {content.heroSlides[currentSlide].subtitle}
           </span>
-          <h1 className="text-5xl sm:text-6xl md:text-8xl font-serif mb-6 tracking-wide drop-shadow-2xl font-normal animate-in slide-in-from-bottom-6 fade-in duration-1000 delay-300 fill-mode-both" key={`title-${currentSlide}`}>
+          <h1 className="text-4xl sm:text-5xl md:text-8xl font-serif mb-4 md:mb-6 tracking-wide drop-shadow-2xl font-normal animate-in slide-in-from-bottom-6 fade-in duration-1000 delay-300 fill-mode-both leading-[1.1] md:leading-tight" key={`title-${currentSlide}`}>
             {content.heroSlides[currentSlide].title}
           </h1>
-          <p className="text-lg md:text-xl font-light max-w-2xl mx-auto mb-10 drop-shadow-md text-gray-200 animate-in slide-in-from-bottom-8 fade-in duration-1000 delay-500 fill-mode-both" key={`desc-${currentSlide}`}>
+          <p className="text-sm md:text-xl font-light max-w-2xl mx-auto mb-8 md:mb-10 drop-shadow-md text-gray-200 animate-in slide-in-from-bottom-8 fade-in duration-1000 delay-500 fill-mode-both px-4" key={`desc-${currentSlide}`}>
             {content.heroSlides[currentSlide].description}
           </p>
-          <Link to="/collection" className="inline-block bg-white text-gray-900 font-medium px-10 py-4 hover:bg-accent hover:text-white transition-all duration-300 shadow-2xl tracking-widest uppercase text-sm rounded-sm animate-in zoom-in-95 fade-in duration-700 delay-700 fill-mode-both">
+          <Link to="/collection" className="inline-block bg-white text-gray-900 font-bold px-8 py-3.5 md:px-10 md:py-4 hover:bg-accent hover:text-white transition-all duration-300 shadow-2xl tracking-widest uppercase text-xs md:text-sm rounded-sm animate-in zoom-in-95 fade-in duration-700 delay-700 fill-mode-both">
             Explore Dresses
           </Link>
         </div>
@@ -91,12 +91,12 @@ const Home = () => {
       </div>
 
       {/* Featured Categories */}
-      <div className="max-w-7xl mx-auto px-6 mb-32 fade-in">
-        <div className="flex flex-col items-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-serif text-gray-900 drop-shadow-sm">Shop by Category</h2>
-          <div className="w-16 h-0.5 bg-accent mt-6"></div>
+      <div className="max-w-7xl mx-auto px-6 mb-24 md:mb-32 fade-in">
+        <div className="flex flex-col items-center mb-10 md:mb-12">
+          <h2 className="text-3xl md:text-4xl font-serif text-gray-900 drop-shadow-sm text-center">Shop by Category</h2>
+          <div className="w-16 h-0.5 bg-accent mt-4 md:mt-6"></div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {content.featuredCategories.map((cat: any) => (
             <Link to="/collection" key={cat.name} className="relative group h-96 overflow-hidden bg-gray-100 cursor-pointer shadow-sm hover:shadow-xl transition-shadow duration-500 rounded-sm block">
               <img src={cat.image} alt={cat.name} className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover:scale-110" />

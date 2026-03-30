@@ -157,17 +157,17 @@ const ItemDetails = () => {
               </div>
             </div>
 
-            {/* Thumbnail Navigation (Optional - keeping it clean as requested) */}
+            {/* Thumbnail Navigation (Mobile friendly horizontal swipe) */}
             {allImages.length > 1 && (
-              <div className="flex gap-4 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pb-2">
+              <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pb-2 mt-2 px-1">
                 {allImages.map((img: string, idx: number) => (
                   <button 
                     key={idx}
                     onClick={() => setCurrentIndex(idx)}
-                    className={`relative w-20 h-24 flex-shrink-0 overflow-hidden transition-all duration-500 ${
+                    className={`snap-center relative w-16 h-20 sm:w-20 sm:h-24 flex-shrink-0 overflow-hidden transition-all duration-500 ${
                       currentIndex === idx 
-                        ? 'ring-1 ring-gray-900 ring-offset-2 ring-offset-[#faf9f8] opacity-100' 
-                        : 'opacity-40 hover:opacity-100 grayscale-[0.5] hover:grayscale-0'
+                        ? 'ring-2 ring-gray-900 ring-offset-2 ring-offset-[#faf9f8] opacity-100' 
+                        : 'opacity-40 hover:opacity-100 grayscale hover:grayscale-0'
                     }`}
                   >
                     <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover object-center" />

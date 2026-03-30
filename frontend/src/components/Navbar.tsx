@@ -132,41 +132,56 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
-      {isMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-xl border-t border-gray-100 py-4 px-6 flex flex-col gap-4 text-gray-900 z-40">
+      {/* Mobile Menu Side Drawer Overlay */}
+      <div className={`md:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300 ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeMenu}></div>
+      
+      {/* Mobile Menu Sliding Drawer */}
+      <div className={`md:hidden fixed top-0 right-0 h-screen w-3/4 sm:w-1/2 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} flex flex-col`}>
+         <div className="flex justify-between items-center p-6 border-b border-gray-100">
+            <span className="font-bold text-lg text-gray-900">Menu</span>
+            <button onClick={closeMenu} className="text-gray-500 hover:text-black">
+               ✕
+            </button>
+         </div>
+         
+         <div className="flex-1 overflow-y-auto px-6 py-6 flex flex-col gap-4 text-gray-900">
           {isAuthenticated ? (
             <div className="flex flex-col gap-2">
-              <Link to="/collection" onClick={closeMenu} className="font-medium hover:bg-gray-50 transition-colors tracking-wide text-sm uppercase py-3 border-b border-gray-50">Collection</Link>
+              <Link to="/collection" onClick={closeMenu} className="font-medium hover:bg-gray-50 transition-colors tracking-wide text-sm uppercase py-4 border-b border-gray-100 flex items-center justify-between">Collection <span>→</span></Link>
               {isAdmin && (
-                <Link to="/admin" onClick={closeMenu} className="font-medium hover:bg-gray-50 transition-colors tracking-wide text-sm uppercase py-3 border-b border-gray-50">Admin Panel</Link>
+                <Link to="/admin" onClick={closeMenu} className="font-medium hover:bg-gray-50 transition-colors tracking-wide text-sm uppercase py-4 border-b border-gray-100 flex items-center justify-between">Admin Panel <span>→</span></Link>
               )}
-              <Link to="/myorders" onClick={closeMenu} className="font-medium hover:text-accent transition-colors tracking-wide text-sm uppercase py-3 border-b border-gray-50">My Orders</Link>
-              <Link to="/cart" onClick={closeMenu} className="flex items-center justify-between font-medium hover:text-accent transition-colors tracking-wide text-sm uppercase pt-3 border-b border-gray-50 pb-3">
+              <Link to="/myorders" onClick={closeMenu} className="font-medium hover:text-accent transition-colors tracking-wide text-sm uppercase py-4 border-b border-gray-100 flex items-center justify-between">My Orders <span>→</span></Link>
+              <Link to="/cart" onClick={closeMenu} className="flex items-center justify-between font-medium hover:text-accent transition-colors tracking-wide text-sm uppercase py-4 border-b border-gray-100">
                 Cart
                 {cartCount > 0 && (
-                  <span className="bg-accent text-white text-xs flex items-center justify-center px-2 py-1 font-bold rounded-sm">
-                    {cartCount} Items
+                  <span className="bg-accent text-white text-[10px] flex items-center justify-center h-6 w-6 font-bold rounded-full">
+                    {cartCount}
                   </span>
                 )}
               </Link>
-              <button 
-                onClick={handleLogout}
-                className="mt-4 font-bold tracking-widest text-xs uppercase px-4 py-4 flex items-center justify-center rounded-sm transition-colors border bg-red-50 text-red-600 border-red-100 hover:bg-red-100"
-              >
-                Logout
-              </button>
             </div>
           ) : (
-            <div className="flex flex-col gap-3 mt-2">
-              <Link to="/login" onClick={closeMenu} className="text-center font-bold hover:bg-gray-100 transition-colors tracking-widest text-sm uppercase py-4 bg-gray-50 rounded-sm border border-gray-200">Login</Link>
-              <Link to="/register" onClick={closeMenu} className="text-center font-bold tracking-widest text-sm uppercase px-4 py-4 bg-gray-900 text-white rounded-sm hover:bg-black transition-colors shadow-md">
+            <div className="flex flex-col gap-4 mt-2">
+              <Link to="/login" onClick={closeMenu} className="text-center font-bold hover:bg-gray-100 transition-colors tracking-widest text-sm uppercase py-4 bg-gray-50 rounded border border-gray-200 block">Login</Link>
+              <Link to="/register" onClick={closeMenu} className="text-center font-bold tracking-widest text-sm uppercase px-4 py-4 bg-gray-900 text-white rounded hover:bg-black transition-colors shadow-md block">
                 Register
               </Link>
             </div>
           )}
-        </div>
-      )}
+         </div>
+         
+         {isAuthenticated && (
+            <div className="p-6 border-t border-gray-100">
+              <button 
+                onClick={handleLogout}
+                className="w-full font-bold tracking-widest text-sm uppercase py-4 flex items-center justify-center rounded transition-colors border bg-red-50 text-red-600 border-red-100 hover:bg-red-100"
+              >
+                Logout
+              </button>
+            </div>
+         )}
+      </div>
     </nav>
   );
 };

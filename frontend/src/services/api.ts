@@ -63,6 +63,10 @@ export const apiService = {
     body: JSON.stringify(data),
     credentials: 'include'
   }),
+  deleteCategory: (id: string) => apiFetch(`/api/categories/${id}`, {
+    method: 'DELETE',
+    credentials: 'include'
+  }),
 
   // Orders & Analytics
   getOrders: () => fetch(`${BASE_URL}/api/orders`, { credentials: 'include' }),

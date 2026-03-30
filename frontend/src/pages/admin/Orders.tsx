@@ -64,62 +64,117 @@ const Orders: React.FC = () => {
             <p className="text-gray-500 mb-2">No orders have been placed yet.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left min-w-[800px]">
-              <thead className="bg-gray-50 border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500 font-bold">
-                <tr>
-                  <th className="p-4">Order Info</th>
-                  <th className="p-4">Customer</th>
-                  <th className="p-4">Amount</th>
-                  <th className="p-4">Payment</th>
-                  <th className="p-4">Order Status</th>
-                  <th className="p-4 text-center">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 text-sm">
-                {orders.map((order: any) => (
-                  <tr key={order._id} className="hover:bg-gray-50/50 transition-colors">
-                     <td className="p-4">
-                        <div className="font-mono text-xs text-gray-500 mb-1">
-                          #{order._id.substring(order._id.length - 8).toUpperCase()}
-                        </div>
-                        <div className="text-gray-900 font-medium">
-                          {new Date(order.createdAt).toLocaleDateString()}
-                        </div>
-                        <div className="text-xs text-gray-500 mt-0.5">
-                          {order.items?.length || 0} items
-                        </div>
-                     </td>
-                     <td className="p-4">
-                        <div className="font-medium text-gray-900">{order.user?.name || 'Guest'}</div>
-                        <div className="text-gray-500 text-xs">{order.user?.email || 'N/A'}</div>
-                     </td>
-                     <td className="p-4 font-bold text-emerald-600">
-                        {formatPrice(order.totalAmount)}
-                     </td>
-                     <td className="p-4">
-                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${getStatusColor(order.paymentStatus)}`}>
-                          {order.paymentStatus || 'pending'}
-                        </span>
-                     </td>
-                     <td className="p-4">
-                        {/* New orderStatus field visualization */}
-                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${getStatusColor(order.orderStatus || 'pending')}`}>
-                          {order.orderStatus || 'pending'}
-                        </span>
-                     </td>
-                     <td className="p-4 text-center">
-                        <button 
-                          onClick={() => navigate(`/admin/order/${order._id}`)} 
-                          className="px-4 py-2 bg-gray-900 text-white rounded hover:bg-gray-800 transition text-xs font-semibold shadow-sm"
-                        >
-                          Manage →
-                        </button>
-                     </td>
+          <div>
+            {/* Desktop Table View */}
+            <div className="hidden lg:block overflow-x-auto">
+              <table className="w-full text-left min-w-[800px]">
+                <thead className="bg-gray-50 border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500 font-bold">
+                  <tr>
+                    <th className="p-4">Order Info</th>
+                    <th className="p-4">Customer</th>
+                    <th className="p-4">Amount</th>
+                    <th className="p-4">Payment</th>
+                    <th className="p-4">Order Status</th>
+                    <th className="p-4 text-center">Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-100 text-sm">
+                  {orders.map((order: any) => (
+                    <tr key={order._id} className="hover:bg-gray-50/50 transition-colors">
+                       <td className="p-4">
+                          <div className="font-mono text-xs text-gray-500 mb-1">
+                            #{order._id.substring(order._id.length - 8).toUpperCase()}
+                          </div>
+                          <div className="text-gray-900 font-medium">
+                            {new Date(order.createdAt).toLocaleDateString()}
+                          </div>
+                          <div className="text-xs text-gray-500 mt-0.5">
+                            {order.items?.length || 0} items
+                          </div>
+                       </td>
+                       <td className="p-4">
+                          <div className="font-medium text-gray-900">{order.user?.name || 'Guest'}</div>
+                          <div className="text-gray-500 text-xs">{order.user?.email || 'N/A'}</div>
+                       </td>
+                       <td className="p-4 font-bold text-emerald-600">
+                          {formatPrice(order.totalAmount)}
+                       </td>
+                       <td className="p-4">
+                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${getStatusColor(order.paymentStatus)}`}>
+                            {order.paymentStatus || 'pending'}
+                          </span>
+                       </td>
+                       <td className="p-4">
+                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${getStatusColor(order.orderStatus || 'pending')}`}>
+                            {order.orderStatus || 'pending'}
+                          </span>
+                       </td>
+                       <td className="p-4 text-center">
+                          <button 
+                            onClick={() => navigate(`/admin/order/${order._id}`)} 
+                            className="px-4 py-2 bg-gray-900 text-white rounded hover:bg-gray-800 transition text-xs font-semibold shadow-sm"
+                          >
+                            Manage →
+                          </button>
+                       </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="lg:hidden flex flex-col divide-y divide-gray-100">
+              {orders.map((order: any) => (
+                <div key={order._id} className="p-5 flex flex-col gap-4">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <div className="font-mono text-xs text-gray-500 mb-1">
+                        #{order._id.substring(order._id.length - 8).toUpperCase()}
+                      </div>
+                      <div className="text-gray-900 font-bold">
+                        {new Date(order.createdAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                       <span className={`inline-block px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-1 ${getStatusColor(order.orderStatus || 'pending')}`}>
+                         {order.orderStatus || 'pending'}
+                       </span>
+                       <div className="font-bold text-emerald-600">
+                          {formatPrice(order.totalAmount)}
+                       </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-gray-50 rounded p-3 text-sm">
+                    <div className="flex justify-between mb-1">
+                       <span className="text-gray-500 text-xs font-semibold uppercase tracking-wide">Customer</span>
+                       <span className="font-medium text-gray-900">{order.user?.name || 'Guest'}</span>
+                    </div>
+                    <div className="flex justify-between mb-1">
+                       <span className="text-gray-500 text-xs font-semibold uppercase tracking-wide">Email</span>
+                       <span className="text-gray-600 text-xs">{order.user?.email || 'N/A'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                       <span className="text-gray-500 text-xs font-semibold uppercase tracking-wide">Items</span>
+                       <span className="text-gray-900 text-xs font-medium">{order.items?.length || 0}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between mt-2">
+                    <span className={`px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-widest ${getStatusColor(order.paymentStatus)}`}>
+                      Pay: {order.paymentStatus || 'pending'}
+                    </span>
+                    <button 
+                      onClick={() => navigate(`/admin/order/${order._id}`)} 
+                      className="px-6 py-2 bg-gray-900 text-white rounded hover:bg-black active:scale-95 transition text-xs font-bold uppercase tracking-widest shadow-md"
+                    >
+                      Manage
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

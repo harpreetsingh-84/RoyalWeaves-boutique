@@ -49,11 +49,21 @@ const Categories: React.FC = () => {
     }
   };
 
-  // The backend might not have Delete Category route right now based on api.ts,
-  // but we can prepare the UI.
+  // Delete Category route
   const handleDeleteCategory = async (id: string, name: string) => {
      if(window.confirm(`Are you sure you want to delete ${name}? Important: Make sure no products are using this category before deleting.`)) {
-         console.log(id); // NOTE: Add apiService.deleteCategory(id) if backend supports it.
+         try {
+             const res = await apiService.deleteCategory(id);
+             if (res.ok) {
+                 fetchCategories();
+             } else {
+                 const err = await res.json();
+                 alert(err.message || 'Failed to delete category');
+             }
+         } catch(e) {
+             console.error("Error deleting category", e);
+             alert("Network error deleting category");
+         }
      }
   };
 

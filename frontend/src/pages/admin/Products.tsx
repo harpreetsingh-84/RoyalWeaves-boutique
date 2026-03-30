@@ -237,7 +237,9 @@ const Products: React.FC = () => {
       {/* Product List Grid/Table */}
       {!showForm && (
          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="overflow-x-auto">
+          <div>
+            {/* Desktop Table View */}
+            <div className="hidden lg:block overflow-x-auto">
                <table className="w-full text-left min-w-[800px]">
                  <thead className="bg-gray-50 border-b border-gray-100">
                    <tr>
@@ -300,6 +302,50 @@ const Products: React.FC = () => {
                  </tbody>
                </table>
             </div>
+
+            {/* Mobile Card View */}
+            <div className="lg:hidden flex flex-col divide-y divide-gray-100">
+               {products.length === 0 ? (
+                  <div className="p-12 text-center text-gray-500">
+                     No products found. Start by adding a new one!
+                  </div>
+               ) : (
+                  products.map((product) => (
+                    <div key={product._id} className="p-5 flex gap-4 items-start">
+                       <img src={product.image} alt={product.name} className="w-20 h-24 object-cover rounded shadow-sm border shrink-0" />
+                       <div className="flex-1 min-w-0">
+                          <div className="flex justify-between items-start gap-2 mb-1">
+                             <h3 className="font-bold text-gray-900 text-sm leading-snug line-clamp-2">{product.name}</h3>
+                             <div className="flex gap-1 shrink-0">
+                               <button onClick={() => handleEditProduct(product)} className="p-2 text-blue-600 bg-blue-50 rounded" aria-label="Edit">
+                                 ✏️
+                               </button>
+                               <button 
+                                 onClick={() => handleDeleteProduct(product._id)} 
+                                 disabled={deletingId === product._id}
+                                 className="p-2 text-red-600 bg-red-50 rounded disabled:opacity-50" 
+                                 aria-label="Delete"
+                               >
+                                 {deletingId === product._id ? '⏳' : '🗑️'}
+                               </button>
+                             </div>
+                          </div>
+                          <p className="text-emerald-600 font-bold mb-2 text-sm">{formatPrice(product.price)}</p>
+                          <div className="flex flex-wrap items-center gap-2 mb-2">
+                             <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-600 uppercase tracking-wide">
+                               {product.category}
+                             </span>
+                             <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${product.quantity > 5 ? 'bg-green-50 text-green-700' : product.quantity > 0 ? 'bg-orange-50 text-orange-700' : 'bg-red-50 text-red-700'}`}>
+                               <span className={`w-1.5 h-1.5 rounded-full ${product.quantity > 5 ? 'bg-green-500' : product.quantity > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
+                               Stock: {product.quantity}
+                             </span>
+                          </div>
+                       </div>
+                    </div>
+                  ))
+               )}
+            </div>
+          </div>
          </div>
       )}
     </div>
