@@ -49,8 +49,8 @@ const streamUpload = (buffer: Buffer): Promise<any> => {
   });
 };
 
-// POST a single image
-router.post('/', verifyToken, requireAdmin, upload.single('image'), async (req: any, res: any) => {
+// POST a single image (allowed for authenticated users for payment screenshots)
+router.post('/', verifyToken, upload.single('image'), async (req: any, res: any) => {
   try {
     if (!req.file) {
       console.error("No file in request");
