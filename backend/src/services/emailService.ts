@@ -2,20 +2,15 @@ import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 dotenv.config();
 
-// Default ethereal credentials for fallback (used if no real SMTP is provided in .env)
-const ETHEREAL_USER = 'katarina.hamill16@ethereal.email';
-const ETHEREAL_PASS = '1pWQj4Uf9B2K9a2kXf';
+ 
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'smtp.ethereal.email',
-  port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: process.env.SMTP_PORT === '465', // true for 465, false for other ports
+  service: "gmail",
   auth: {
-    user: process.env.SMTP_USER && process.env.SMTP_USER !== 'your-email@gmail.com' ? process.env.SMTP_USER : ETHEREAL_USER,
-    pass: process.env.SMTP_PASS && process.env.SMTP_PASS !== 'your-app-password' ? process.env.SMTP_PASS : ETHEREAL_PASS,
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
   },
 });
-
 export const sendOtpEmail = async (to: string, otp: string, roleAction: 'update' | 'add') => {
   const subject = roleAction === 'update' 
     ? 'Woven Wonder: Verify Your Admin Email Update'
@@ -47,7 +42,12 @@ export const sendOtpEmail = async (to: string, otp: string, roleAction: 'update'
       subject,
       html,
     });
-    console.log(`Email sent: ${info.messageId}`);
+    console.log(`\n================================`);
+    console.log(`🔐 OTP Generated for ${to}: ${otp}`);
+    if (info.messageId) {
+      console.log(`📧 Ethereal Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+    }
+    console.log(`================================\n`);
     return true;
   } catch (error) {
     console.error('Error sending OTP Email:', error);
