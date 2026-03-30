@@ -20,7 +20,6 @@ const Admin = () => {
 
   const [uploading, setUploading] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
-  const [isUpdatingCreds, setIsUpdatingCreds] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [categories, setCategories] = useState<{_id: string, name: string}[]>([]);
   const [newCategoryName, setNewCategoryName] = useState('');
@@ -74,28 +73,64 @@ const Admin = () => {
     }
   };
 
+  // OTP Management State
+  const [adminAction, setAdminAction] = useState<'update' | 'add'>('add');
   const [adminEmail, setAdminEmail] = useState('');
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [updateMsg, setUpdateMsg] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpInput, setOtpInput] = useState('');
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  const [adminMsg, setAdminMsg] = useState({ text: '', type: '' });
 
-  const handleUpdateCredentials = async (e: React.FormEvent) => {
+  const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsUpdatingCreds(true);
+    if (!adminEmail) return;
+    setIsSendingOtp(true);
+    setAdminMsg({ text: '', type: '' });
     try {
-      const res = await apiService.updateCredentials({ email: adminEmail, password: currentPassword, newPassword });
+      const res = await apiService.sendAdminOtp({ action: adminAction, targetEmail: adminEmail });
       const data = await res.json();
-      setUpdateMsg(data.message || (res.ok ? 'Success' : 'Failed'));
       if (res.ok) {
-        setAdminEmail('');
-        setCurrentPassword('');
-        setNewPassword('');
+        setOtpSent(true);
+        setAdminMsg({ text: 'OTP sent via email. Valid for 5 minutes.', type: 'success' });
+      } else {
+        setAdminMsg({ text: data.message || 'Failed to send OTP', type: 'error' });
       }
     } catch (err) {
-      setUpdateMsg('Network Error');
+      setAdminMsg({ text: 'Network Error', type: 'error' });
     } finally {
-      setIsUpdatingCreds(false);
+      setIsSendingOtp(false);
     }
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!otpInput) return;
+    setIsVerifyingOtp(true);
+    try {
+      const res = await apiService.verifyAdminAction({ action: adminAction, targetEmail: adminEmail, otp: otpInput });
+      const data = await res.json();
+      if (res.ok) {
+        setAdminMsg({ text: data.message || 'Success!', type: 'success' });
+        setAdminEmail('');
+        setOtpInput('');
+        setOtpSent(false);
+      } else {
+        setAdminMsg({ text: data.message || 'Failed to verify OTP', type: 'error' });
+      }
+    } catch (err) {
+      setAdminMsg({ text: 'Network Error', type: 'error' });
+    } finally {
+      setIsVerifyingOtp(false);
+    }
+  };
+
+  const resetAdminForm = (action: 'update' | 'add') => {
+    setAdminAction(action);
+    setAdminEmail('');
+    setOtpSent(false);
+    setOtpInput('');
+    setAdminMsg({ text: '', type: '' });
   };
 
   const [analytics, setAnalytics] = useState({
@@ -605,31 +640,75 @@ const Admin = () => {
         </div>
 
         <div className="bg-white p-4 sm:p-8 rounded-lg shadow-sm border border-gray-100">
-          <h2 className="text-xl font-bold mb-2">Account Settings</h2>
-          <p className="text-gray-500 mb-6 text-sm">Update your administrator credentials securely.</p>
+          <h2 className="text-xl font-bold mb-2">Admin Access Management</h2>
+          <p className="text-gray-500 mb-6 text-sm">Securely manage your own admin email or grant access to a new user. OTP verification is mandatory.</p>
           
-          {updateMsg && <div className={`p-4 rounded-sm text-sm font-medium mb-6 border ${updateMsg.includes('success') ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-600 border-red-100'}`}>{updateMsg}</div>}
-          
-          <form onSubmit={handleUpdateCredentials} className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
-            <div className="md:col-span-2">
-              <label className="block text-gray-700 text-xs font-bold tracking-widest uppercase mb-2">New Email Address (Optional)</label>
-              <input type="email" placeholder="newadmin@wovenwonder.com" className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:border-accent" value={adminEmail} onChange={e => setAdminEmail(e.target.value)} />
-            </div>
-            
-            <div>
-              <label className="block text-gray-700 text-xs font-bold tracking-widest uppercase mb-2">Current Password</label>
-              <input required type="password" placeholder="••••••••" className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:border-accent" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} />
-            </div>
-            
-            <div>
-              <label className="block text-gray-700 text-xs font-bold tracking-widest uppercase mb-2">New Password (Optional)</label>
-              <input type="password" placeholder="••••••••" className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:border-accent" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
-            </div>
-            
-            <button type="submit" disabled={isUpdatingCreds} className={`md:col-span-2 btn-primary mt-2 uppercase tracking-widest w-full font-bold ${isUpdatingCreds ? 'opacity-70 cursor-not-allowed' : ''}`}>
-              {isUpdatingCreds ? 'Updating...' : 'Update Credentials'}
+          <div className="flex border-b mb-6">
+            <button 
+              className={`px-4 py-2 font-medium text-sm transition-colors ${adminAction === 'add' ? 'border-b-2 border-accent text-accent' : 'text-gray-500 hover:text-gray-700'}`}
+              onClick={() => resetAdminForm('add')}
+            >
+              Add New Admin
             </button>
-          </form>
+            <button 
+              className={`px-4 py-2 font-medium text-sm transition-colors ${adminAction === 'update' ? 'border-b-2 border-accent text-accent' : 'text-gray-500 hover:text-gray-700'}`}
+              onClick={() => resetAdminForm('update')}
+            >
+              Update Own Email
+            </button>
+          </div>
+
+          {adminMsg.text && (
+            <div className={`p-4 rounded-sm text-sm font-medium mb-6 border flex items-start gap-3 ${adminMsg.type === 'success' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-600 border-red-100'}`}>
+              <span className="mt-0.5">{adminMsg.type === 'success' ? '✓' : '⚠'}</span>
+              <span>{adminMsg.text}</span>
+            </div>
+          )}
+          
+          {!otpSent ? (
+            <form onSubmit={handleSendOtp} className="max-w-md">
+              <label className="block text-gray-700 text-xs font-bold tracking-widest uppercase mb-2">
+                {adminAction === 'add' ? "New Admin's Email Address" : 'Your New Email Address'}
+              </label>
+              <input 
+                required 
+                type="email" 
+                placeholder="admin@wovenwonder.com" 
+                className="w-full px-4 py-3 mb-4 border border-gray-200 rounded-sm focus:outline-none focus:border-accent" 
+                value={adminEmail} 
+                onChange={e => setAdminEmail(e.target.value)} 
+                disabled={isSendingOtp}
+              />
+              <button type="submit" disabled={isSendingOtp || !adminEmail} className={`btn-primary w-full ${isSendingOtp ? 'opacity-70 cursor-wait' : ''}`}>
+                {isSendingOtp ? 'Generating Transfer Securely...' : 'Send Magic Link OTP'}
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleVerifyOtp} className="max-w-md bg-gray-50 p-6 border rounded shadow-inner">
+              <label className="block text-gray-700 text-xs font-bold tracking-widest uppercase mb-2">
+                Verification Code
+              </label>
+              <p className="text-xs text-gray-500 mb-4">Please enter the 6-digit code sent to <strong className="text-gray-900">{adminEmail}</strong>. Do not share this code.</p>
+              <input 
+                required 
+                type="text" 
+                maxLength={6}
+                placeholder="••••••" 
+                className="w-full px-4 py-3 mb-4 text-center tracking-[1em] font-mono text-xl border border-gray-200 rounded-sm focus:outline-none focus:border-accent" 
+                value={otpInput} 
+                onChange={e => setOtpInput(e.target.value)} 
+                disabled={isVerifyingOtp}
+              />
+              <div className="flex gap-2 text-sm justify-between">
+                 <button type="submit" disabled={isVerifyingOtp || otpInput.length < 6} className={`flex-grow btn-primary bg-green-600 hover:bg-green-700 disabled:bg-gray-400 ${isVerifyingOtp ? 'opacity-70 cursor-wait' : ''}`}>
+                   {isVerifyingOtp ? 'Verifying Identity...' : 'Confirm Action'}
+                 </button>
+                 <button type="button" onClick={() => setOtpSent(false)} className="px-4 py-2 border rounded text-gray-600 hover:bg-white font-medium">
+                   Cancel
+                 </button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </div>

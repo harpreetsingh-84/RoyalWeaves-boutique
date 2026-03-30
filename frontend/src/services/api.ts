@@ -31,8 +31,13 @@ export const apiService = {
   verifyAuth: () => fetch(`${BASE_URL}/api/auth/verify`, {
     credentials: 'include'
   }),
-  updateCredentials: (data: any) => apiFetch('/api/auth/update-credentials', {
-    method: 'PUT',
+  sendAdminOtp: (data: { action: 'update' | 'add', targetEmail: string }) => apiFetch('/api/auth/send-admin-otp', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    credentials: 'include'
+  }),
+  verifyAdminAction: (data: { action: 'update' | 'add', targetEmail: string, otp: string }) => apiFetch('/api/auth/verify-admin-action', {
+    method: 'POST',
     body: JSON.stringify(data),
     credentials: 'include'
   }),
