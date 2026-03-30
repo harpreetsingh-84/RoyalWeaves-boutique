@@ -37,15 +37,38 @@ const Admin = () => {
     try {
       const res = await apiService.upload(uploadData);
       const data = await res.json();
-      if (isPrimary) {
-        setFormData({...formData, image: data.url});
-      } else {
-        const current = formData.galleryUrls ? formData.galleryUrls + ', ' : '';
-        setFormData({...formData, galleryUrls: current + data.url});
+      if (res.ok) {
+        if (isPrimary) {
+          setFormData({...formData, image: data.url});
+        } else {
+          const current = formData.galleryUrls ? formData.galleryUrls + ', ' : '';
+          setFormData({...formData, galleryUrls: current + data.url});
+        }
       }
     } catch (err) {
       console.error(err);
       alert('File upload failed');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const uploadSiteImage = async (e: React.ChangeEvent<HTMLInputElement>, callback: (url: string) => void) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const uploadData = new FormData();
+    uploadData.append('image', file);
+    setUploading(true);
+    try {
+      const res = await apiService.upload(uploadData);
+      if (res.ok) {
+        const data = await res.json();
+        callback(data.url);
+      } else {
+        alert('Upload failed');
+      }
+    } catch (err) {
+      alert('Upload failed');
     } finally {
       setUploading(false);
     }
@@ -532,15 +555,31 @@ const Admin = () => {
               </div>
 
               <div>
-                <h3 className="text-lg font-serif font-bold mb-4 text-gray-900 border-b pb-2">Hero Slider Images</h3>
+                <h3 className="text-lg font-serif font-bold mb-4 text-gray-900 border-b pb-2 flex items-center justify-between">
+                  Hero Slider Images
+                  <span className="text-[10px] font-sans font-normal text-gray-400 normal-case tracking-normal bg-gray-50 px-2 py-1 rounded">Tip: Use direct image links or upload a file</span>
+                </h3>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   {siteContent.heroSlides.map((slide: any, idx: number) => (
                     <div key={`slide-${idx}`} className="bg-gray-50 p-4 rounded-sm border border-gray-100 flex flex-col gap-3">
-                      <div className="text-xs font-bold text-accent uppercase tracking-widest mb-2">Slide {idx + 1}</div>
+                      <div className="text-xs font-bold text-accent uppercase tracking-widest mb-2 flex justify-between items-center">
+                        Slide {idx + 1}
+                        {slide.image && (
+                          <div className="w-8 h-8 rounded border overflow-hidden bg-white">
+                            <img src={slide.image} alt="" className="w-full h-full object-cover" />
+                          </div>
+                        )}
+                      </div>
                       
                       <div className="flex flex-col gap-1">
-                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Image URL</label>
-                        <input required type="text" className="w-full text-sm border p-2 rounded" value={slide.image} onChange={(e) => updateHeroSlide(idx, 'image', e.target.value)} />
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Image URL / Upload</label>
+                        <div className="flex gap-2">
+                          <input required type="text" className="flex-1 text-sm border p-2 rounded" value={slide.image} onChange={(e) => updateHeroSlide(idx, 'image', e.target.value)} placeholder="https://..." />
+                          <input type="file" accept="image/*" id={`heroUpload-${idx}`} className="hidden" onChange={(e) => uploadSiteImage(e, (url) => updateHeroSlide(idx, 'image', url))} />
+                          <label htmlFor={`heroUpload-${idx}`} className="btn-primary cursor-pointer px-3 py-1 flex items-center justify-center text-xs whitespace-nowrap">
+                            {uploading ? '...' : 'Upload'}
+                          </label>
+                        </div>
                       </div>
                       <div className="flex flex-col gap-1">
                         <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Subtitle / Tagline</label>
@@ -564,14 +603,27 @@ const Admin = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   {siteContent.featuredCategories.map((cat: any, idx: number) => (
                     <div key={`cat-${idx}`} className="bg-gray-50 p-4 rounded-sm border border-gray-100 flex flex-col gap-3">
-                      <div className="text-xs font-bold text-accent uppercase tracking-widest mb-2">Feature Block {idx + 1}</div>
+                      <div className="text-xs font-bold text-accent uppercase tracking-widest mb-2 flex justify-between items-center">
+                        Feature Block {idx + 1}
+                        {cat.image && (
+                          <div className="w-8 h-8 rounded border overflow-hidden bg-white">
+                            <img src={cat.image} alt="" className="w-full h-full object-cover" />
+                          </div>
+                        )}
+                      </div>
                       <div className="flex flex-col gap-1">
                         <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Category Name</label>
                         <input required type="text" className="w-full text-sm border p-2 rounded" value={cat.name} onChange={(e) => updateCategory(idx, 'name', e.target.value)} />
                       </div>
                       <div className="flex flex-col gap-1">
-                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Image URL</label>
-                        <input required type="text" className="w-full text-sm border p-2 rounded" value={cat.image} onChange={(e) => updateCategory(idx, 'image', e.target.value)} />
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Image URL / Upload</label>
+                        <div className="flex gap-2">
+                          <input required type="text" className="flex-1 text-sm border p-2 rounded" value={cat.image} onChange={(e) => updateCategory(idx, 'image', e.target.value)} placeholder="https://..." />
+                          <input type="file" accept="image/*" id={`catUpload-${idx}`} className="hidden" onChange={(e) => uploadSiteImage(e, (url) => updateCategory(idx, 'image', url))} />
+                          <label htmlFor={`catUpload-${idx}`} className="btn-primary cursor-pointer px-3 py-1 flex items-center justify-center text-xs whitespace-nowrap">
+                            {uploading ? '...' : 'Upload'}
+                          </label>
+                        </div>
                       </div>
                     </div>
                   ))}

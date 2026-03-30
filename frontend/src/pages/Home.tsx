@@ -51,6 +51,10 @@ const Home = () => {
             <img 
               src={slide.image} 
               alt={slide.title} 
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1541339907198-e08759dfc3ef?q=80&w=2070&auto=format&fit=crop'; // Elegant dark fabric placeholder
+                (e.target as HTMLImageElement).className += ' opacity-30 grayscale';
+              }}
               className={`absolute inset-0 w-full h-full object-cover object-top opacity-50 ${idx === currentSlide ? 'animate-slow-zoom' : ''}`}
             />
           </div>
