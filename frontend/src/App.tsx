@@ -6,7 +6,6 @@ import Collection from './pages/Collection';
 import ItemDetails from './pages/ItemDetails';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
-import Admin from './pages/Admin';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import OrderDetails from './pages/OrderDetails';
@@ -15,31 +14,55 @@ import MyOrders from './pages/MyOrders';
 import ProtectedRoute from './components/ProtectedRoute';
 import GlobalLoader from './components/GlobalLoader';
 
+// Admin Layout & Pages
+import AdminLayout from './pages/admin/AdminLayout';
+import Dashboard from './pages/admin/Dashboard';
+import Products from './pages/admin/Products';
+import Categories from './pages/admin/Categories';
+import Orders from './pages/admin/Orders';
+import Users from './pages/admin/Users';
+import Admins from './pages/admin/Admins';
+import Settings from './pages/admin/Settings';
+
 function App() {
   const location = useLocation();
   const isHome = location.pathname === '/';
+  const isAdminRoute = location.pathname.startsWith('/admin');
 
   return (
     <GlobalLoader>
-      <div className="flex flex-col min-h-screen relative">
-        <Navbar />
-        <main className={`flex-grow w-full ${isHome ? '' : 'pt-28 max-w-7xl mx-auto px-6'}`}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/collection" element={<ProtectedRoute><Collection /></ProtectedRoute>} />
-            <Route path="/item/:id" element={<ProtectedRoute><ItemDetails /></ProtectedRoute>} />
-            <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
-            <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
-            <Route path="/myorders" element={<ProtectedRoute><MyOrders /></ProtectedRoute>} />
-            <Route path="/order/:id" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
-            <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-            <Route path="/admin/order/:id" element={<ProtectedRoute><AdminOrderDetails /></ProtectedRoute>} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      {!isAdminRoute ? (
+        <div className="flex flex-col min-h-screen relative">
+          <Navbar />
+          <main className={`flex-grow w-full ${isHome ? '' : 'pt-28 max-w-7xl mx-auto px-6'}`}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/collection" element={<ProtectedRoute><Collection /></ProtectedRoute>} />
+              <Route path="/item/:id" element={<ProtectedRoute><ItemDetails /></ProtectedRoute>} />
+              <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+              <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+              <Route path="/myorders" element={<ProtectedRoute><MyOrders /></ProtectedRoute>} />
+              <Route path="/order/:id" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      ) : (
+        <Routes>
+           <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+              <Route index element={<Dashboard />} />
+              <Route path="products" element={<Products />} />
+              <Route path="categories" element={<Categories />} />
+              <Route path="orders" element={<Orders />} />
+              <Route path="users" element={<Users />} />
+              <Route path="admins" element={<Admins />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="order/:id" element={<AdminOrderDetails />} />
+           </Route>
+        </Routes>
+      )}
     </GlobalLoader>
   );
 }

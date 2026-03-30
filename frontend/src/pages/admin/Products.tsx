@@ -1,0 +1,309 @@
+import React, { useState, useEffect } from 'react';
+import { useShop } from '../../context/ShopContext';
+import { apiService } from '../../services/api';
+
+const Products: React.FC = () => {
+  const { products, refreshProducts, formatPrice } = useShop();
+  
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '', description: '', price: '', image: '', galleryUrls: '', category: '', quantity: ''
+  });
+  const [categories, setCategories] = useState<{_id: string, name: string}[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await apiService.getCategories();
+      if (res.ok) {
+        setCategories(await res.json());
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const uploadFileHandler = async (e: React.ChangeEvent<HTMLInputElement>, isPrimary: boolean) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const uploadData = new FormData();
+    uploadData.append('image', file);
+    setUploading(true);
+
+    try {
+      const res = await apiService.upload(uploadData);
+      const data = await res.json();
+      if (res.ok) {
+        if (isPrimary) {
+          setFormData({...formData, image: data.url});
+        } else {
+          const current = formData.galleryUrls ? formData.galleryUrls + ', ' : '';
+          setFormData({...formData, galleryUrls: current + data.url});
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      alert('File upload failed');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const uploadMultipleHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.length) return;
+    
+    const uploadData = new FormData();
+    Array.from(e.target.files).forEach(file => {
+      uploadData.append('images', file);
+    });
+    setUploading(true);
+    
+    try {
+      const res = await apiService.uploadMultiple(uploadData);
+      const data = await res.json();
+      const current = formData.galleryUrls ? formData.galleryUrls + ', ' : '';
+      setFormData({...formData, galleryUrls: current + data.urls.join(', ')});
+    } catch (err) {
+      console.error(err);
+      alert('Gallery upload failed');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleAddProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsAdding(true);
+    try {
+      const payload = {
+        ...formData,
+        price: Number(formData.price),
+        gallery: formData.galleryUrls.split(',').map(url => url.trim()).filter(url => url)
+      };
+
+      if (editingId) {
+        await apiService.updateProduct(editingId, payload);
+      } else {
+        await apiService.addProduct(payload);
+      }
+      
+      refreshProducts();
+      cancelForm();
+    } catch (error) {
+      console.error("Error saving product:", error);
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
+  const handleEditProduct = (product: any) => {
+    setEditingId(product._id);
+    setFormData({
+      name: product.name,
+      description: product.description,
+      price: product.price.toString(),
+      image: product.image,
+      category: product.category,
+      galleryUrls: Array.isArray(product.gallery) ? product.gallery.join(', ') : '',
+      quantity: product.quantity ? product.quantity.toString() : '0'
+    });
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const cancelForm = () => {
+    setShowForm(false);
+    setEditingId(null);
+    setFormData({ name: '', description: '', price: '', image: '', galleryUrls: '', category: '', quantity: '' });
+  };
+
+  const handleDeleteProduct = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
+    setDeletingId(id);
+    try {
+      await apiService.deleteProduct(id);
+      refreshProducts();
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  return (
+    <div className="fade-in space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+         <div>
+            <h1 className="text-2xl font-bold text-gray-900">Products Inventory</h1>
+            <p className="text-sm text-gray-500 mt-1">Manage and track your entire catalog.</p>
+         </div>
+         <button 
+           onClick={showForm ? cancelForm : () => setShowForm(true)}
+           className={`px-4 py-2 font-medium rounded-md transition-colors ${
+             showForm 
+               ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' 
+               : 'bg-black text-white hover:bg-gray-800'
+           }`}
+         >
+           {showForm ? '← Back to List' : '+ Add Product'}
+         </button>
+      </div>
+
+      {showForm && (
+        <div className="bg-white border rounded-xl overflow-hidden shadow-sm animate-fade-in relative">
+          <div className="bg-gray-50 px-6 py-4 border-b">
+             <h2 className="font-semibold text-lg">{editingId ? 'Edit Product' : 'Add New Product'}</h2>
+          </div>
+          <form onSubmit={handleAddProduct} className="p-6 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-gray-600 mb-1 uppercase tracking-wide">Product Name</label>
+                <input required type="text" placeholder="e.g. Vintage Cotton Shirt" className="w-full border p-2.5 rounded focus:ring-2 focus:ring-black/5 outline-none transition-all" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-600 mb-1 uppercase tracking-wide">Category</label>
+                <select 
+                  required 
+                  className="w-full border p-2.5 rounded focus:ring-2 focus:ring-black/5 outline-none appearance-none bg-white" 
+                  value={formData.category} 
+                  onChange={e => setFormData({...formData, category: e.target.value})}
+                >
+                  <option value="">Select a Category</option>
+                  {categories.map(cat => (
+                    <option key={cat._id} value={cat.name}>{cat.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <label className="block text-xs font-bold text-gray-600 mb-1 uppercase tracking-wide">Price (₹)</label>
+                  <input required type="number" min="0" className="w-full border p-2.5 rounded" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
+                </div>
+                <div className="flex-1">
+                  <label className="block text-xs font-bold text-gray-600 mb-1 uppercase tracking-wide">Stock Quantity</label>
+                  <input required type="number" min="0" className="w-full border p-2.5 rounded" value={formData.quantity} onChange={e => setFormData({...formData, quantity: e.target.value})} />
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+               <div>
+                  <label className="block text-xs font-bold text-gray-600 mb-1 uppercase tracking-wide">Primary Cover Image</label>
+                  <div className="flex gap-2">
+                    <input required type="text" placeholder="Direct URL or upload ->" className="flex-1 border p-2.5 rounded" value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} />
+                    <input type="file" accept="image/*" id="primaryUpload" className="hidden" onChange={(e) => uploadFileHandler(e, true)} />
+                    <label htmlFor="primaryUpload" className={`px-4 py-2 bg-gray-100 hover:bg-gray-200 font-medium rounded cursor-pointer flex items-center justify-center ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                      {uploading ? '...' : 'Upload'}
+                    </label>
+                  </div>
+                  {formData.image && <img src={formData.image} className="mt-2 h-20 rounded border bg-gray-50 object-cover" alt="preview" />}
+               </div>
+               
+               <div>
+                  <label className="block text-xs font-bold text-gray-600 mb-1 uppercase tracking-wide">Gallery Images</label>
+                  <div className="flex gap-2">
+                    <input type="text" placeholder="Urls separated by commas" className="flex-1 border p-2.5 rounded" value={formData.galleryUrls} onChange={e => setFormData({...formData, galleryUrls: e.target.value})} />
+                    <input type="file" accept="image/*" multiple id="galleryUpload" className="hidden" onChange={uploadMultipleHandler} />
+                    <label htmlFor="galleryUpload" className={`px-4 py-2 bg-gray-100 hover:bg-gray-200 font-medium rounded cursor-pointer flex items-center justify-center ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                      {uploading ? '...' : 'Uploads'}
+                    </label>
+                  </div>
+               </div>
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="block text-xs font-bold text-gray-600 mb-1 uppercase tracking-wide">Detailed Description</label>
+              <textarea required placeholder="Write a description for the product..." className="w-full border p-2.5 rounded h-32 resize-y" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
+            </div>
+
+            <div className="md:col-span-2 flex justify-end gap-3 pt-4 border-t">
+               <button type="button" onClick={cancelForm} className="px-5 py-2 text-gray-600 bg-gray-100 rounded hover:bg-gray-200 transition">Cancel</button>
+               <button type="submit" disabled={isAdding || uploading} className="px-6 py-2 bg-black text-white rounded hover:bg-gray-800 transition disabled:opacity-70 disabled:cursor-wait">
+                 {isAdding ? 'Saving...' : (editingId ? 'Save Changes' : 'Create Product')}
+               </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Product List Grid/Table */}
+      {!showForm && (
+         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="overflow-x-auto">
+               <table className="w-full text-left min-w-[800px]">
+                 <thead className="bg-gray-50 border-b border-gray-100">
+                   <tr>
+                     <th className="p-4 font-semibold text-gray-600 text-sm">Product</th>
+                     <th className="p-4 font-semibold text-gray-600 text-sm">Category</th>
+                     <th className="p-4 font-semibold text-gray-600 text-sm">Stock</th>
+                     <th className="p-4 font-semibold text-gray-600 text-sm">Price</th>
+                     <th className="p-4 font-semibold text-gray-600 text-sm w-32">Actions</th>
+                   </tr>
+                 </thead>
+                 <tbody className="divide-y divide-gray-100">
+                    {products.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="p-12 text-center text-gray-500">
+                           No products found. Start by adding a new one!
+                        </td>
+                      </tr>
+                    ) : (
+                      products.map((product) => (
+                        <tr key={product._id} className="hover:bg-gray-50/50 transition-colors">
+                           <td className="p-4 w-1/3">
+                              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                                 <img src={product.image} alt={product.name} className="w-16 h-16 object-cover rounded shadow-sm border" />
+                                 <div className="flex-1 min-w-0">
+                                    <h3 className="font-medium text-gray-900 truncate" title={product.name}>{product.name}</h3>
+                                    <p className="text-xs text-gray-500 line-clamp-1 mt-0.5" title={product.description}>{product.description}</p>
+                                 </div>
+                              </div>
+                           </td>
+                           <td className="p-4">
+                             <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 uppercase tracking-wide">
+                               {product.category}
+                             </span>
+                           </td>
+                           <td className="p-4">
+                              <div className="flex items-center gap-2">
+                                <span className={`w-2 h-2 rounded-full ${product.quantity > 5 ? 'bg-green-500' : product.quantity > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
+                                <span className="font-medium">{product.quantity}</span>
+                              </div>
+                           </td>
+                           <td className="p-4 text-emerald-600 font-bold">{formatPrice(product.price)}</td>
+                           <td className="p-4">
+                              <div className="flex gap-2">
+                                 <button onClick={() => handleEditProduct(product)} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition" aria-label="Edit">
+                                   ✏️
+                                 </button>
+                                 <button 
+                                   onClick={() => handleDeleteProduct(product._id)} 
+                                   disabled={deletingId === product._id}
+                                   className="p-2 text-red-600 hover:bg-red-50 rounded transition disabled:opacity-50" 
+                                   aria-label="Delete"
+                                 >
+                                   {deletingId === product._id ? '⏳' : '🗑️'}
+                                 </button>
+                              </div>
+                           </td>
+                        </tr>
+                      ))
+                    )}
+                 </tbody>
+               </table>
+            </div>
+         </div>
+      )}
+    </div>
+  );
+};
+
+export default Products;

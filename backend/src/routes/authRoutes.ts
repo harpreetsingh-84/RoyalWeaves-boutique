@@ -91,6 +91,12 @@ router.post('/verify-admin-action', verifyToken, requireAdmin, async (req: AuthR
         user.email = targetEmail;
         await user.save();
      } else if (action === 'add') {
+        const adminCount = await User.countDocuments({ isAdmin: true });
+        if (adminCount >= 3) {
+            await Otp.deleteOne({ email: targetEmail });
+            return res.status(400).json({ message: 'Maximum limit of 3 Admins reached.' });
+        }
+        
         // Prevent duplicate users
         let user = await User.findOne({ email: targetEmail });
         if (user) {

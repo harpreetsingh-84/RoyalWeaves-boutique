@@ -98,4 +98,23 @@ export const apiService = {
     method: 'PUT',
     body: JSON.stringify(data)
   }),
+
+  // User Management
+  getUsers: () => fetch(`${BASE_URL}/api/users`, { credentials: 'include' }),
+  blockUser: (id: string, isBlocked: boolean) => apiFetch(`/api/users/${id}/block`, {
+    method: 'PUT',
+    body: JSON.stringify({ isBlocked }),
+    credentials: 'include'
+  }),
+  deleteUser: (id: string) => apiFetch(`/api/users/${id}`, {
+    method: 'DELETE',
+    credentials: 'include'
+  }),
+
+  // Admin Management
+  getAdmins: () => fetch(`${BASE_URL}/api/users/admins`, { credentials: 'include' }),
+  removeAdmin: (id: string) => apiFetch(`/api/users/admins/${id}`, {
+    method: 'DELETE',
+    credentials: 'include'
+  }),
 };

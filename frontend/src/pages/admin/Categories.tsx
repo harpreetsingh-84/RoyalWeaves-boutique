@@ -1,0 +1,129 @@
+import React, { useState, useEffect } from 'react';
+import { apiService } from '../../services/api';
+
+interface Category {
+  _id: string;
+  name: string;
+}
+
+const Categories: React.FC = () => {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [isAdding, setIsAdding] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await apiService.getCategories();
+      if (res.ok) {
+        setCategories(await res.json());
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const handleAddCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCategoryName.trim()) return;
+    setIsAdding(true);
+    try {
+      const res = await apiService.addCategory({ name: newCategoryName });
+      if (res.ok) {
+        fetchCategories();
+        setNewCategoryName('');
+      } else {
+        const err = await res.json();
+        alert(err.message || 'Failed to add category');
+      }
+    } catch (error) {
+      console.error("Error adding category:", error);
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
+  // The backend might not have Delete Category route right now based on api.ts,
+  // but we can prepare the UI.
+  const handleDeleteCategory = async (id: string, name: string) => {
+     if(window.confirm(`Are you sure you want to delete ${name}? Important: Make sure no products are using this category before deleting.`)) {
+         console.log(id); // NOTE: Add apiService.deleteCategory(id) if backend supports it.
+     }
+  };
+
+  return (
+    <div className="fade-in space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+         <div>
+            <h1 className="text-2xl font-bold text-gray-900">Categories</h1>
+            <p className="text-sm text-gray-500 mt-1">Organize products structurally.</p>
+         </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+         <div className="md:col-span-1 border border-gray-100 bg-white p-6 rounded-xl shadow-sm h-fit">
+            <h2 className="font-semibold text-lg mb-4 text-gray-800">Add New Category</h2>
+            <form onSubmit={handleAddCategory} className="flex flex-col gap-4">
+               <div>
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Category Name</label>
+                  <input 
+                    type="text" 
+                    value={newCategoryName}
+                    onChange={(e) => setNewCategoryName(e.target.value)}
+                    placeholder="e.g. T-Shirts"
+                    className="mt-1 w-full border rounded p-2.5 focus:ring-2 outline-none" 
+                    required 
+                  />
+               </div>
+               <button 
+                 type="submit" 
+                 disabled={isAdding || !newCategoryName.trim()} 
+                 className="w-full bg-black text-white px-4 py-2 rounded font-medium hover:bg-gray-800 transition disabled:opacity-50"
+               >
+                 {isAdding ? 'Adding...' : 'Create Category'}
+               </button>
+            </form>
+         </div>
+
+         <div className="md:col-span-2 border border-gray-100 bg-white rounded-xl shadow-sm overflow-hidden">
+            <div className="bg-gray-50 px-6 py-4 border-b flex justify-between items-center">
+              <h2 className="font-semibold text-gray-800">Existing Categories</h2>
+              <span className="text-xs font-bold bg-gray-200 text-gray-600 px-2 py-1 rounded-full">{categories.length} Categories</span>
+            </div>
+            
+            {loading ? (
+               <div className="p-8 text-center text-gray-500 animate-pulse">Loading categories...</div>
+            ) : categories.length === 0 ? (
+               <div className="p-12 text-center text-gray-500">No categories found.</div>
+            ) : (
+               <ul className="divide-y divide-gray-100">
+                  {categories.map((cat) => (
+                    <li key={cat._id} className="p-4 px-6 flex items-center justify-between hover:bg-gray-50 transition-colors group">
+                       <div className="flex items-center gap-3">
+                         <span className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">#</span>
+                         <span className="font-medium text-gray-800">{cat.name}</span>
+                       </div>
+                       <button 
+                         onClick={() => handleDeleteCategory(cat._id, cat.name)}
+                         className="text-red-500 opacity-0 group-hover:opacity-100 transition p-2 hover:bg-red-50 rounded"
+                         title="Delete Category"
+                       >
+                          🗑️
+                       </button>
+                    </li>
+                  ))}
+               </ul>
+            )}
+         </div>
+      </div>
+    </div>
+  );
+};
+
+export default Categories;
