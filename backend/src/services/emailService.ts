@@ -11,6 +11,16 @@ const transporter = nodemailer.createTransport({
     pass: process.env.SMTP_PASS,
   },
 });
+
+// Verify connection configuration
+transporter.verify(function (error, success) {
+  if (error) {
+    console.error('❌ SMTP Connection Error:', error);
+  } else {
+    console.log('✅ SMTP Server is ready (Gmail)');
+  }
+});
+
 export const sendOtpEmail = async (to: string, otp: string, roleAction: 'update' | 'add') => {
   const subject = roleAction === 'update' 
     ? 'Woven Wonder: Verify Your Admin Email Update'
@@ -37,20 +47,18 @@ export const sendOtpEmail = async (to: string, otp: string, roleAction: 'update'
 
   try {
     const info = await transporter.sendMail({
-      from: `"Woven Wonder Security" <security@wovenwonder.com>`,
+      from: `"Woven Wonder" <${process.env.SMTP_USER}>`, // MUST match SMTP_USER for Gmail
       to,
       subject,
       html,
     });
     console.log(`\n================================`);
     console.log(`🔐 OTP Generated for ${to}: ${otp}`);
-    if (info.messageId) {
-      console.log(`📧 Ethereal Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
-    }
+    console.log(`📧 Email Status: ${info.response}`);
     console.log(`================================\n`);
     return true;
   } catch (error) {
-    console.error('Error sending OTP Email:', error);
+    console.error('❌ Error sending OTP Email:', error);
     return false;
   }
 };
