@@ -13,17 +13,28 @@ const transporter = nodemailer.createTransport({
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
+  tls: {
+    rejectUnauthorized: false // Often needed for cloud environments
+  },
   connectionTimeout: 10000, // 10 seconds
   greetingTimeout: 10000,
   socketTimeout: 10000,
 });
 
-// Verify connection configuration
+// Verify connection configuration on startup
+console.log('🔍 Verifying SMTP Configuration...');
+if (process.env.SMTP_USER) {
+  console.log(`📡 SMTP USER: ${process.env.SMTP_USER.substring(0, 3)}... (length: ${process.env.SMTP_USER.length})`);
+  console.log(`📡 SMTP PASS: ${process.env.SMTP_PASS ? 'Detecting password' : 'NOT DETECTED'}`);
+} else {
+  console.log('⚠️ SMTP_USER environment variable NOT found');
+}
+
 transporter.verify(function (error, success) {
   if (error) {
-    console.error('❌ SMTP Connection Error:', error);
+    console.error('❌ SMTP Initial Startup Error:', error);
   } else {
-    console.log('✅ SMTP Server is ready (Gmail)');
+    console.log('✅ SMTP Server Connection: SUCCESS (Gmail STARTTLS Ready)');
   }
 });
 
@@ -71,8 +82,10 @@ export const sendOtpEmail = async (to: string, otp: string, roleAction: 'update'
     console.log(`📧 Email Status: ${info.response}`);
     console.log(`================================\n`);
     return true;
-  } catch (error) {
-    console.error('❌ Error sending OTP Email:', error);
+  } catch (error: any) {
+    console.error('❌ Error sending OTP Email:', error.message || error);
+    if (error.code) console.error('🔍 SMTP Error Code:', error.code);
+    if (error.command) console.error('🔍 SMTP Command Failed:', error.command);
     return false;
   }
 };
