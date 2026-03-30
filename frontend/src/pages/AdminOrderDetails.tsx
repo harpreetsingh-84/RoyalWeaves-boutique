@@ -317,9 +317,9 @@ export default function AdminOrderDetails() {
               {order.items?.map((item: any, idx: number) => (
                 <div key={idx} className="p-6 flex flex-col sm:flex-row items-start sm:items-center gap-6">
                   <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 border">
-                    {item.product?.image ? (
+                    {item.product?.image || item.image ? (
                         <img 
-                          src={`http://localhost:5000${item.product.image}`} 
+                          src={(item.product?.image || item.image).startsWith('http') ? (item.product?.image || item.image) : `http://localhost:5000${item.product?.image || item.image}`} 
                           alt={item.name} 
                           className="w-full h-full object-cover" 
                         />
