@@ -42,8 +42,10 @@ const Cart = () => {
                   </button>
                   <span className="w-4 text-center font-medium">{item.quantity}</span>
                   <button 
-                    className="w-8 h-8 rounded-full bg-white shadow-sm hover:bg-primary hover:text-white transition-colors flex items-center justify-center font-bold"
+                    className={`w-8 h-8 rounded-full shadow-sm transition-colors flex items-center justify-center font-bold ${item.quantity >= item.product.quantity ? 'bg-gray-50 text-gray-300 cursor-not-allowed border border-gray-100' : 'bg-white hover:bg-primary hover:text-white'}`}
                     onClick={() => updateQuantity(item.product._id, item.quantity + 1)}
+                    disabled={item.quantity >= item.product.quantity}
+                    title={item.quantity >= item.product.quantity ? 'Maximum stock reached' : 'Increase quantity'}
                   >
                     &#43;
                   </button>

@@ -18,9 +18,15 @@ export interface CartItem {
   quantity: number;
 }
 
+export interface User {
+  name: string;
+  email: string;
+}
+
 interface ShopContextType {
   products: Product[];
   cart: CartItem[];
+  user: User | null;
   isAdmin: boolean;
   isAuthenticated: boolean;
   isAuthChecking: boolean;
@@ -43,6 +49,7 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const savedCart = localStorage.getItem('wovenwonder_cart');
     return savedCart ? JSON.parse(savedCart) : [];
   });
+  const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isAuthChecking, setIsAuthChecking] = useState<boolean>(true);
@@ -76,14 +83,17 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const data = text ? JSON.parse(text) : {};
         setIsAuthenticated(true);
         setIsAdmin(!!data.isAdmin);
+        setUser(data.user || null);
       } else {
         setIsAuthenticated(false);
         setIsAdmin(false);
+        setUser(null);
       }
     } catch (error) {
       console.error("Auth verification failed:", error);
       setIsAuthenticated(false);
       setIsAdmin(false);
+      setUser(null);
     } finally {
       setIsAuthChecking(false);
     }
@@ -143,7 +153,7 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <ShopContext.Provider value={{ products, cart, isAdmin, isAuthenticated, isAuthChecking, isLoading, formatPrice, setIsAdmin, setIsAuthenticated, addToCart, removeFromCart, updateQuantity, refreshProducts, verifyAuth }}>
+    <ShopContext.Provider value={{ products, cart, user, isAdmin, isAuthenticated, isAuthChecking, isLoading, formatPrice, setIsAdmin, setIsAuthenticated, addToCart, removeFromCart, updateQuantity, refreshProducts, verifyAuth }}>
       {children}
     </ShopContext.Provider>
   );

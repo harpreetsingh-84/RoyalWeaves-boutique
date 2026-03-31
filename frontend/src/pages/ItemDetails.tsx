@@ -196,10 +196,20 @@ const ItemDetails = () => {
                 {product.name}
               </h1>
               
-              <p className="text-2xl font-light text-gray-600 mb-10 font-serif italic flex items-center gap-4">
+              <p className="text-2xl font-light text-gray-600 mb-10 font-serif italic flex items-center flex-wrap gap-4">
                 {formatPrice(product.price)}
-                <span className={`text-xs font-sans not-italic font-medium tracking-widest uppercase px-3 py-1 rounded-full ${product.quantity > 0 ? 'text-gray-400 bg-gray-100' : 'text-red-600 bg-red-50'}`}>
-                  {product.quantity > 0 ? `${product.quantity} In Stock` : 'Out of Stock'}
+                <span className={`text-xs font-sans not-italic tracking-widest uppercase px-3 py-1.5 rounded-full ${
+                  product.quantity <= 0 
+                    ? 'text-red-700 bg-red-50 font-bold border border-red-100' 
+                    : product.quantity <= 5 
+                      ? 'text-orange-700 bg-orange-50 font-bold animate-pulse border border-orange-200' 
+                      : 'text-gray-500 bg-gray-100 font-medium'
+                }`}>
+                  {product.quantity <= 0 
+                    ? 'Out of Stock' 
+                    : product.quantity <= 5 
+                      ? `Only ${product.quantity} left` 
+                      : `${product.quantity} In Stock`}
                 </span>
               </p>
 

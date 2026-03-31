@@ -182,8 +182,14 @@ router.post('/logout', (req, res) => {
   res.json({ message: 'Logged out successfully' });
 });
 
-router.get('/verify', verifyToken, (req: any, res) => {
-  res.json({ message: 'Token is valid', isAdmin: req.user.isAdmin });
+router.get('/verify', verifyToken, async (req: AuthRequest, res: any): Promise<any> => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json({ message: 'Token is valid', isAdmin: user.isAdmin, user: { email: user.email, name: user.name } });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
 router.post('/google', async (req: any, res: any) => {
