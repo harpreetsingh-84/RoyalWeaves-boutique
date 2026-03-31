@@ -44,7 +44,7 @@ const Navbar = () => {
   return (
     <nav className={`fixed w-full top-0 transition-all duration-500 z-50 ${navClass}`}>
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-        <Link to="/" className={`text-2xl font-bold tracking-tight ${textClass}`} onClick={closeMenu}>
+        <Link to="/" className={`text-[1.15rem] sm:text-xl md:text-2xl font-bold tracking-tight whitespace-nowrap ${textClass}`} onClick={closeMenu}>
           Woven Wonder <span className={`font-light ${logoAccentClass}`}>Creation</span>
         </Link>
         
