@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiService } from '../../services/api';
+import { Trash2 } from 'lucide-react';
 
 interface Category {
   _id: string;
@@ -121,10 +122,10 @@ const Categories: React.FC = () => {
                        </div>
                        <button 
                          onClick={() => handleDeleteCategory(cat._id, cat.name)}
-                         className="text-red-500 opacity-0 group-hover:opacity-100 transition p-2 hover:bg-red-50 rounded"
+                         className="text-red-500 lg:opacity-0 group-hover:opacity-100 transition p-2 bg-red-50 lg:bg-transparent hover:bg-red-50 rounded-lg flex items-center justify-center shrink-0 w-10 h-10 shadow-sm lg:shadow-none"
                          title="Delete Category"
                        >
-                          🗑️
+                          <Trash2 size={18} />
                        </button>
                     </li>
                   ))}

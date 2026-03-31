@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiService } from '../../services/api';
+import { Ban, CheckCircle, Trash2 } from 'lucide-react';
 
 const Users: React.FC = () => {
   const [users, setUsers] = useState<any[]>([]);
@@ -73,55 +74,109 @@ const Users: React.FC = () => {
         ) : users.length === 0 ? (
            <div className="p-12 text-center text-gray-500">No users registered yet.</div>
         ) : (
-           <div className="overflow-x-auto">
-             <table className="w-full text-left min-w-[700px]">
-               <thead className="bg-gray-50 border-b border-gray-100 uppercase text-[10px] font-bold tracking-wider text-gray-500">
-                 <tr>
-                   <th className="p-4 px-6">Name</th>
-                   <th className="p-4">Email</th>
-                   <th className="p-4 text-center">Status</th>
-                   <th className="p-4 text-center">Actions</th>
-                 </tr>
-               </thead>
-               <tbody className="divide-y divide-gray-100">
-                 {users.map((user) => (
-                   <tr key={user._id} className={`hover:bg-gray-50 transition-colors ${user.isBlocked ? 'bg-red-50/30' : ''}`}>
-                     <td className="p-4 px-6 font-medium text-gray-900 flex items-center gap-3">
-                       <span className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${user.isBlocked ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
-                         {user.name.charAt(0).toUpperCase()}
-                       </span>
-                       {user.name}
-                     </td>
-                     <td className="p-4 text-gray-600 text-sm">{user.email}</td>
-                     <td className="p-4 text-center">
-                       {user.isBlocked ? (
-                         <span className="px-2.5 py-1 rounded bg-red-100 text-red-700 text-xs font-bold uppercase tracking-wider">Blocked</span>
-                       ) : (
-                         <span className="px-2.5 py-1 rounded bg-emerald-100 text-emerald-700 text-xs font-bold uppercase tracking-wider">Active</span>
-                       )}
-                     </td>
-                     <td className="p-4 text-center">
-                        <div className="flex items-center justify-center gap-2">
-                           <button 
-                             onClick={() => handleBlockToggle(user._id, user.isBlocked, user.name)}
-                             className={`px-3 py-1.5 rounded text-xs font-bold transition-colors ${
-                               user.isBlocked ? 'bg-gray-800 text-white hover:bg-black' : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
-                             }`}
-                           >
-                              {user.isBlocked ? 'Unblock' : 'Block'}
-                           </button>
-                           <button 
-                             onClick={() => handleDeleteUser(user._id, user.name)}
-                             className="px-3 py-1.5 rounded text-xs font-bold bg-red-100 text-red-600 hover:bg-red-200 transition-colors"
-                           >
-                              Delete
-                           </button>
-                        </div>
-                     </td>
+           <div>
+             {/* Desktop Table View */}
+             <div className="hidden lg:block overflow-x-auto">
+               <table className="w-full text-left min-w-[700px]">
+                 <thead className="bg-gray-50 border-b border-gray-100 uppercase text-[10px] font-bold tracking-wider text-gray-500">
+                   <tr>
+                     <th className="p-4 px-6">Name</th>
+                     <th className="p-4">Email</th>
+                     <th className="p-4 text-center">Status</th>
+                     <th className="p-4 text-center">Actions</th>
                    </tr>
-                 ))}
-               </tbody>
-             </table>
+                 </thead>
+                 <tbody className="divide-y divide-gray-100">
+                   {users.map((user) => (
+                     <tr key={user._id} className={`hover:bg-gray-50 transition-colors ${user.isBlocked ? 'bg-red-50/30' : ''}`}>
+                       <td className="p-4 px-6 font-medium text-gray-900 flex items-center gap-3">
+                         <span className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${user.isBlocked ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
+                           {user.name.charAt(0).toUpperCase()}
+                         </span>
+                         {user.name}
+                       </td>
+                       <td className="p-4 text-gray-600 text-sm">{user.email}</td>
+                       <td className="p-4 text-center">
+                         {user.isBlocked ? (
+                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-red-100 text-red-700 text-xs font-bold uppercase tracking-wider">
+                             <Ban size={12} /> Blocked
+                           </span>
+                         ) : (
+                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-emerald-100 text-emerald-700 text-xs font-bold uppercase tracking-wider">
+                             <CheckCircle size={12} /> Active
+                           </span>
+                         )}
+                       </td>
+                       <td className="p-4 text-center">
+                          <div className="flex items-center justify-center gap-2">
+                             <button 
+                               onClick={() => handleBlockToggle(user._id, user.isBlocked, user.name)}
+                               className={`px-3 py-1.5 flex items-center gap-1.5 rounded text-xs font-bold transition-colors ${
+                                 user.isBlocked ? 'bg-gray-800 text-white hover:bg-black' : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
+                               }`}
+                             >
+                                {user.isBlocked ? <CheckCircle size={14} /> : <Ban size={14} />}
+                                {user.isBlocked ? 'Unblock' : 'Block'}
+                             </button>
+                             <button 
+                               onClick={() => handleDeleteUser(user._id, user.name)}
+                               className="px-3 py-1.5 flex items-center gap-1.5 rounded text-xs font-bold bg-red-100 text-red-600 hover:bg-red-200 transition-colors"
+                             >
+                                <Trash2 size={14} /> Delete
+                             </button>
+                          </div>
+                       </td>
+                     </tr>
+                   ))}
+                 </tbody>
+               </table>
+             </div>
+
+             {/* Mobile Card View */}
+             <div className="lg:hidden flex flex-col divide-y divide-gray-100">
+               {users.map((user) => (
+                 <div key={user._id} className={`p-5 flex flex-col gap-4 ${user.isBlocked ? 'bg-red-50/30' : ''}`}>
+                   <div className="flex items-center gap-4">
+                     <span className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center font-bold text-sm ${user.isBlocked ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
+                       {user.name.charAt(0).toUpperCase()}
+                     </span>
+                     <div className="flex-1 min-w-0">
+                       <h3 className="font-bold text-gray-900 truncate">{user.name}</h3>
+                       <p className="text-gray-500 text-xs truncate">{user.email}</p>
+                     </div>
+                     <div className="shrink-0">
+                       {user.isBlocked ? (
+                         <span className="inline-flex items-center gap-1 px-2py-1 rounded bg-red-100 text-red-700 text-[10px] font-bold uppercase tracking-wider">
+                           <Ban size={10} /> Blocked
+                         </span>
+                       ) : (
+                         <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-wider">
+                           <CheckCircle size={10} /> Active
+                         </span>
+                       )}
+                     </div>
+                   </div>
+
+                   <div className="grid grid-cols-2 gap-3 mt-2">
+                     <button 
+                       onClick={() => handleBlockToggle(user._id, user.isBlocked, user.name)}
+                       className={`flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-colors ${
+                         user.isBlocked ? 'bg-gray-800 text-white hover:bg-black shadow-md' : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
+                       }`}
+                     >
+                        {user.isBlocked ? <CheckCircle size={14} /> : <Ban size={14} />}
+                        {user.isBlocked ? 'Unblock Account' : 'Block Account'}
+                     </button>
+                     <button 
+                       onClick={() => handleDeleteUser(user._id, user.name)}
+                       className="flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold bg-red-100 text-red-600 hover:bg-red-200 transition-colors"
+                     >
+                        <Trash2 size={14} /> Delete
+                     </button>
+                   </div>
+                 </div>
+               ))}
+             </div>
            </div>
         )}
       </div>

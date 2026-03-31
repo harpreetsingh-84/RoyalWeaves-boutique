@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { apiService } from '../../services/api';
 import { useShop } from '../../context/ShopContext';
+import { Package, DollarSign, Users, Tag } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
   const { formatPrice } = useShop();
@@ -51,7 +52,7 @@ const Dashboard: React.FC = () => {
         <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 relative overflow-hidden group">
           <div className="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l" />
           <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-             📦
+             <Package size={20} />
           </div>
           <h3 className="text-gray-500 font-medium text-xs tracking-wider uppercase mb-1">Total Orders</h3>
           <p className="text-3xl font-bold text-gray-900">{analytics.totalOrders}</p>
@@ -60,7 +61,7 @@ const Dashboard: React.FC = () => {
         <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 relative overflow-hidden group">
           <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500 rounded-l" />
           <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-             💸
+             <DollarSign size={20} />
           </div>
           <h3 className="text-gray-500 font-medium text-xs tracking-wider uppercase mb-1">Total Revenue</h3>
           <p className="text-3xl font-bold text-gray-900">{formatPrice(analytics.totalRevenue)}</p>
@@ -69,7 +70,7 @@ const Dashboard: React.FC = () => {
         <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 relative overflow-hidden group">
           <div className="absolute top-0 left-0 w-1 h-full bg-purple-500 rounded-l" />
           <div className="w-10 h-10 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-             👥
+             <Users size={20} />
           </div>
           <h3 className="text-gray-500 font-medium text-xs tracking-wider uppercase mb-1">Customers</h3>
           <p className="text-3xl font-bold text-gray-900">{analytics.totalCustomers}</p>
@@ -78,7 +79,7 @@ const Dashboard: React.FC = () => {
         <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 relative overflow-hidden group">
            <div className="absolute top-0 left-0 w-1 h-full bg-amber-500 rounded-l" />
            <div className="w-10 h-10 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-             🏷️
+             <Tag size={20} />
            </div>
            <h3 className="text-gray-500 font-medium text-xs tracking-wider uppercase mb-1">Products</h3>
            <p className="text-3xl font-bold text-gray-900">{analytics.totalProducts || 0}</p>

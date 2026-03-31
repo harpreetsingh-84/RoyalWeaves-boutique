@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../../services/api';
 import { useShop } from '../../context/ShopContext';
+import { RefreshCw, ArrowRight } from 'lucide-react';
 
 const Orders: React.FC = () => {
   const [orders, setOrders] = useState([]);
@@ -52,7 +53,7 @@ const Orders: React.FC = () => {
             <p className="text-sm text-gray-500 mt-1">Manage all incoming orders and statuses.</p>
          </div>
          <button onClick={fetchOrders} className="px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 font-medium rounded-md transition flex items-center gap-2">
-           ↻ Refresh
+           <RefreshCw size={16} className={loading ? "animate-spin" : ""} /> Refresh
          </button>
       </div>
 
@@ -161,15 +162,15 @@ const Orders: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between mt-2">
-                    <span className={`px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-widest ${getStatusColor(order.paymentStatus)}`}>
+                  <div className="flex flex-col mt-4 gap-3">
+                    <span className={`px-3 py-2 rounded text-xs font-bold uppercase tracking-widest text-center ${getStatusColor(order.paymentStatus)}`}>
                       Pay: {order.paymentStatus || 'pending'}
                     </span>
                     <button 
                       onClick={() => navigate(`/admin/order/${order._id}`)} 
-                      className="px-6 py-2 bg-gray-900 text-white rounded hover:bg-black active:scale-95 transition text-xs font-bold uppercase tracking-widest shadow-md"
+                      className="w-full flex justify-center items-center gap-2 py-3 bg-gray-900 text-white rounded-lg hover:bg-black active:scale-95 transition text-xs font-bold uppercase tracking-widest shadow-md"
                     >
-                      Manage
+                      Manage Order <ArrowRight size={14} />
                     </button>
                   </div>
                 </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiService } from '../../services/api';
+import { Trash2, CheckCircle, XCircle } from 'lucide-react';
 
 const Admins: React.FC = () => {
   const [admins, setAdmins] = useState<any[]>([]);
@@ -141,10 +142,10 @@ const Admins: React.FC = () => {
                      </div>
                      <button 
                        onClick={() => handleRemoveAdmin(admin._id, admin.name)}
-                       className="p-2 text-red-500 hover:bg-red-50 hover:text-red-600 rounded-lg transition"
+                       className="p-2 text-red-500 hover:bg-red-50 bg-red-50 lg:bg-transparent lg:hover:bg-red-50 rounded-lg transition flex items-center justify-center shrink-0 w-10 h-10"
                        title="Remove Admin Permissions"
                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        <Trash2 size={18} />
                      </button>
                   </li>
                 ))}
@@ -176,7 +177,7 @@ const Admins: React.FC = () => {
 
            {adminMsg.text && (
              <div className={`p-3 rounded-lg text-sm font-medium mb-6 flex items-start gap-2 border ${adminMsg.type === 'success' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-600 border-red-200'}`}>
-               <span className="mt-0.5 text-xs">{adminMsg.type === 'success' ? '✅' : '❌'}</span>
+               <span className="mt-0.5 shrink-0">{adminMsg.type === 'success' ? <CheckCircle size={16} /> : <XCircle size={16} />}</span>
                <span>{adminMsg.text}</span>
              </div>
            )}

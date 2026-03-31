@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useShop } from '../../context/ShopContext';
 import { apiService } from '../../services/api';
+import { Plus, Pencil, Trash2, Loader2, Upload, UploadCloud, ArrowLeft } from 'lucide-react';
 
 const Products: React.FC = () => {
   const { products, refreshProducts, formatPrice } = useShop();
@@ -153,7 +154,7 @@ const Products: React.FC = () => {
                : 'bg-black text-white hover:bg-gray-800'
            }`}
          >
-           {showForm ? '← Back to List' : '+ Add Product'}
+           {showForm ? <span className="flex items-center gap-2"><ArrowLeft size={18}/> Back to List</span> : <span className="flex items-center gap-2"><Plus size={18}/> Add Product</span>}
          </button>
       </div>
 
@@ -197,11 +198,12 @@ const Products: React.FC = () => {
             <div className="space-y-4">
                <div>
                   <label className="block text-xs font-bold text-gray-600 mb-1 uppercase tracking-wide">Primary Cover Image</label>
-                  <div className="flex gap-2">
-                    <input required type="text" placeholder="Direct URL or upload ->" className="flex-1 border p-2.5 rounded" value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} />
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input required type="text" placeholder="Direct URL or upload ->" className="flex-1 border p-2.5 rounded w-full" value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} />
                     <input type="file" accept="image/*" id="primaryUpload" className="hidden" onChange={(e) => uploadFileHandler(e, true)} />
-                    <label htmlFor="primaryUpload" className={`px-4 py-2 bg-gray-100 hover:bg-gray-200 font-medium rounded cursor-pointer flex items-center justify-center ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
-                      {uploading ? '...' : 'Upload'}
+                    <label htmlFor="primaryUpload" className={`px-4 py-2 bg-gray-100 hover:bg-gray-200 font-medium rounded cursor-pointer flex items-center justify-center gap-2 shrink-0 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                      {uploading ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />}
+                      {uploading ? 'Uploading...' : 'Upload'}
                     </label>
                   </div>
                   {formData.image && <img src={formData.image} className="mt-2 h-20 rounded border bg-gray-50 object-cover" alt="preview" />}
@@ -209,11 +211,12 @@ const Products: React.FC = () => {
                
                <div>
                   <label className="block text-xs font-bold text-gray-600 mb-1 uppercase tracking-wide">Gallery Images</label>
-                  <div className="flex gap-2">
-                    <input type="text" placeholder="Urls separated by commas" className="flex-1 border p-2.5 rounded" value={formData.galleryUrls} onChange={e => setFormData({...formData, galleryUrls: e.target.value})} />
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input type="text" placeholder="Urls separated by commas" className="flex-1 border p-2.5 rounded w-full" value={formData.galleryUrls} onChange={e => setFormData({...formData, galleryUrls: e.target.value})} />
                     <input type="file" accept="image/*" multiple id="galleryUpload" className="hidden" onChange={uploadMultipleHandler} />
-                    <label htmlFor="galleryUpload" className={`px-4 py-2 bg-gray-100 hover:bg-gray-200 font-medium rounded cursor-pointer flex items-center justify-center ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
-                      {uploading ? '...' : 'Uploads'}
+                    <label htmlFor="galleryUpload" className={`px-4 py-2 bg-gray-100 hover:bg-gray-200 font-medium rounded cursor-pointer flex items-center justify-center gap-2 shrink-0 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                      {uploading ? <Loader2 size={16} className="animate-spin" /> : <UploadCloud size={16} />}
+                      {uploading ? 'Uploading...' : 'Upload Many'}
                     </label>
                   </div>
                </div>
@@ -283,16 +286,16 @@ const Products: React.FC = () => {
                            <td className="p-4 text-emerald-600 font-bold">{formatPrice(product.price)}</td>
                            <td className="p-4">
                               <div className="flex gap-2">
-                                 <button onClick={() => handleEditProduct(product)} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition" aria-label="Edit">
-                                   ✏️
+                                 <button onClick={() => handleEditProduct(product)} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition flex items-center justify-center h-9 w-9" aria-label="Edit">
+                                   <Pencil size={18} />
                                  </button>
                                  <button 
                                    onClick={() => handleDeleteProduct(product._id)} 
                                    disabled={deletingId === product._id}
-                                   className="p-2 text-red-600 hover:bg-red-50 rounded transition disabled:opacity-50" 
+                                   className="p-2 text-red-600 hover:bg-red-50 rounded transition disabled:opacity-50 flex items-center justify-center h-9 w-9" 
                                    aria-label="Delete"
                                  >
-                                   {deletingId === product._id ? '⏳' : '🗑️'}
+                                   {deletingId === product._id ? <Loader2 size={18} className="animate-spin" /> : <Trash2 size={18} />}
                                  </button>
                               </div>
                            </td>
@@ -317,16 +320,16 @@ const Products: React.FC = () => {
                           <div className="flex justify-between items-start gap-2 mb-1">
                              <h3 className="font-bold text-gray-900 text-sm leading-snug line-clamp-2">{product.name}</h3>
                              <div className="flex gap-1 shrink-0">
-                               <button onClick={() => handleEditProduct(product)} className="p-2 text-blue-600 bg-blue-50 rounded" aria-label="Edit">
-                                 ✏️
+                               <button onClick={() => handleEditProduct(product)} className="p-2 text-blue-600 hover:bg-blue-50 bg-blue-50/50 rounded transition flex items-center justify-center h-8 w-8" aria-label="Edit">
+                                 <Pencil size={14} />
                                </button>
                                <button 
                                  onClick={() => handleDeleteProduct(product._id)} 
                                  disabled={deletingId === product._id}
-                                 className="p-2 text-red-600 bg-red-50 rounded disabled:opacity-50" 
+                                 className="p-2 text-red-600 hover:bg-red-50 bg-red-50/50 rounded transition disabled:opacity-50 flex items-center justify-center h-8 w-8" 
                                  aria-label="Delete"
                                >
-                                 {deletingId === product._id ? '⏳' : '🗑️'}
+                                 {deletingId === product._id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
                                </button>
                              </div>
                           </div>

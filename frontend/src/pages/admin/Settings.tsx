@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiService } from '../../services/api';
+import { CreditCard, Target, Sparkles, Upload } from 'lucide-react';
 
 const Settings: React.FC = () => {
   const [siteContent, setSiteContent] = useState<any>(null);
@@ -113,7 +114,7 @@ const Settings: React.FC = () => {
         {/* UPI Config Section */}
         <section className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
            <div className="bg-gray-50 border-b border-gray-100 p-6 flex items-center gap-3">
-              <span className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">💳</span>
+              <span className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center"><CreditCard size={16}/></span>
               <h2 className="text-lg font-bold text-gray-800">Payment Configuration</h2>
            </div>
            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -129,17 +130,17 @@ const Settings: React.FC = () => {
               </div>
               <div>
                 <label className="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">UPI QR Code URL / Upload</label>
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                    <input 
                      type="text" 
-                     className="flex-1 text-sm border border-gray-200 p-3 rounded-lg focus:ring-2" 
+                     className="flex-1 text-sm border border-gray-200 p-3 rounded-lg focus:ring-2 w-full" 
                      value={siteContent.upiQrCode || ''} 
                      onChange={(e) => setSiteContent({...siteContent, upiQrCode: e.target.value})} 
                      placeholder="Direct URL or upload" 
                    />
                    <input type="file" accept="image/*" id="qrUpload" className="hidden" onChange={uploadUpiQr} />
-                   <label htmlFor="qrUpload" className={`px-4 py-3 bg-gray-100 text-sm font-medium rounded-lg cursor-pointer hover:bg-gray-200 transition ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
-                      {uploading ? '...' : 'Upload'}
+                   <label htmlFor="qrUpload" className={`px-4 py-3 bg-gray-100 text-sm font-medium rounded-lg cursor-pointer hover:bg-gray-200 transition flex items-center justify-center gap-2 shrink-0 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                      <Upload size={16}/> {uploading ? '...' : 'Upload'}
                    </label>
                 </div>
                 {siteContent.upiQrCode && (
@@ -155,7 +156,7 @@ const Settings: React.FC = () => {
         <section className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
            <div className="bg-gray-50 border-b border-gray-100 p-6 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                 <span className="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold">🎯</span>
+                 <span className="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold"><Target size={16}/></span>
                  <h2 className="text-lg font-bold text-gray-800">Landing Page Carousel</h2>
               </div>
               <span className="text-xs bg-white border px-3 py-1 rounded-full text-gray-500 font-medium shadow-sm">3 Active Slides</span>
@@ -177,11 +178,11 @@ const Settings: React.FC = () => {
                    
                    <div>
                      <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-1">Image URL / Upload</label>
-                     <div className="flex gap-2">
-                        <input required type="text" className="flex-1 text-sm border p-2 rounded focus:ring-2 outline-none" value={slide.image} onChange={(e) => updateHeroSlide(idx, 'image', e.target.value)} />
+                     <div className="flex flex-col sm:flex-row gap-2">
+                        <input required type="text" className="flex-1 text-sm border p-2 rounded focus:ring-2 outline-none w-full" value={slide.image} onChange={(e) => updateHeroSlide(idx, 'image', e.target.value)} />
                         <input type="file" accept="image/*" id={`heroUpload-${idx}`} className="hidden" onChange={(e) => uploadSiteImage(e, (url) => updateHeroSlide(idx, 'image', url))} />
-                        <label htmlFor={`heroUpload-${idx}`} className={`px-2 py-2 bg-white border text-xs font-semibold rounded cursor-pointer hover:bg-gray-50 ${uploading ? 'opacity-50' : ''}`}>
-                          Upload
+                        <label htmlFor={`heroUpload-${idx}`} className={`px-3 py-2 bg-white border text-xs font-semibold rounded cursor-pointer hover:bg-gray-50 flex items-center justify-center gap-1.5 shrink-0 ${uploading ? 'opacity-50' : ''}`}>
+                          <Upload size={14}/> Upload
                         </label>
                      </div>
                    </div>
@@ -208,7 +209,7 @@ const Settings: React.FC = () => {
         {/* Categories Spotlight */}
         <section className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
            <div className="bg-gray-50 border-b border-gray-100 p-6 flex items-center gap-3">
-              <span className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">✨</span>
+              <span className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold"><Sparkles size={16}/></span>
               <h2 className="text-lg font-bold text-gray-800">Featured Categories Spotlight</h2>
            </div>
            <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -225,11 +226,11 @@ const Settings: React.FC = () => {
                    </div>
                    <div>
                      <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-1">Spotlight Image</label>
-                     <div className="flex gap-2">
-                        <input required type="text" className="flex-1 text-sm border p-2 rounded outline-none" value={cat.image} onChange={(e) => updateCategory(idx, 'image', e.target.value)} />
+                     <div className="flex flex-col sm:flex-row gap-2">
+                        <input required type="text" className="flex-1 text-sm border p-2 rounded outline-none w-full" value={cat.image} onChange={(e) => updateCategory(idx, 'image', e.target.value)} />
                         <input type="file" accept="image/*" id={`catUpload-${idx}`} className="hidden" onChange={(e) => uploadSiteImage(e, (url) => updateCategory(idx, 'image', url))} />
-                        <label htmlFor={`catUpload-${idx}`} className={`px-2 py-2 bg-gray-100 border text-xs font-semibold rounded cursor-pointer ${uploading ? 'opacity-50' : ''}`}>
-                          Up
+                        <label htmlFor={`catUpload-${idx}`} className={`px-3 py-2 bg-gray-100 border text-xs font-semibold rounded cursor-pointer hover:bg-gray-200 flex items-center justify-center gap-1.5 shrink-0 ${uploading ? 'opacity-50' : ''}`}>
+                          <Upload size={14}/> Upload
                         </label>
                      </div>
                    </div>
