@@ -136,7 +136,7 @@ const Navbar = () => {
       <div className={`md:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300 ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeMenu}></div>
       
       {/* Mobile Menu Sliding Drawer */}
-      <div className={`md:hidden fixed top-0 right-0 h-screen w-3/4 sm:w-1/2 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} flex flex-col`}>
+      <div className={`md:hidden fixed top-0 right-0 h-fit max-h-[100dvh] w-3/4 sm:w-1/2 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} flex flex-col rounded-bl-2xl overflow-hidden pb-4`}>
          <div className="flex justify-between items-center p-6 border-b border-gray-100">
             <span className="font-bold text-lg text-gray-900">Menu</span>
             <button onClick={closeMenu} className="text-gray-500 hover:text-black">
@@ -144,7 +144,7 @@ const Navbar = () => {
             </button>
          </div>
          
-         <div className="flex-1 overflow-y-auto px-6 py-6 flex flex-col gap-4 text-gray-900">
+         <div className="overflow-y-auto px-6 py-4 flex flex-col gap-4 text-gray-900">
           {isAuthenticated ? (
             <div className="flex flex-col gap-2">
               <Link to="/collection" onClick={closeMenu} className="font-medium hover:bg-gray-50 transition-colors tracking-wide text-sm uppercase py-4 border-b border-gray-100 flex items-center justify-between">Collection <span>→</span></Link>
@@ -172,7 +172,7 @@ const Navbar = () => {
          </div>
          
          {isAuthenticated && (
-            <div className="p-6 border-t border-gray-100">
+            <div className="px-6 pt-2 pb-2 border-t border-gray-100">
               <button 
                 onClick={handleLogout}
                 className="w-full font-bold tracking-widest text-sm uppercase py-4 flex items-center justify-center rounded transition-colors border bg-red-50 text-red-600 border-red-100 hover:bg-red-100"
