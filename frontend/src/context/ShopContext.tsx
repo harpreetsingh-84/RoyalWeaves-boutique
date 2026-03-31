@@ -57,7 +57,9 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsLoading(true);
     try {
       const res = await apiService.getProducts();
-      const data = await res.json();
+      if (!res.ok) throw new Error("Server returned non-ok status");
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : [];
       setProducts(data);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -70,15 +72,18 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const res = await apiService.verifyAuth();
       if (res.ok) {
-        const data = await res.json();
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : {};
         setIsAuthenticated(true);
-        setIsAdmin(data.isAdmin);
+        setIsAdmin(!!data.isAdmin);
       } else {
         setIsAuthenticated(false);
         setIsAdmin(false);
       }
     } catch (error) {
       console.error("Auth verification failed:", error);
+      setIsAuthenticated(false);
+      setIsAdmin(false);
     } finally {
       setIsAuthChecking(false);
     }

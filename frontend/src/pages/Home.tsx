@@ -12,13 +12,31 @@ const Home = () => {
         const res = await apiService.getContent();
         if (res.ok) {
           setContent(await res.json());
+        } else {
+          setContent(fallbackContent);
         }
       } catch (e) {
         console.error("Failed to fetch content", e);
+        setContent(fallbackContent);
       }
     };
     loadContent();
   }, []);
+
+  const fallbackContent = {
+    heroSlides: [
+      {
+        image: "https://images.unsplash.com/photo-1515347619252-a3915155cc9c?q=80&w=2070&auto=format&fit=crop",
+        subtitle: "The Signature Collection",
+        title: "Elegance Redefined",
+        description: "Discover our exclusive range of luxury women's dresses."
+      }
+    ],
+    featuredCategories: [
+      { name: 'Evening Gowns', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600' },
+      { name: 'Summer Dresses', image: 'https://images.unsplash.com/photo-1572804013309-82a89b4b09fd?q=80&w=600' }
+    ]
+  };
 
   useEffect(() => {
     if (!content) return;

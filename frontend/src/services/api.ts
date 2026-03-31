@@ -1,12 +1,36 @@
-const BASE_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = import.meta.env.VITE_API_URL || '';
+
+const fetchWithTimeout = async (url: string, options: RequestInit = {}) => {
+  const controller = new AbortController();
+  // 15 seconds timeout
+  const id = setTimeout(() => controller.abort(), 15000); 
+  
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal
+    });
+    clearTimeout(id);
+    return response;
+  } catch (error: any) {
+    clearTimeout(id);
+    console.error("Fetch Error:", error.message || error);
+    // Return a fake response that fails ok check so app continues instead of crashing
+    return { ok: false, status: 504, json: async () => ({ message: 'Request Timeout' }) } as Response;
+  }
+};
+
 const apiFetch = (endpoint: string, options: RequestInit = {}) => {
-  return fetch(`${BASE_URL}${endpoint}`, {
+  const isFormData = options.body instanceof FormData;
+  const headers = { ...options.headers } as any;
+  if (!isFormData) {
+    headers['Content-Type'] = 'application/json';
+  }
+
+  return fetchWithTimeout(`${BASE_URL}${endpoint}`, {
     credentials: 'include',
     ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
+    headers,
   });
 };
 
@@ -24,26 +48,24 @@ export const apiService = {
     method: 'POST',
     body: JSON.stringify(data),
   }),
-  logout: () => fetch(`${BASE_URL}/api/auth/logout`, { // Special case for cookies sometimes needed
+  logout: () => fetchWithTimeout(`${BASE_URL}/api/auth/logout`, {
     method: 'POST',
     credentials: 'include'
   }),
-  verifyAuth: () => fetch(`${BASE_URL}/api/auth/verify`, {
+  verifyAuth: () => fetchWithTimeout(`${BASE_URL}/api/auth/verify`, {
     credentials: 'include'
   }),
   sendAdminOtp: (data: { action: 'update' | 'add', targetEmail: string }) => apiFetch('/api/auth/send-admin-otp', {
     method: 'POST',
     body: JSON.stringify(data),
-    credentials: 'include'
   }),
   verifyAdminAction: (data: { action: 'update' | 'add', targetEmail: string, otp: string }) => apiFetch('/api/auth/verify-admin-action', {
     method: 'POST',
     body: JSON.stringify(data),
-    credentials: 'include'
   }),
 
   // Products
-  getProducts: () => fetch(`${BASE_URL}/api/products`),
+  getProducts: () => fetchWithTimeout(`${BASE_URL}/api/products`),
   addProduct: (productData: any) => apiFetch('/api/products', {
     method: 'POST',
     body: JSON.stringify(productData)
@@ -57,68 +79,59 @@ export const apiService = {
   }),
 
   // Categories
-  getCategories: () => fetch(`${BASE_URL}/api/categories`),
+  getCategories: () => fetchWithTimeout(`${BASE_URL}/api/categories`),
   addCategory: (data: any) => apiFetch('/api/categories', {
     method: 'POST',
-    body: JSON.stringify(data),
-    credentials: 'include'
+    body: JSON.stringify(data)
   }),
   deleteCategory: (id: string) => apiFetch(`/api/categories/${id}`, {
-    method: 'DELETE',
-    credentials: 'include'
+    method: 'DELETE'
   }),
 
   // Orders & Analytics
-  getOrders: () => fetch(`${BASE_URL}/api/orders`, { credentials: 'include' }),
-  getMyOrders: () => fetch(`${BASE_URL}/api/orders/myorders`, { credentials: 'include' }),
-  getOrderById: (id: string) => fetch(`${BASE_URL}/api/orders/${id}`, { credentials: 'include' }),
+  getOrders: () => fetchWithTimeout(`${BASE_URL}/api/orders`, { credentials: 'include' }),
+  getMyOrders: () => fetchWithTimeout(`${BASE_URL}/api/orders/myorders`, { credentials: 'include' }),
+  getOrderById: (id: string) => fetchWithTimeout(`${BASE_URL}/api/orders/${id}`, { credentials: 'include' }),
   updateOrderStatus: (id: string, statuses: {status?: string, paymentStatus?: string, orderStatus?: string}) => apiFetch(`/api/orders/${id}/status`, {
     method: 'PUT',
     body: JSON.stringify(statuses),
-    credentials: 'include'
   }),
   createOrder: (data: any) => apiFetch('/api/orders', {
     method: 'POST',
     body: JSON.stringify(data),
-    credentials: 'include'
   }),
-  getAnalytics: () => fetch(`${BASE_URL}/api/analytics`, { credentials: 'include' }),
+  getAnalytics: () => fetchWithTimeout(`${BASE_URL}/api/analytics`, { credentials: 'include' }),
 
   // Upload
-  upload: (formData: FormData) => fetch(`${BASE_URL}/api/upload`, {
+  upload: (formData: FormData) => apiFetch('/api/upload', {
     method: 'POST',
     body: formData,
-    credentials: 'include'
   }),
-  uploadMultiple: (formData: FormData) => fetch(`${BASE_URL}/api/upload/multiple`, {
+  uploadMultiple: (formData: FormData) => apiFetch('/api/upload/multiple', {
     method: 'POST',
     body: formData,
-    credentials: 'include'
   }),
 
   // CMS Content Management
-  getContent: () => fetch(`${BASE_URL}/api/content`),
+  getContent: () => fetchWithTimeout(`${BASE_URL}/api/content`),
   updateContent: (data: any) => apiFetch('/api/content', {
     method: 'PUT',
     body: JSON.stringify(data)
   }),
 
   // User Management
-  getUsers: () => fetch(`${BASE_URL}/api/users`, { credentials: 'include' }),
+  getUsers: () => fetchWithTimeout(`${BASE_URL}/api/users`, { credentials: 'include' }),
   blockUser: (id: string, isBlocked: boolean) => apiFetch(`/api/users/${id}/block`, {
     method: 'PUT',
     body: JSON.stringify({ isBlocked }),
-    credentials: 'include'
   }),
   deleteUser: (id: string) => apiFetch(`/api/users/${id}`, {
     method: 'DELETE',
-    credentials: 'include'
   }),
 
   // Admin Management
-  getAdmins: () => fetch(`${BASE_URL}/api/users/admins`, { credentials: 'include' }),
+  getAdmins: () => fetchWithTimeout(`${BASE_URL}/api/users/admins`, { credentials: 'include' }),
   removeAdmin: (id: string) => apiFetch(`/api/users/admins/${id}`, {
     method: 'DELETE',
-    credentials: 'include'
   }),
 };
