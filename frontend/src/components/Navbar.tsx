@@ -136,23 +136,23 @@ const Navbar = () => {
       <div className={`md:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300 ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={closeMenu}></div>
       
       {/* Mobile Menu Sliding Drawer */}
-      <div className={`md:hidden fixed top-0 right-0 h-fit max-h-[100dvh] w-3/4 sm:w-1/2 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} flex flex-col rounded-bl-2xl overflow-hidden pb-4`}>
-         <div className="flex justify-between items-center p-6 border-b border-gray-100">
+      <div className={`md:hidden fixed top-0 right-0 h-[100dvh] w-full bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} flex flex-col overflow-hidden`}>
+         <div className="flex justify-between items-center p-6 border-b border-gray-100 shrink-0">
             <span className="font-bold text-lg text-gray-900">Menu</span>
             <button onClick={closeMenu} className="text-gray-500 hover:text-black">
                ✕
             </button>
          </div>
          
-         <div className="overflow-y-auto px-6 py-4 flex flex-col gap-4 text-gray-900">
+         <div className="flex-1 overflow-y-auto px-8 py-4 flex flex-col text-gray-900 justify-center">
           {isAuthenticated ? (
-            <div className="flex flex-col gap-2">
-              <Link to="/collection" onClick={closeMenu} className="font-medium hover:bg-gray-50 transition-colors tracking-wide text-sm uppercase py-4 border-b border-gray-100 flex items-center justify-between">Collection <span>→</span></Link>
+            <div className="flex flex-col gap-2 w-full max-w-sm mx-auto">
+              <Link to="/collection" onClick={closeMenu} className="font-medium hover:bg-gray-50 transition-colors tracking-wide text-sm uppercase py-5 border-b border-gray-100 flex items-center justify-between">Collection <span>→</span></Link>
               {isAdmin && (
-                <Link to="/admin" onClick={closeMenu} className="font-medium hover:bg-gray-50 transition-colors tracking-wide text-sm uppercase py-4 border-b border-gray-100 flex items-center justify-between">Admin Panel <span>→</span></Link>
+                <Link to="/admin" onClick={closeMenu} className="font-medium hover:bg-gray-50 transition-colors tracking-wide text-sm uppercase py-5 border-b border-gray-100 flex items-center justify-between">Admin Panel <span>→</span></Link>
               )}
-              <Link to="/myorders" onClick={closeMenu} className="font-medium hover:text-accent transition-colors tracking-wide text-sm uppercase py-4 border-b border-gray-100 flex items-center justify-between">My Orders <span>→</span></Link>
-              <Link to="/cart" onClick={closeMenu} className="flex items-center justify-between font-medium hover:text-accent transition-colors tracking-wide text-sm uppercase py-4 border-b border-gray-100">
+              <Link to="/myorders" onClick={closeMenu} className="font-medium hover:text-accent transition-colors tracking-wide text-sm uppercase py-5 border-b border-gray-100 flex items-center justify-between">My Orders <span>→</span></Link>
+              <Link to="/cart" onClick={closeMenu} className="flex items-center justify-between font-medium hover:text-accent transition-colors tracking-wide text-sm uppercase py-5 border-b border-gray-100">
                 Cart
                 {cartCount > 0 && (
                   <span className="bg-accent text-white text-[10px] flex items-center justify-center h-6 w-6 font-bold rounded-full">
@@ -162,9 +162,9 @@ const Navbar = () => {
               </Link>
             </div>
           ) : (
-            <div className="flex flex-col gap-4 mt-2">
-              <Link to="/login" onClick={closeMenu} className="text-center font-bold hover:bg-gray-100 transition-colors tracking-widest text-sm uppercase py-4 bg-gray-50 rounded border border-gray-200 block">Login</Link>
-              <Link to="/register" onClick={closeMenu} className="text-center font-bold tracking-widest text-sm uppercase px-4 py-4 bg-gray-900 text-white rounded hover:bg-black transition-colors shadow-md block">
+            <div className="flex flex-col gap-6 w-full max-w-sm mx-auto">
+              <Link to="/login" onClick={closeMenu} className="text-center font-bold hover:bg-gray-100 transition-colors tracking-widest text-sm uppercase py-5 bg-gray-50 rounded-lg border border-gray-200 block w-full">Login</Link>
+              <Link to="/register" onClick={closeMenu} className="text-center font-bold tracking-widest text-sm uppercase px-4 py-5 bg-gray-900 text-white rounded-lg hover:bg-black transition-colors shadow-md block w-full">
                 Register
               </Link>
             </div>
@@ -172,10 +172,10 @@ const Navbar = () => {
          </div>
          
          {isAuthenticated && (
-            <div className="px-6 pt-2 pb-2 border-t border-gray-100">
+            <div className="px-8 pb-8 pt-4 shrink-0">
               <button 
                 onClick={handleLogout}
-                className="w-full font-bold tracking-widest text-sm uppercase py-4 flex items-center justify-center rounded transition-colors border bg-red-50 text-red-600 border-red-100 hover:bg-red-100"
+                className="w-full max-w-sm mx-auto font-bold tracking-widest text-sm uppercase py-4 flex items-center justify-center rounded-lg transition-colors border bg-red-50 text-red-600 border-red-100 hover:bg-red-100"
               >
                 Logout
               </button>

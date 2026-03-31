@@ -239,11 +239,11 @@ const Settings: React.FC = () => {
            </div>
         </section>
 
-        <div className="sticky bottom-4 z-10 flex justify-end bg-white/80 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-lg mt-8">
+        <div className="flex justify-end bg-gray-50 p-4 rounded-xl border border-gray-100 mt-8">
            <button 
              type="submit" 
              disabled={isUpdatingContent} 
-             className="px-10 py-3 bg-black text-white font-bold rounded-lg shadow-xl shadow-black/20 hover:scale-105 active:scale-95 transition-all text-sm disabled:opacity-50"
+             className="w-full sm:w-auto px-10 py-3 bg-black text-white font-bold rounded-lg hover:scale-105 active:scale-95 transition-all text-sm disabled:opacity-50"
            >
              {isUpdatingContent ? 'Saving Configuration...' : 'Publish Live Settings'}
            </button>
