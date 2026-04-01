@@ -70,8 +70,14 @@ const Home = () => {
               src={slide.image} 
               alt={slide.title} 
               onError={(e) => {
-                (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1541339907198-e08759dfc3ef?q=80&w=2070&auto=format&fit=crop'; // Elegant dark fabric placeholder
-                (e.target as HTMLImageElement).className += ' opacity-30 grayscale';
+                const target = e.target as HTMLImageElement;
+                const fallbackSrc = 'https://images.unsplash.com/photo-1541339907198-e08759dfc3ef?q=80&w=2070&auto=format&fit=crop';
+                if (target.src !== fallbackSrc) {
+                  target.src = fallbackSrc;
+                  target.className += ' opacity-30 grayscale';
+                } else {
+                  target.onerror = null; // Prevent further loops if fallback also fails
+                }
               }}
               className={`absolute inset-0 w-full h-full object-cover object-top opacity-50 ${idx === currentSlide ? 'animate-slow-zoom' : ''}`}
             />
