@@ -27,6 +27,10 @@ const ItemDetails = () => {
     }
   }, [product]);
 
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [selectedColor]);
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - left) / width) * 100;
@@ -55,7 +59,15 @@ const ItemDetails = () => {
     );
   }
 
-  const allImages = [product.image, ...(product.gallery || [])];
+  let mainImage = product.image;
+  if (selectedColor && product.colors) {
+    const colorVariant = product.colors.find((c: any) => c.color === selectedColor);
+    if (colorVariant && colorVariant.image) {
+      mainImage = colorVariant.image;
+    }
+  }
+
+  const allImages = Array.from(new Set([mainImage, ...(product.gallery || [])]));
   const isFullscreen = fullscreenIndex >= 0;
 
   useEffect(() => {

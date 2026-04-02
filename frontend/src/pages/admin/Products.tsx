@@ -8,7 +8,7 @@ const Products: React.FC = () => {
   
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
-    name: '', description: '', price: '', image: '', galleryUrls: '', category: '', quantity: '', colors: [] as { color: string, stock: string }[]
+    name: '', description: '', price: '', image: '', galleryUrls: '', category: '', quantity: '', colors: [] as { color: string, stock: string, image: string }[]
   });
   const [categories, setCategories] = useState<{_id: string, name: string}[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -88,7 +88,7 @@ const Products: React.FC = () => {
         ...formData,
         price: Number(formData.price),
         gallery: formData.galleryUrls.split(',').map((url: string) => url.trim()).filter((url: string) => url),
-        colors: formData.colors.map((c: any) => ({ color: c.color, stock: Number(c.stock) }))
+        colors: formData.colors.map((c: any) => ({ color: c.color, stock: Number(c.stock), image: c.image || '' }))
       };
 
       if (editingId) {
@@ -116,7 +116,7 @@ const Products: React.FC = () => {
       category: product.category,
       galleryUrls: Array.isArray(product.gallery) ? product.gallery.join(', ') : '',
       quantity: product.quantity ? product.quantity.toString() : '0',
-      colors: product.colors ? product.colors.map((c: any) => ({ color: c.color, stock: c.stock.toString() })) : []
+      colors: product.colors ? product.colors.map((c: any) => ({ color: c.color, stock: c.stock.toString(), image: c.image || '' })) : []
     });
     setShowForm(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -142,13 +142,35 @@ const Products: React.FC = () => {
   };
 
   const addColorVariant = () => {
-    setFormData({ ...formData, colors: [...formData.colors, { color: '', stock: '0' }] });
+    setFormData({ ...formData, colors: [...formData.colors, { color: '', stock: '0', image: '' }] });
   };
 
-  const updateColorVariant = (index: number, key: 'color' | 'stock', value: string) => {
+  const updateColorVariant = (index: number, key: 'color' | 'stock' | 'image', value: string) => {
     const updated = [...formData.colors];
     updated[index][key] = value;
     setFormData({ ...formData, colors: updated });
+  };
+
+  const uploadColorVariantImage = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const uploadData = new FormData();
+    uploadData.append('image', file);
+    setUploading(true);
+
+    try {
+      const res = await apiService.upload(uploadData);
+      const data = await res.json();
+      if (res.ok) {
+        updateColorVariant(index, 'image', data.url);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('File upload failed');
+    } finally {
+      setUploading(false);
+    }
   };
 
   const removeColorVariant = (index: number) => {
@@ -253,6 +275,15 @@ const Products: React.FC = () => {
                 <div key={index} className="flex gap-4 items-center mb-2">
                   <input required placeholder="Color Name (e.g. Red)" type="text" className="border p-2 rounded flex-1" value={c.color} onChange={e => updateColorVariant(index, 'color', e.target.value)} />
                   <input required placeholder="Stock" type="number" min="0" className="border p-2 rounded w-24" value={c.stock} onChange={e => updateColorVariant(index, 'stock', e.target.value)} />
+                  
+                  <div className="flex items-center gap-2">
+                    {c.image && <img src={c.image} alt="Color variant" className="w-8 h-8 object-cover rounded border" />}
+                    <input type="file" accept="image/*" id={`colorUpload-${index}`} className="hidden" onChange={(e) => uploadColorVariantImage(e, index)} />
+                    <label htmlFor={`colorUpload-${index}`} className={`px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-xs font-medium rounded cursor-pointer flex items-center justify-center gap-1 shrink-0 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                      <Upload size={14} /> <span className="hidden sm:inline">Upload Image</span>
+                    </label>
+                  </div>
+
                   <button type="button" onClick={() => removeColorVariant(index)} className="text-red-500 hover:text-red-700">
                     <Trash2 size={16} />
                   </button>

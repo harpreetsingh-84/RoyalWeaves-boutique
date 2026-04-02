@@ -8,7 +8,7 @@ export interface IProduct extends Document {
   category: string;
   gallery: string[];
   quantity: number;
-  colors?: { color: string; stock: number }[];
+  colors?: { color: string; stock: number; image?: string }[];
 }
 
 const productSchema = new Schema<IProduct>({
@@ -21,7 +21,8 @@ const productSchema = new Schema<IProduct>({
   quantity: { type: Number, required: true, default: 0, min: 0 },
   colors: [{
     color: { type: String, required: true },
-    stock: { type: Number, required: true, default: 0, min: 0 }
+    stock: { type: Number, required: true, default: 0, min: 0 },
+    image: { type: String }
   }]
 }, { timestamps: true });
 
