@@ -11,7 +11,7 @@ export interface Product {
   category: string;
   gallery?: string[];
   quantity: number;
-  colors?: { color: string; stock: number; image?: string }[];
+  colors?: { color: string; stock: number; images?: string[] }[];
 }
 
 export interface CartItem {

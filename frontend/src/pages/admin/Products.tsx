@@ -8,7 +8,7 @@ const Products: React.FC = () => {
   
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
-    name: '', description: '', price: '', image: '', galleryUrls: '', category: '', quantity: '', colors: [] as { color: string, stock: string, image: string }[]
+    name: '', description: '', price: '', image: '', galleryUrls: '', category: '', quantity: '', colors: [] as { color: string, stock: string, images: string[] }[]
   });
   const [categories, setCategories] = useState<{_id: string, name: string}[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -88,7 +88,7 @@ const Products: React.FC = () => {
         ...formData,
         price: Number(formData.price),
         gallery: formData.galleryUrls.split(',').map((url: string) => url.trim()).filter((url: string) => url),
-        colors: formData.colors.map((c: any) => ({ color: c.color, stock: Number(c.stock), image: c.image || '' }))
+        colors: formData.colors.map((c: any) => ({ color: c.color, stock: Number(c.stock), images: c.images || [] }))
       };
 
       if (editingId) {
@@ -116,7 +116,7 @@ const Products: React.FC = () => {
       category: product.category,
       galleryUrls: Array.isArray(product.gallery) ? product.gallery.join(', ') : '',
       quantity: product.quantity ? product.quantity.toString() : '0',
-      colors: product.colors ? product.colors.map((c: any) => ({ color: c.color, stock: c.stock.toString(), image: c.image || '' })) : []
+      colors: product.colors ? product.colors.map((c: any) => ({ color: c.color, stock: c.stock.toString(), images: c.images?.length > 0 ? c.images : (c.image ? [c.image] : []) })) : []
     });
     setShowForm(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -142,32 +142,34 @@ const Products: React.FC = () => {
   };
 
   const addColorVariant = () => {
-    setFormData({ ...formData, colors: [...formData.colors, { color: '', stock: '0', image: '' }] });
+    setFormData({ ...formData, colors: [...formData.colors, { color: '', stock: '0', images: [] }] });
   };
 
-  const updateColorVariant = (index: number, key: 'color' | 'stock' | 'image', value: string) => {
+  const updateColorVariant = (index: number, key: 'color' | 'stock', value: string) => {
     const updated = [...formData.colors];
     updated[index][key] = value;
     setFormData({ ...formData, colors: updated });
   };
 
-  const uploadColorVariantImage = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const uploadMultipleColorImagesHandler = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    if (!e.target.files?.length) return;
 
     const uploadData = new FormData();
-    uploadData.append('image', file);
+    Array.from(e.target.files).forEach((file: File) => {
+      uploadData.append('images', file);
+    });
     setUploading(true);
 
     try {
-      const res = await apiService.upload(uploadData);
+      const res = await apiService.uploadMultiple(uploadData);
       const data = await res.json();
-      if (res.ok) {
-        updateColorVariant(index, 'image', data.url);
-      }
+      const currentImages = formData.colors[index].images || [];
+      const updated = [...formData.colors];
+      updated[index].images = [...currentImages, ...data.urls];
+      setFormData({ ...formData, colors: updated });
     } catch (err) {
       console.error(err);
-      alert('File upload failed');
+      alert('Gallery upload failed');
     } finally {
       setUploading(false);
     }
@@ -277,10 +279,14 @@ const Products: React.FC = () => {
                   <input required placeholder="Stock" type="number" min="0" className="border p-2 rounded w-24" value={c.stock} onChange={e => updateColorVariant(index, 'stock', e.target.value)} />
                   
                   <div className="flex items-center gap-2">
-                    {c.image && <img src={c.image} alt="Color variant" className="w-8 h-8 object-cover rounded border" />}
-                    <input type="file" accept="image/*" id={`colorUpload-${index}`} className="hidden" onChange={(e) => uploadColorVariantImage(e, index)} />
+                    <div className="flex gap-1 overflow-x-auto max-w-[120px] scrollbar-hide">
+                      {c.images && c.images.map((imgUrl, iIdx) => (
+                         <img key={iIdx} src={imgUrl} alt="Variant" className="w-8 h-8 object-cover rounded border shrink-0" />
+                      ))}
+                    </div>
+                    <input type="file" accept="image/*" multiple id={`colorUpload-${index}`} className="hidden" onChange={(e) => uploadMultipleColorImagesHandler(e, index)} />
                     <label htmlFor={`colorUpload-${index}`} className={`px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-xs font-medium rounded cursor-pointer flex items-center justify-center gap-1 shrink-0 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
-                      <Upload size={14} /> <span className="hidden sm:inline">Upload Image</span>
+                      <UploadCloud size={14} /> <span className="hidden sm:inline">Upload Photos</span>
                     </label>
                   </div>
 

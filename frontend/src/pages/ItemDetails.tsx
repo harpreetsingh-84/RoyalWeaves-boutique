@@ -60,14 +60,20 @@ const ItemDetails = () => {
   }
 
   let mainImage = product.image;
+  let variantImages: string[] = [];
+
   if (selectedColor && product.colors) {
     const colorVariant = product.colors.find((c: any) => c.color === selectedColor);
-    if (colorVariant && colorVariant.image) {
-      mainImage = colorVariant.image;
+    if (colorVariant && colorVariant.images && colorVariant.images.length > 0) {
+      mainImage = colorVariant.images[0];
+      variantImages = colorVariant.images;
+    } else if (colorVariant && (colorVariant as any).image) {
+      mainImage = (colorVariant as any).image;
+      variantImages = [(colorVariant as any).image];
     }
   }
 
-  const allImages = Array.from(new Set([mainImage, ...(product.gallery || [])]));
+  const allImages = Array.from(new Set([mainImage, ...variantImages, ...(product.gallery || [])].filter(Boolean))) as string[];
   const isFullscreen = fullscreenIndex >= 0;
 
   useEffect(() => {
