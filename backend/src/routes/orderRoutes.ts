@@ -22,8 +22,19 @@ router.post('/', verifyToken, async (req: AuthRequest, res: any): Promise<any> =
       if (!product) {
         return res.status(404).json({ message: `Product ${item.name} not found` });
       }
-      if (product.quantity < item.quantity) {
-        return res.status(400).json({ message: `Insufficient stock for ${product.name}` });
+      
+      if (item.color) {
+        const colorVariant = product.colors?.find((c: any) => c.color === item.color);
+        if (!colorVariant) {
+          return res.status(400).json({ message: `Color ${item.color} not found for ${product.name}` });
+        }
+        if (colorVariant.stock < item.quantity) {
+          return res.status(400).json({ message: `Insufficient stock for ${product.name} (${item.color})` });
+        }
+      } else {
+        if (product.quantity < item.quantity) {
+          return res.status(400).json({ message: `Insufficient stock for ${product.name}` });
+        }
       }
     }
     
@@ -43,9 +54,16 @@ router.post('/', verifyToken, async (req: AuthRequest, res: any): Promise<any> =
 
     // 2. Decrement Stock
     for (const item of items) {
-      await Product.findByIdAndUpdate(item.product, {
-        $inc: { quantity: -item.quantity }
-      });
+      if (item.color) {
+        await Product.findOneAndUpdate(
+          { _id: item.product, "colors.color": item.color },
+          { $inc: { "colors.$.stock": -item.quantity } }
+        );
+      } else {
+        await Product.findByIdAndUpdate(item.product, {
+          $inc: { quantity: -item.quantity }
+        });
+      }
     }
 
     res.status(201).json(order);

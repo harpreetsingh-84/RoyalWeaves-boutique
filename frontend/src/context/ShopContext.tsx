@@ -11,11 +11,13 @@ export interface Product {
   category: string;
   gallery?: string[];
   quantity: number;
+  colors?: { color: string; stock: number }[];
 }
 
 export interface CartItem {
   product: Product;
   quantity: number;
+  color?: string;
 }
 
 export interface User {
@@ -34,9 +36,9 @@ interface ShopContextType {
   formatPrice: (price: number) => string;
   setIsAdmin: (val: boolean) => void;
   setIsAuthenticated: (val: boolean) => void;
-  addToCart: (product: Product) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addToCart: (product: Product, color?: string) => void;
+  removeFromCart: (productId: string, color?: string) => void;
+  updateQuantity: (productId: string, quantity: number, color?: string) => void;
   refreshProducts: () => void;
   verifyAuth: () => Promise<void>;
 }
@@ -113,42 +115,60 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     fetchProducts();
   };
 
-  const addToCart = (product: Product) => {
-    if (product.quantity <= 0) {
-      alert('This product is out of stock');
+  const addToCart = (product: Product, color?: string) => {
+    let availableStock = product.quantity;
+    if (color && product.colors) {
+      const colorVariant = product.colors.find(c => c.color === color);
+      if (colorVariant) {
+        availableStock = colorVariant.stock;
+      }
+    }
+
+    if (availableStock <= 0) {
+      alert(color ? `This color variant is out of stock` : 'This product is out of stock');
       return;
     }
 
     setCart((prevCart) => {
-      const existing = prevCart.find(item => item.product._id === product._id);
+      const existing = prevCart.find(item => item.product._id === product._id && item.color === color);
       if (existing) {
-        if (existing.quantity >= product.quantity) {
-          alert(`Only ${product.quantity} items available in stock`);
+        if (existing.quantity >= availableStock) {
+          alert(`Only ${availableStock} items available in stock`);
           return prevCart;
         }
         return prevCart.map(item =>
-          item.product._id === product._id ? { ...item, quantity: item.quantity + 1 } : item
+          (item.product._id === product._id && item.color === color) ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      return [...prevCart, { product, quantity: 1 }];
+      return [...prevCart, { product, quantity: 1, color }];
     });
   };
 
-  const removeFromCart = (productId: string) => {
-    setCart((prevCart) => prevCart.filter(item => item.product._id !== productId));
+  const removeFromCart = (productId: string, color?: string) => {
+    setCart((prevCart) => prevCart.filter(item => !(item.product._id === productId && item.color === color)));
   };
 
-  const updateQuantity = (productId: string, quantity: number) => {
+  const updateQuantity = (productId: string, quantity: number, color?: string) => {
     if (quantity < 1) return;
     
     const product = products.find(p => p._id === productId);
-    if (product && quantity > product.quantity) {
-      alert(`Only ${product.quantity} items available in stock`);
-      return;
+    if (product) {
+      let availableStock = product.quantity;
+      if (color && product.colors) {
+        const colorVariant = product.colors.find(c => c.color === color);
+        if (colorVariant) {
+          availableStock = colorVariant.stock;
+        }
+      }
+
+      if (quantity > availableStock) {
+        alert(`Only ${availableStock} items available in stock`);
+        return;
+      }
     }
 
     setCart((prevCart) => prevCart.map(item =>
-      item.product._id === productId ? { ...item, quantity } : item
+      (item.product._id === productId && item.color === color) ? { ...item, quantity } : item
     ));
   };
 

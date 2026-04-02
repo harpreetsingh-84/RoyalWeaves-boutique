@@ -13,6 +13,19 @@ const ItemDetails = () => {
   const [activeTab, setActiveTab] = useState('description');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [zoomStyles, setZoomStyles] = useState<React.CSSProperties>({});
+  
+  const [selectedColor, setSelectedColor] = useState<string>('');
+
+  useEffect(() => {
+    if (product && product.colors && product.colors.length > 0) {
+      const availableColor = product.colors.find(c => c.stock > 0);
+      if (availableColor) {
+        setSelectedColor(availableColor.color);
+      } else {
+        setSelectedColor(product.colors[0].color);
+      }
+    }
+  }, [product]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
@@ -77,7 +90,19 @@ const ItemDetails = () => {
       setCurrentIndex((prev: number) => (prev + 1) % allImages.length);
     }
   };
-  const handleAddToCart = () => { addToCart(product); };
+  const handleAddToCart = () => { 
+    if (product.colors && product.colors.length > 0 && !selectedColor) {
+      alert("Please select a color");
+      return;
+    }
+    addToCart(product, selectedColor); 
+  };
+
+  let maxStockForDisplay = product?.quantity ?? 0;
+  if (product && product.colors && product.colors.length > 0 && selectedColor) {
+     const colorVar = product.colors.find((c: any) => c.color === selectedColor);
+     if (colorVar) maxStockForDisplay = colorVar.stock;
+  }
 
   return (
     <div className="min-h-screen bg-[#faf9f8] selection:bg-gray-900 selection:text-white pb-32 font-sans text-gray-900">
@@ -196,33 +221,63 @@ const ItemDetails = () => {
                 {product.name}
               </h1>
               
-              <p className="text-2xl font-light text-gray-600 mb-10 font-serif italic flex items-center flex-wrap gap-4">
+              <p className="text-2xl font-light text-gray-600 mb-6 font-serif italic flex items-center flex-wrap gap-4">
                 {formatPrice(product.price)}
                 <span className={`text-xs font-sans not-italic tracking-widest uppercase px-3 py-1.5 rounded-full ${
-                  product.quantity <= 0 
+                  maxStockForDisplay <= 0 
                     ? 'text-red-700 bg-red-50 font-bold border border-red-100' 
-                    : product.quantity <= 5 
+                    : maxStockForDisplay <= 5 
                       ? 'text-orange-700 bg-orange-50 font-bold animate-pulse border border-orange-200' 
                       : 'text-gray-500 bg-gray-100 font-medium'
                 }`}>
-                  {product.quantity <= 0 
+                  {maxStockForDisplay <= 0 
                     ? 'Out of Stock' 
-                    : product.quantity <= 5 
-                      ? `Only ${product.quantity} left` 
-                      : `${product.quantity} In Stock`}
+                    : maxStockForDisplay <= 5 
+                      ? `Only ${maxStockForDisplay} left` 
+                      : `${maxStockForDisplay} In Stock`}
                 </span>
               </p>
+
+              {/* Color Selection */}
+              {product.colors && product.colors.length > 0 && (
+                <div className="mb-10">
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-xs font-bold tracking-[0.15em] text-gray-900 uppercase">Select Color</span>
+                    <span className="text-xs text-gray-500">{selectedColor}</span>
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    {product.colors.map((c: any, idx: number) => {
+                      const isSelected = selectedColor === c.color;
+                      const isOutOfStock = c.stock <= 0;
+                      return (
+                        <button
+                          key={idx}
+                          onClick={() => !isOutOfStock && setSelectedColor(c.color)}
+                          disabled={isOutOfStock}
+                          className={`
+                            px-6 py-3 text-xs font-bold uppercase tracking-widest border transition-all duration-300
+                            ${isSelected ? 'border-gray-900 bg-gray-900 text-white' : 'border-gray-200 text-gray-600 hover:border-gray-900'}
+                            ${isOutOfStock ? 'opacity-40 cursor-not-allowed bg-gray-50 text-gray-400 border-gray-200 hover:border-gray-200' : ''}
+                          `}
+                        >
+                          {c.color} {isOutOfStock && '(Sold Out)'}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               {/* Add to Cart - Premium Button */}
               <button 
                 onClick={handleAddToCart}
-                disabled={product.quantity <= 0}
-                className={`relative group overflow-hidden ${product.quantity > 0 ? 'bg-gray-900' : 'bg-gray-400 cursor-not-allowed'} text-white w-full py-5 mb-12 shadow-2xl shadow-gray-900/20 active:scale-[0.98] transition-all duration-500 block`}
+                disabled={maxStockForDisplay <= 0}
+                className={`relative group overflow-hidden ${maxStockForDisplay > 0 ? 'bg-gray-900' : 'bg-gray-400 cursor-not-allowed'} text-white w-full py-5 mb-12 shadow-2xl shadow-gray-900/20 active:scale-[0.98] transition-all duration-500 block`}
               >
                 <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out"></div>
                 <span className="relative z-10 flex items-center justify-center gap-4 text-xs font-bold tracking-[0.2em] uppercase">
-                  {product.quantity > 0 ? 'Add to Bag' : 'Sold Out'}
-                  {product.quantity > 0 && (
+                  {maxStockForDisplay > 0 ? 'Add to Bag' : 'Sold Out'}
+                  {maxStockForDisplay > 0 && (
                     <span className="group-hover:translate-x-2 transition-transform duration-500">
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                     </span>

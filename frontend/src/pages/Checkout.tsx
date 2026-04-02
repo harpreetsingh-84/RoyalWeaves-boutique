@@ -22,7 +22,7 @@ const Checkout = () => {
   const [screenshotFile, setScreenshotFile] = useState<File | null>(null);
   const [upiConfig, setUpiConfig] = useState<{upiId: string, upiQrCode: string} | null>(null);
   
-  const totalAmount = cart.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+  const totalAmount = cart.reduce((total: number, item: any) => total + (item.product.price * item.quantity), 0);
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -85,7 +85,8 @@ const Checkout = () => {
           product: item.product._id,
           name: item.product.name,
           price: item.product.price,
-          quantity: item.quantity
+          quantity: item.quantity,
+          color: item.color
         })),
         totalAmount,
         shippingDetails: {
@@ -287,14 +288,19 @@ const Checkout = () => {
             
             <div className="space-y-4 mb-6 max-h-64 overflow-y-auto pr-2">
               {cart.map(item => (
-                <div key={item.product._id} className="flex justify-between items-center text-sm">
-                  <div className="flex items-center gap-3">
-                    <span className="font-semibold text-gray-500">{item.quantity}x</span>
-                    <span className="truncate max-w-[150px] font-medium" title={item.product.name}>
-                      {item.product.name}
-                    </span>
+                <div key={`${item.product._id}-${item.color || 'none'}`} className="flex justify-between items-start text-sm py-1">
+                  <div className="flex items-start gap-3">
+                    <span className="font-semibold text-gray-500 mt-0.5">{item.quantity}x</span>
+                    <div className="flex flex-col">
+                      <span className="truncate max-w-[150px] font-medium leading-tight" title={item.product.name}>
+                        {item.product.name}
+                      </span>
+                      {item.color && (
+                        <span className="text-xs text-gray-500 capitalize mt-1">{item.color}</span>
+                      )}
+                    </div>
                   </div>
-                  <span className="text-gray-700 font-medium">{formatPrice(item.product.price * item.quantity)}</span>
+                  <span className="text-gray-700 font-medium mt-0.5">{formatPrice(item.product.price * item.quantity)}</span>
                 </div>
               ))}
             </div>

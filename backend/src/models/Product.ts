@@ -8,6 +8,7 @@ export interface IProduct extends Document {
   category: string;
   gallery: string[];
   quantity: number;
+  colors?: { color: string; stock: number }[];
 }
 
 const productSchema = new Schema<IProduct>({
@@ -17,7 +18,11 @@ const productSchema = new Schema<IProduct>({
   image: { type: String, required: true },
   category: { type: String, required: true },
   gallery: [{ type: String }],
-  quantity: { type: Number, required: true, default: 0, min: 0 }
+  quantity: { type: Number, required: true, default: 0, min: 0 },
+  colors: [{
+    color: { type: String, required: true },
+    stock: { type: Number, required: true, default: 0, min: 0 }
+  }]
 }, { timestamps: true });
 
 export default mongoose.model<IProduct>('Product', productSchema);

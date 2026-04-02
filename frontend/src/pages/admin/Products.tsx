@@ -8,7 +8,7 @@ const Products: React.FC = () => {
   
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
-    name: '', description: '', price: '', image: '', galleryUrls: '', category: '', quantity: ''
+    name: '', description: '', price: '', image: '', galleryUrls: '', category: '', quantity: '', colors: [] as { color: string, stock: string }[]
   });
   const [categories, setCategories] = useState<{_id: string, name: string}[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -62,7 +62,7 @@ const Products: React.FC = () => {
     if (!e.target.files?.length) return;
     
     const uploadData = new FormData();
-    Array.from(e.target.files).forEach(file => {
+    Array.from(e.target.files).forEach((file: File) => {
       uploadData.append('images', file);
     });
     setUploading(true);
@@ -87,7 +87,8 @@ const Products: React.FC = () => {
       const payload = {
         ...formData,
         price: Number(formData.price),
-        gallery: formData.galleryUrls.split(',').map(url => url.trim()).filter(url => url)
+        gallery: formData.galleryUrls.split(',').map((url: string) => url.trim()).filter((url: string) => url),
+        colors: formData.colors.map((c: any) => ({ color: c.color, stock: Number(c.stock) }))
       };
 
       if (editingId) {
@@ -114,7 +115,8 @@ const Products: React.FC = () => {
       image: product.image,
       category: product.category,
       galleryUrls: Array.isArray(product.gallery) ? product.gallery.join(', ') : '',
-      quantity: product.quantity ? product.quantity.toString() : '0'
+      quantity: product.quantity ? product.quantity.toString() : '0',
+      colors: product.colors ? product.colors.map((c: any) => ({ color: c.color, stock: c.stock.toString() })) : []
     });
     setShowForm(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -123,7 +125,7 @@ const Products: React.FC = () => {
   const cancelForm = () => {
     setShowForm(false);
     setEditingId(null);
-    setFormData({ name: '', description: '', price: '', image: '', galleryUrls: '', category: '', quantity: '' });
+    setFormData({ name: '', description: '', price: '', image: '', galleryUrls: '', category: '', quantity: '', colors: [] });
   };
 
   const handleDeleteProduct = async (id: string) => {
@@ -137,6 +139,21 @@ const Products: React.FC = () => {
     } finally {
       setDeletingId(null);
     }
+  };
+
+  const addColorVariant = () => {
+    setFormData({ ...formData, colors: [...formData.colors, { color: '', stock: '0' }] });
+  };
+
+  const updateColorVariant = (index: number, key: 'color' | 'stock', value: string) => {
+    const updated = [...formData.colors];
+    updated[index][key] = value;
+    setFormData({ ...formData, colors: updated });
+  };
+
+  const removeColorVariant = (index: number) => {
+    const updated = formData.colors.filter((_: any, i: number) => i !== index);
+    setFormData({ ...formData, colors: updated });
   };
 
   return (
@@ -227,6 +244,22 @@ const Products: React.FC = () => {
               <textarea required placeholder="Write a description for the product..." className="w-full border p-2.5 rounded h-32 resize-y" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
             </div>
 
+            <div className="md:col-span-2 border-t pt-4">
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-xs font-bold text-gray-600 uppercase tracking-wide">Color Variants (Optional)</label>
+                <button type="button" onClick={addColorVariant} className="text-xs text-blue-600 font-bold hover:underline">+ Add Variant</button>
+              </div>
+              {formData.colors.map((c, index) => (
+                <div key={index} className="flex gap-4 items-center mb-2">
+                  <input required placeholder="Color Name (e.g. Red)" type="text" className="border p-2 rounded flex-1" value={c.color} onChange={e => updateColorVariant(index, 'color', e.target.value)} />
+                  <input required placeholder="Stock" type="number" min="0" className="border p-2 rounded w-24" value={c.stock} onChange={e => updateColorVariant(index, 'stock', e.target.value)} />
+                  <button type="button" onClick={() => removeColorVariant(index)} className="text-red-500 hover:text-red-700">
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+
             <div className="md:col-span-2 flex justify-end gap-3 pt-4 border-t">
                <button type="button" onClick={cancelForm} className="px-5 py-2 text-gray-600 bg-gray-100 rounded hover:bg-gray-200 transition">Cancel</button>
                <button type="submit" disabled={isAdding || uploading} className="px-6 py-2 bg-black text-white rounded hover:bg-gray-800 transition disabled:opacity-70 disabled:cursor-wait">
@@ -278,9 +311,20 @@ const Products: React.FC = () => {
                              </span>
                            </td>
                            <td className="p-4">
-                              <div className="flex items-center gap-2">
-                                <span className={`w-2 h-2 rounded-full ${product.quantity > 5 ? 'bg-green-500' : product.quantity > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
-                                <span className="font-medium">{product.quantity}</span>
+                              <div className="flex flex-col gap-1">
+                                {product.colors && product.colors.length > 0 ? (
+                                  product.colors.map((c: any, i: number) => (
+                                    <div key={i} className="flex items-center gap-2 text-xs">
+                                      <span className={`w-1.5 h-1.5 rounded-full ${c.stock > 5 ? 'bg-green-500' : c.stock > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
+                                      <span className="font-medium text-gray-700">{c.color}: {c.stock}</span>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <div className="flex items-center gap-2 text-xs">
+                                    <span className={`w-2 h-2 rounded-full ${product.quantity > 5 ? 'bg-green-500' : product.quantity > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
+                                    <span className="font-medium">Base: {product.quantity}</span>
+                                  </div>
+                                )}
                               </div>
                            </td>
                            <td className="p-4 text-emerald-600 font-bold">{formatPrice(product.price)}</td>
@@ -334,15 +378,24 @@ const Products: React.FC = () => {
                              </div>
                           </div>
                           <p className="text-emerald-600 font-bold mb-2 text-sm">{formatPrice(product.price)}</p>
-                          <div className="flex flex-wrap items-center gap-2 mb-2">
+                           <div className="flex flex-wrap items-center gap-2 mb-2">
                              <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-600 uppercase tracking-wide">
                                {product.category}
                              </span>
-                             <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${product.quantity > 5 ? 'bg-green-50 text-green-700' : product.quantity > 0 ? 'bg-orange-50 text-orange-700' : 'bg-red-50 text-red-700'}`}>
-                               <span className={`w-1.5 h-1.5 rounded-full ${product.quantity > 5 ? 'bg-green-500' : product.quantity > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
-                               Stock: {product.quantity}
-                             </span>
-                          </div>
+                             {product.colors && product.colors.length > 0 ? (
+                               product.colors.map((c: any, i: number) => (
+                                 <span key={i} className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${c.stock > 5 ? 'bg-green-50 text-green-700' : c.stock > 0 ? 'bg-orange-50 text-orange-700' : 'bg-red-50 text-red-700'}`}>
+                                   <span className={`w-1.5 h-1.5 rounded-full ${c.stock > 5 ? 'bg-green-500' : c.stock > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
+                                   {c.color}: {c.stock}
+                                 </span>
+                               ))
+                             ) : (
+                               <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${product.quantity > 5 ? 'bg-green-50 text-green-700' : product.quantity > 0 ? 'bg-orange-50 text-orange-700' : 'bg-red-50 text-red-700'}`}>
+                                 <span className={`w-1.5 h-1.5 rounded-full ${product.quantity > 5 ? 'bg-green-500' : product.quantity > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
+                                 Stock: {product.quantity}
+                               </span>
+                             )}
+                           </div>
                        </div>
                     </div>
                   ))

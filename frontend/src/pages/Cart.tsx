@@ -5,7 +5,7 @@ const Cart = () => {
   const { cart, removeFromCart, updateQuantity, formatPrice } = useShop();
   const navigate = useNavigate();
 
-  const totalAmount = cart.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+  const totalAmount = cart.reduce((total: number, item: any) => total + (item.product.price * item.quantity), 0);
 
   const handleCheckout = () => {
     if (cart.length === 0) return;
@@ -31,21 +31,23 @@ const Cart = () => {
             <div key={item.product._id} className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-white rounded-lg shadow-sm">
               <img src={item.product.image} alt={item.product.name} className="w-24 h-24 object-cover rounded-md" />
               <div className="flex-grow text-center sm:text-left">
-                <h3 className="text-xl font-medium mb-2">{item.product.name}</h3>
+                <h3 className="text-xl font-medium mb-1">{item.product.name}</h3>
+                {item.color && (
+                  <p className="text-sm text-gray-500 mb-2 uppercase tracking-wider font-semibold">Color: {item.color}</p>
+                )}
                 <p className="text-gray-500 mb-4">{formatPrice(item.product.price)}</p>
                 <div className="flex items-center justify-center sm:justify-start gap-4 bg-gray-50 w-max mx-auto sm:mx-0 p-1 rounded-full">
                   <button 
                     className="w-8 h-8 rounded-full bg-white shadow-sm hover:bg-primary hover:text-white transition-colors flex items-center justify-center font-bold"
-                    onClick={() => updateQuantity(item.product._id, item.quantity - 1)}
+                    onClick={() => updateQuantity(item.product._id, item.quantity - 1, item.color)}
                   >
                     &minus;
                   </button>
                   <span className="w-4 text-center font-medium">{item.quantity}</span>
                   <button 
-                    className={`w-8 h-8 rounded-full shadow-sm transition-colors flex items-center justify-center font-bold ${item.quantity >= item.product.quantity ? 'bg-gray-50 text-gray-300 cursor-not-allowed border border-gray-100' : 'bg-white hover:bg-primary hover:text-white'}`}
-                    onClick={() => updateQuantity(item.product._id, item.quantity + 1)}
-                    disabled={item.quantity >= item.product.quantity}
-                    title={item.quantity >= item.product.quantity ? 'Maximum stock reached' : 'Increase quantity'}
+                    className={`w-8 h-8 rounded-full shadow-sm transition-colors flex items-center justify-center font-bold bg-white hover:bg-primary hover:text-white`}
+                    onClick={() => updateQuantity(item.product._id, item.quantity + 1, item.color)}
+                    title={'Increase quantity'}
                   >
                     &#43;
                   </button>
@@ -55,7 +57,7 @@ const Cart = () => {
                 <p className="text-xl font-semibold mb-4">{formatPrice(item.product.price * item.quantity)}</p>
                 <button 
                   className="text-red-500 text-sm hover:text-red-700 underline transition-colors"
-                  onClick={() => removeFromCart(item.product._id)}
+                  onClick={() => removeFromCart(item.product._id, item.color)}
                 >
                   Remove
                 </button>
