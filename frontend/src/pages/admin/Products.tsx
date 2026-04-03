@@ -4,7 +4,8 @@ import { apiService } from '../../services/api';
 import { Plus, Pencil, Trash2, Loader2, Upload, UploadCloud, ArrowLeft } from 'lucide-react';
 
 const Products: React.FC = () => {
-  const { products, refreshProducts, formatPrice } = useShop();
+  const { products: _publicProducts, refreshProducts, formatPrice } = useShop();
+  const [adminProducts, setAdminProducts] = useState<any[]>([]);
   
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
@@ -18,7 +19,19 @@ const Products: React.FC = () => {
 
   useEffect(() => {
     fetchCategories();
+    fetchAdminProducts();
   }, []);
+
+  const fetchAdminProducts = async () => {
+    try {
+      const res = await apiService.getAdminProducts();
+      if (res.ok) {
+        setAdminProducts(await res.json());
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const fetchCategories = async () => {
     try {
@@ -98,6 +111,7 @@ const Products: React.FC = () => {
       }
       
       refreshProducts();
+      fetchAdminProducts();
       cancelForm();
     } catch (error) {
       console.error("Error saving product:", error);
@@ -134,6 +148,7 @@ const Products: React.FC = () => {
     try {
       await apiService.deleteProduct(id);
       refreshProducts();
+      fetchAdminProducts();
     } catch (error) {
       console.error("Error deleting product:", error);
     } finally {
@@ -200,7 +215,8 @@ const Products: React.FC = () => {
       </div>
 
       {showForm && (
-        <div className="bg-white border rounded-xl overflow-hidden shadow-sm animate-fade-in relative">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in relative">
+        <div className="lg:col-span-2 bg-white border rounded-xl overflow-hidden shadow-sm">
           <div className="bg-gray-50 px-6 py-4 border-b">
              <h2 className="font-semibold text-lg">{editingId ? 'Edit Product' : 'Add New Product'}</h2>
           </div>
@@ -305,6 +321,52 @@ const Products: React.FC = () => {
             </div>
           </form>
         </div>
+        
+        {/* Product Status Overview */}
+        <div className="bg-white border rounded-xl overflow-hidden shadow-sm flex flex-col h-full max-h-[800px]">
+          <div className="bg-gray-50 px-6 py-4 border-b shrink-0">
+             <h2 className="font-semibold text-lg">Product Status Overview</h2>
+          </div>
+          <div className="p-6 overflow-y-auto flex-1 space-y-6">
+            <div>
+              <h3 className="text-sm font-bold text-red-600 uppercase tracking-wide mb-3 flex items-center gap-2"><Trash2 size={16}/> Deleted Products</h3>
+              <div className="space-y-3">
+                {adminProducts.filter(p => p.isDeleted).length === 0 ? (
+                  <p className="text-xs text-gray-500">No deleted products.</p>
+                ) : (
+                  adminProducts.filter(p => p.isDeleted).map(p => (
+                    <div key={p._id} className="flex items-center gap-3 bg-red-50 p-2 rounded border border-red-100">
+                      <img src={p.image} className="w-10 h-10 object-cover rounded" alt={p.name} />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs text-gray-900 font-semibold truncate">{p.name}</p>
+                        <p className="text-[10px] text-red-600 font-bold">Deleted</p>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-orange-600 uppercase tracking-wide mb-3 flex items-center gap-2"><Loader2 size={16}/> Sold Out</h3>
+              <div className="space-y-3">
+                {adminProducts.filter(p => !p.isDeleted && p.quantity === 0 && (!p.colors || p.colors.length === 0 || p.colors.every((c: any) => c.stock === 0))).length === 0 ? (
+                  <p className="text-xs text-gray-500">No sold out products.</p>
+                ) : (
+                  adminProducts.filter(p => !p.isDeleted && p.quantity === 0 && (!p.colors || p.colors.length === 0 || p.colors.every((c: any) => c.stock === 0))).map(p => (
+                    <div key={p._id} className="flex items-center gap-3 bg-orange-50 p-2 rounded border border-orange-100">
+                      <img src={p.image} className="w-10 h-10 object-cover rounded" alt={p.name} />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs text-gray-900 font-semibold truncate">{p.name}</p>
+                        <p className="text-[10px] text-orange-600 font-bold">Sold Out</p>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
       )}
 
       {/* Product List Grid/Table */}
@@ -324,15 +386,15 @@ const Products: React.FC = () => {
                    </tr>
                  </thead>
                  <tbody className="divide-y divide-gray-100">
-                    {products.length === 0 ? (
+                    {adminProducts.length === 0 ? (
                       <tr>
                         <td colSpan={5} className="p-12 text-center text-gray-500">
                            No products found. Start by adding a new one!
                         </td>
                       </tr>
                     ) : (
-                      products.map((product) => (
-                        <tr key={product._id} className="hover:bg-gray-50/50 transition-colors">
+                      adminProducts.map((product) => (
+                        <tr key={product._id} className={`hover:bg-gray-50/50 transition-colors ${product.isDeleted ? 'opacity-50' : ''}`}>
                            <td className="p-4 w-1/3">
                               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                                  <img src={product.image} alt={product.name} className="w-16 h-16 object-cover rounded shadow-sm border" />
@@ -352,28 +414,27 @@ const Products: React.FC = () => {
                                 {product.colors && product.colors.length > 0 ? (
                                   product.colors.map((c: any, i: number) => (
                                     <div key={i} className="flex items-center gap-2 text-xs">
-                                      <span className={`w-1.5 h-1.5 rounded-full ${c.stock > 5 ? 'bg-green-500' : c.stock > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
+                                     <span className={`w-1.5 h-1.5 rounded-full ${product.isDeleted ? 'bg-gray-400' : c.stock > 5 ? 'bg-green-500' : c.stock > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
                                       <span className="font-medium text-gray-700">{c.color}: {c.stock}</span>
                                     </div>
                                   ))
                                 ) : (
                                   <div className="flex items-center gap-2 text-xs">
-                                    <span className={`w-2 h-2 rounded-full ${product.quantity > 5 ? 'bg-green-500' : product.quantity > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
+                                    <span className={`w-2 h-2 rounded-full ${product.isDeleted ? 'bg-gray-400' : product.quantity > 5 ? 'bg-green-500' : product.quantity > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
                                     <span className="font-medium">Base: {product.quantity}</span>
                                   </div>
                                 )}
                               </div>
                            </td>
-                           <td className="p-4 text-emerald-600 font-bold">{formatPrice(product.price)}</td>
-                           <td className="p-4">
+                           <td className="p-4 text-emerald-600 font-bold">{formatPrice(product.price)}</td>                            <td className="p-4">
                               <div className="flex gap-2">
-                                 <button onClick={() => handleEditProduct(product)} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition flex items-center justify-center h-9 w-9" aria-label="Edit">
+                                 <button onClick={() => handleEditProduct(product)} disabled={product.isDeleted} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition flex items-center justify-center h-9 w-9 disabled:opacity-30" aria-label="Edit">
                                    <Pencil size={18} />
                                  </button>
                                  <button 
                                    onClick={() => handleDeleteProduct(product._id)} 
-                                   disabled={deletingId === product._id}
-                                   className="p-2 text-red-600 hover:bg-red-50 rounded transition disabled:opacity-50 flex items-center justify-center h-9 w-9" 
+                                   disabled={deletingId === product._id || product.isDeleted}
+                                   className="p-2 text-red-600 hover:bg-red-50 rounded transition disabled:opacity-30 flex items-center justify-center h-9 w-9" 
                                    aria-label="Delete"
                                  >
                                    {deletingId === product._id ? <Loader2 size={18} className="animate-spin" /> : <Trash2 size={18} />}
@@ -389,25 +450,25 @@ const Products: React.FC = () => {
 
             {/* Mobile Card View */}
             <div className="lg:hidden flex flex-col divide-y divide-gray-100">
-               {products.length === 0 ? (
+               {adminProducts.length === 0 ? (
                   <div className="p-12 text-center text-gray-500">
                      No products found. Start by adding a new one!
                   </div>
                ) : (
-                  products.map((product) => (
-                    <div key={product._id} className="p-5 flex gap-4 items-start">
+                  adminProducts.map((product) => (
+                    <div key={product._id} className={`p-5 flex gap-4 items-start ${product.isDeleted ? 'opacity-50' : ''}`}>
                        <img src={product.image} alt={product.name} className="w-20 h-24 object-cover rounded shadow-sm border shrink-0" />
                        <div className="flex-1 min-w-0">
                           <div className="flex justify-between items-start gap-2 mb-1">
                              <h3 className="font-bold text-gray-900 text-sm leading-snug line-clamp-2">{product.name}</h3>
                              <div className="flex gap-1 shrink-0">
-                               <button onClick={() => handleEditProduct(product)} className="p-2 text-blue-600 hover:bg-blue-50 bg-blue-50/50 rounded transition flex items-center justify-center h-8 w-8" aria-label="Edit">
+                               <button onClick={() => handleEditProduct(product)} disabled={product.isDeleted} className="p-2 text-blue-600 hover:bg-blue-50 bg-blue-50/50 rounded transition flex items-center justify-center h-8 w-8 disabled:opacity-30" aria-label="Edit">
                                  <Pencil size={14} />
                                </button>
                                <button 
                                  onClick={() => handleDeleteProduct(product._id)} 
-                                 disabled={deletingId === product._id}
-                                 className="p-2 text-red-600 hover:bg-red-50 bg-red-50/50 rounded transition disabled:opacity-50 flex items-center justify-center h-8 w-8" 
+                                 disabled={deletingId === product._id || product.isDeleted}
+                                 className="p-2 text-red-600 hover:bg-red-50 bg-red-50/50 rounded transition disabled:opacity-30 flex items-center justify-center h-8 w-8" 
                                  aria-label="Delete"
                                >
                                  {deletingId === product._id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
@@ -421,14 +482,14 @@ const Products: React.FC = () => {
                              </span>
                              {product.colors && product.colors.length > 0 ? (
                                product.colors.map((c: any, i: number) => (
-                                 <span key={i} className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${c.stock > 5 ? 'bg-green-50 text-green-700' : c.stock > 0 ? 'bg-orange-50 text-orange-700' : 'bg-red-50 text-red-700'}`}>
-                                   <span className={`w-1.5 h-1.5 rounded-full ${c.stock > 5 ? 'bg-green-500' : c.stock > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
+                                 <span key={i} className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${product.isDeleted ? 'bg-gray-100 text-gray-500' : c.stock > 5 ? 'bg-green-50 text-green-700' : c.stock > 0 ? 'bg-orange-50 text-orange-700' : 'bg-red-50 text-red-700'}`}>
+                                   <span className={`w-1.5 h-1.5 rounded-full ${product.isDeleted ? 'bg-gray-400' : c.stock > 5 ? 'bg-green-500' : c.stock > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
                                    {c.color}: {c.stock}
                                  </span>
                                ))
                              ) : (
-                               <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${product.quantity > 5 ? 'bg-green-50 text-green-700' : product.quantity > 0 ? 'bg-orange-50 text-orange-700' : 'bg-red-50 text-red-700'}`}>
-                                 <span className={`w-1.5 h-1.5 rounded-full ${product.quantity > 5 ? 'bg-green-500' : product.quantity > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
+                               <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${product.isDeleted ? 'bg-gray-100 text-gray-500' : product.quantity > 5 ? 'bg-green-50 text-green-700' : product.quantity > 0 ? 'bg-orange-50 text-orange-700' : 'bg-red-50 text-red-700'}`}>
+                                 <span className={`w-1.5 h-1.5 rounded-full ${product.isDeleted ? 'bg-gray-400' : product.quantity > 5 ? 'bg-green-500' : product.quantity > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
                                  Stock: {product.quantity}
                                </span>
                              )}
@@ -440,6 +501,39 @@ const Products: React.FC = () => {
             </div>
           </div>
          </div>
+      )}
+
+      {/* Delete History Section */}
+      {!showForm && adminProducts.some(p => p.isDeleted) && (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mt-8 animate-fade-in">
+          <div className="bg-red-50/50 px-6 py-4 border-b border-red-100">
+             <h2 className="font-semibold text-lg text-red-900 flex items-center gap-2">
+               <Trash2 size={20} className="text-red-500" /> Delete History
+             </h2>
+             <p className="text-xs text-red-600 mt-1">Products that have been removed from the catalog.</p>
+          </div>
+          <div className="p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {adminProducts.filter(p => p.isDeleted).map(product => (
+                <div key={product._id} className="flex flex-col border border-red-100 bg-white rounded-lg p-3 relative shadow-sm">
+                  <div className="flex gap-3 items-center mb-3">
+                    <img src={product.image} alt={product.name} className="w-12 h-12 rounded object-cover border border-gray-100 bg-gray-50" />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-sm text-gray-900 truncate" title={product.name}>{product.name}</h4>
+                      <p className="text-xs text-gray-500 truncate">{product.category}</p>
+                    </div>
+                  </div>
+                  <div className="mt-auto pt-3 border-t border-gray-50 flex justify-between items-center text-xs">
+                    <span className="text-red-600 font-medium">Deleted</span>
+                    <span className="text-gray-400">
+                      {product.deletedAt ? new Date(product.deletedAt).toLocaleDateString() : 'Unknown date'}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

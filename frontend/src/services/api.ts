@@ -66,6 +66,7 @@ export const apiService = {
 
   // Products
   getProducts: () => fetchWithTimeout(`${BASE_URL}/api/products`),
+  getAdminProducts: () => fetchWithTimeout(`${BASE_URL}/api/products/admin`, { credentials: 'include' }),
   addProduct: (productData: any) => apiFetch('/api/products', {
     method: 'POST',
     body: JSON.stringify(productData)

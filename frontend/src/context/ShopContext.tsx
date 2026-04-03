@@ -12,6 +12,8 @@ export interface Product {
   gallery?: string[];
   quantity: number;
   colors?: { color: string; stock: number; images?: string[] }[];
+  isDeleted?: boolean;
+  deletedAt?: Date;
 }
 
 export interface CartItem {

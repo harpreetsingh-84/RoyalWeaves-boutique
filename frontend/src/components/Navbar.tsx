@@ -55,8 +55,9 @@ const Navbar = () => {
   return (
     <nav className={`fixed w-full top-0 transition-all duration-500 z-50 ${navClass}`}>
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-        <Link to="/" className={`text-[1.15rem] sm:text-xl md:text-2xl font-bold tracking-tight whitespace-nowrap ${textClass}`} onClick={closeMenu}>
-          Woven Wonder <span className={`font-light ${logoAccentClass}`}>Creation</span>
+        <Link to="/" className={`flex items-center gap-2 text-[1.15rem] sm:text-xl md:text-2xl font-bold tracking-tight whitespace-nowrap ${textClass}`} onClick={closeMenu}>
+          <img src="/favicon.svg" alt="Woven Wonder Logo" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
+          <span>Woven Wonder <span className={`font-light ${logoAccentClass}`}>Creation</span></span>
         </Link>
         
         {/* Desktop Menu */}

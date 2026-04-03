@@ -7,6 +7,16 @@ const router = express.Router();
 // GET all products (Public)
 router.get('/', async (req: Request, res: Response) => {
   try {
+    const products = await Product.find({ isDeleted: { $ne: true } });
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+// GET all products including deleted (Protected Admin)
+router.get('/admin', verifyToken, requireAdmin, async (req: Request, res: Response) => {
+  try {
     const products = await Product.find({});
     res.json(products);
   } catch (error) {
@@ -25,10 +35,10 @@ router.post('/', verifyToken, requireAdmin, async (req: Request, res: Response) 
   }
 });
 
-// DELETE a product (Protected Admin)
+// DELETE a product (Protected Admin) - Soft Delete
 router.delete('/:id', verifyToken, requireAdmin, async (req: Request, res: Response) => {
   try {
-    const product = await Product.findByIdAndDelete(req.params.id);
+    const product = await Product.findByIdAndUpdate(req.params.id, { isDeleted: true, deletedAt: new Date() }, { new: true });
     if (product) {
       res.json({ message: 'Product removed' });
     } else {

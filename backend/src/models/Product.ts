@@ -9,6 +9,8 @@ export interface IProduct extends Document {
   gallery: string[];
   quantity: number;
   colors?: { color: string; stock: number; images?: string[] }[];
+  isDeleted?: boolean;
+  deletedAt?: Date;
 }
 
 const productSchema = new Schema<IProduct>({
@@ -23,7 +25,9 @@ const productSchema = new Schema<IProduct>({
     color: { type: String, required: true },
     stock: { type: Number, required: true, default: 0, min: 0 },
     images: [{ type: String }]
-  }]
+  }],
+  isDeleted: { type: Boolean, default: false },
+  deletedAt: { type: Date }
 }, { timestamps: true });
 
 export default mongoose.model<IProduct>('Product', productSchema);
