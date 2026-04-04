@@ -1,9 +1,8 @@
 import { useShop } from '../context/ShopContext';
-import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 
 const Collection = () => {
-  const { products, isLoading, formatPrice } = useShop();
+  const { products, isLoading } = useShop();
 
   if (isLoading) {
     return (
@@ -37,7 +36,7 @@ const Collection = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16">
             {products.map((product) => (
-              <ProductCard key={product._id} product={product as any} />
+              <ProductCard key={product._id} product={product} />
             ))}
           </div>
         )}

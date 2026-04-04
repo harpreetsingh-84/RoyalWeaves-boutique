@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useShop, Product } from '../context/ShopContext';
+import { useShop, type Product } from '../context/ShopContext';
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const { formatPrice } = useShop();
@@ -17,8 +17,11 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
     product.colors.forEach(c => {
       if (c.images && c.images.length > 0) {
         allImages = [...allImages, ...c.images];
-      } else if ((c as any).image) {
-        allImages.push((c as any).image);
+      } else {
+        const legacyColor = c as { image?: string };
+        if (legacyColor.image) {
+          allImages.push(legacyColor.image);
+        }
       }
     });
   }
@@ -26,7 +29,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
 
   // Auto-slide effect
   useEffect(() => {
-    let timer: any;
+    let timer: ReturnType<typeof setInterval>;
     // Animate every 5 seconds if there are multiple images and the user is NOT hovering
     if (allImages.length > 1 && !isHovered) {
       timer = setInterval(() => {
