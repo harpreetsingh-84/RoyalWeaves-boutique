@@ -62,8 +62,6 @@ const Navbar = () => {
         
         {/* Desktop Menu */}
         <ul className={`hidden md:flex gap-6 md:gap-8 items-center ${textClass}`}>
-          {isAuthenticated && (
-            <>
               <li>
                 <Link to="/collection" className="font-medium hover:text-accent transition-colors tracking-wide text-sm uppercase">Collection</Link>
               </li>
@@ -88,8 +86,6 @@ const Navbar = () => {
                   )}
                 </Link>
               </li>
-            </>
-          )}
 
           {isAuthenticated ? (
             <li>
@@ -118,7 +114,6 @@ const Navbar = () => {
 
         {/* Mobile Hamburger Button */}
         <div className="md:hidden flex items-center gap-4">
-          {isAuthenticated && (
              <Link to="/cart" className={`relative flex items-center gap-2 font-medium tracking-wide text-sm uppercase ${textClass}`}>
              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
              {cartCount > 0 && (
@@ -127,7 +122,6 @@ const Navbar = () => {
                </span>
              )}
            </Link>
-          )}
           
           <button 
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -157,8 +151,7 @@ const Navbar = () => {
          </div>
          
          <div className="flex-1 overflow-y-auto px-8 py-4 flex flex-col text-gray-900 justify-center">
-          {isAuthenticated ? (
-            <div className="flex flex-col gap-2 w-full max-w-sm mx-auto">
+            <div className="flex flex-col gap-2 w-full max-w-sm mx-auto mb-8">
               <Link to="/collection" onClick={closeMenu} className="font-medium hover:bg-gray-50 transition-colors tracking-wide text-sm uppercase py-5 border-b border-gray-100 flex items-center justify-between">Collection <span>→</span></Link>
               {isAdmin && (
                 <Link to="/admin" onClick={closeMenu} className="font-medium hover:bg-gray-50 transition-colors tracking-wide text-sm uppercase py-5 border-b border-gray-100 flex items-center justify-between">Admin Panel <span>→</span></Link>
@@ -173,14 +166,15 @@ const Navbar = () => {
                 )}
               </Link>
             </div>
-          ) : (
-            <div className="flex flex-col gap-6 w-full max-w-sm mx-auto">
-              <Link to="/login" onClick={closeMenu} className="text-center font-bold hover:bg-gray-100 transition-colors tracking-widest text-sm uppercase py-5 bg-gray-50 rounded-lg border border-gray-200 block w-full">Login</Link>
-              <Link to="/register" onClick={closeMenu} className="text-center font-bold tracking-widest text-sm uppercase px-4 py-5 bg-gray-900 text-white rounded-lg hover:bg-black transition-colors shadow-md block w-full">
-                Register
-              </Link>
-            </div>
-          )}
+            
+            {!isAuthenticated && (
+              <div className="flex flex-col gap-4 w-full max-w-sm mx-auto">
+                <Link to="/login" onClick={closeMenu} className="text-center font-bold hover:bg-gray-100 transition-colors tracking-widest text-sm uppercase py-4 bg-gray-50 rounded-lg border border-gray-200 block w-full">Login</Link>
+                <Link to="/register" onClick={closeMenu} className="text-center font-bold tracking-widest text-sm uppercase px-4 py-4 bg-gray-900 text-white rounded-lg hover:bg-black transition-colors shadow-md block w-full">
+                  Register
+                </Link>
+              </div>
+            )}
          </div>
          
          {isAuthenticated && (
