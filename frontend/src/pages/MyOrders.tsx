@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { apiService } from '../services/api';
+import { useShop } from '../context/ShopContext';
 import { Link } from 'react-router-dom';
 
 interface Order {
@@ -14,10 +15,15 @@ const MyOrders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { isAuthenticated } = useShop();
 
   useEffect(() => {
-    fetchOrders();
-  }, []);
+    if (isAuthenticated) {
+      fetchOrders();
+    } else {
+      setLoading(false);
+    }
+  }, [isAuthenticated]);
 
   const fetchOrders = async () => {
     try {
@@ -33,6 +39,23 @@ const MyOrders = () => {
   };
 
   if (loading) return <div className="text-center py-20 flex justify-center items-center h-64"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div></div>;
+  if (!isAuthenticated) return (
+     <div className="py-10 animate-fade-in max-w-7xl mx-auto px-6">
+       <h1 className="text-3xl font-bold mb-8 text-gray-900 tracking-tight">My Orders</h1>
+       <div className="text-center py-20 bg-gray-50 rounded-xl border border-gray-100 shadow-sm">
+          <h2 className="text-2xl font-serif text-gray-900 mb-4">Track Your Orders</h2>
+          <p className="text-gray-500 mb-8 max-w-md mx-auto">Please log in or create an account to securely view your order history, track shipments, and manage returns.</p>
+          <div className="flex gap-4 justify-center">
+             <Link to="/login" className="bg-gray-900 text-white px-8 py-3 rounded hover:bg-black transition-colors shadow-md font-medium tracking-wide text-sm uppercase inline-block">
+               Log In
+             </Link>
+             <Link to="/collection" className="bg-white text-gray-900 border border-gray-200 px-8 py-3 rounded hover:bg-gray-50 transition-colors shadow-sm font-medium tracking-wide text-sm uppercase inline-block">
+               Continue Shopping
+             </Link>
+          </div>
+       </div>
+     </div>
+  );
   if (error) return <div className="text-center py-20 text-red-500 bg-red-50 rounded mt-10 p-6">{error}</div>;
 
   return (

@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 const ItemDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { products, addToCart, formatPrice } = useShop();
+  const { products, addToCart, formatPrice, isAuthenticated, requestLoginPrompt } = useShop();
   
   const product = products.find(p => p._id === id);
   const [fullscreenIndex, setFullscreenIndex] = useState<number>(-1);
@@ -114,6 +114,9 @@ const ItemDetails = () => {
       return;
     }
     addToCart(product, selectedColor); 
+    if (!isAuthenticated) {
+      requestLoginPrompt('cart');
+    }
   };
 
   let maxStockForDisplay = product?.quantity ?? 0;

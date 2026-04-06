@@ -43,6 +43,9 @@ interface ShopContextType {
   updateQuantity: (productId: string, quantity: number, color?: string) => void;
   refreshProducts: () => void;
   verifyAuth: () => Promise<void>;
+  loginPromptConfig: { isOpen: boolean; type: 'cart' | 'checkout' | null };
+  requestLoginPrompt: (type: 'cart' | 'checkout') => void;
+  closeLoginPrompt: () => void;
 }
 
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
@@ -58,6 +61,29 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isAuthChecking, setIsAuthChecking] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  
+  const [loginPromptConfig, setLoginPromptConfig] = useState<{isOpen: boolean, type: 'cart' | 'checkout' | null}>({isOpen: false, type: null});
+
+  const requestLoginPrompt = (type: 'cart' | 'checkout') => {
+    // Basic logic to reduce annoyance: if 'cart', maybe check localStorage?
+    // User requested "If user ignores popup multiple times: Reduce frequency of popup."
+    if (type === 'cart') {
+      const ignores = parseInt(localStorage.getItem('popupIgnores_cart') || '0', 10);
+      // E.g., if ignored 3 times, show it only 1/3 of the time further on
+      if (ignores > 3 && Math.random() > 0.3) {
+        return; 
+      }
+    }
+    setLoginPromptConfig({ isOpen: true, type });
+  };
+
+  const closeLoginPrompt = () => {
+    if (loginPromptConfig.type === 'cart') {
+      const ignores = parseInt(localStorage.getItem('popupIgnores_cart') || '0', 10);
+      localStorage.setItem('popupIgnores_cart', (ignores + 1).toString());
+    }
+    setLoginPromptConfig({ isOpen: false, type: null });
+  };
 
   const formatPrice = (price: number) => {
     if (!price) return '₹0.00';
@@ -175,7 +201,7 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <ShopContext.Provider value={{ products, cart, user, isAdmin, isAuthenticated, isAuthChecking, isLoading, formatPrice, setIsAdmin, setIsAuthenticated, addToCart, removeFromCart, updateQuantity, refreshProducts, verifyAuth }}>
+    <ShopContext.Provider value={{ products, cart, user, isAdmin, isAuthenticated, isAuthChecking, isLoading, formatPrice, setIsAdmin, setIsAuthenticated, addToCart, removeFromCart, updateQuantity, refreshProducts, verifyAuth, loginPromptConfig, requestLoginPrompt, closeLoginPrompt }}>
       {children}
     </ShopContext.Provider>
   );

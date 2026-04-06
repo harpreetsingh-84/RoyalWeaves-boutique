@@ -2,13 +2,17 @@ import { useShop } from '../context/ShopContext';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Cart = () => {
-  const { cart, removeFromCart, updateQuantity, formatPrice } = useShop();
+  const { cart, removeFromCart, updateQuantity, formatPrice, isAuthenticated, requestLoginPrompt } = useShop();
   const navigate = useNavigate();
 
   const totalAmount = cart.reduce((total: number, item: any) => total + (item.product.price * item.quantity), 0);
 
   const handleCheckout = () => {
     if (cart.length === 0) return;
+    if (!isAuthenticated) {
+      requestLoginPrompt('checkout');
+      return;
+    }
     navigate('/checkout');
   };
 

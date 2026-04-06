@@ -13,6 +13,7 @@ import AdminOrderDetails from './pages/AdminOrderDetails';
 import MyOrders from './pages/MyOrders';
 import ProtectedRoute from './components/ProtectedRoute';
 import GlobalLoader from './components/GlobalLoader';
+import LoginPromptModal from './components/LoginPromptModal';
 
 // Admin Layout & Pages
 import AdminLayout from './pages/admin/AdminLayout';
@@ -39,12 +40,12 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/collection" element={<ProtectedRoute><Collection /></ProtectedRoute>} />
-              <Route path="/item/:id" element={<ProtectedRoute><ItemDetails /></ProtectedRoute>} />
-              <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
-              <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
-              <Route path="/myorders" element={<ProtectedRoute><MyOrders /></ProtectedRoute>} />
-              <Route path="/order/:id" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
+              <Route path="/collection" element={<Collection />} />
+              <Route path="/item/:id" element={<ItemDetails />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/myorders" element={<MyOrders />} />
+              <Route path="/order/:id" element={<OrderDetails />} />
             </Routes>
           </main>
           <Footer />
@@ -63,6 +64,7 @@ function App() {
            </Route>
         </Routes>
       )}
+      <LoginPromptModal />
     </GlobalLoader>
   );
 }
