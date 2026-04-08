@@ -9,13 +9,22 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply font-sans bg-[#faf9f8] text-gray-900 antialiased;
+    @apply font-sans bg-darkBg text-lightText antialiased selection:bg-primaryAction selection:text-white;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-gray-900 hover:bg-accent text-white font-medium py-3 px-8 rounded transition-all duration-300 transform shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed tracking-widest uppercase text-sm;
+    @apply bg-primaryAction hover:bg-opacity-90 text-lightText font-semibold py-3 px-8 rounded transition-all duration-300 transform hover:-translate-y-1 shadow-[0_4px_14px_0_rgba(231,29,54,0.39)] hover:shadow-[0_6px_20px_rgba(231,29,54,0.4)] disabled:opacity-50 disabled:cursor-not-allowed uppercase text-sm tracking-wider;
+  }
+  .btn-secondary {
+    @apply bg-transparent border-2 border-secondaryAction text-secondaryAction hover:bg-secondaryAction hover:text-darkBg font-semibold py-3 px-8 rounded transition-all duration-300 transform hover:-translate-y-1 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed uppercase text-sm tracking-wider;
+  }
+  .glass-panel {
+    @apply bg-opacity-10 bg-lightText backdrop-filter backdrop-blur-lg border border-opacity-20 border-lightText rounded-xl shadow-lg;
+  }
+  .premium-card {
+    @apply bg-[#03233c] border border-secondaryAction/20 rounded-xl overflow-hidden transition-all duration-300 hover:border-secondaryAction/60 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-secondaryAction/20;
   }
 }
 

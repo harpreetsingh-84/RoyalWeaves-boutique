@@ -199,14 +199,14 @@ const Products: React.FC = () => {
     <div className="fade-in space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Products Inventory</h1>
-            <p className="text-sm text-gray-500 mt-1">Manage and track your entire catalog.</p>
+            <h1 className="text-2xl font-bold text-gray-100">Products Inventory</h1>
+            <p className="text-sm text-gray-400 mt-1">Manage and track your entire catalog.</p>
          </div>
          <button 
            onClick={showForm ? cancelForm : () => setShowForm(true)}
            className={`px-4 py-2 font-medium rounded-md transition-colors ${
              showForm 
-               ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' 
+               ? 'bg-[#2a2a2a] text-gray-300 hover:bg-[#333]' 
                : 'bg-black text-white hover:bg-gray-800'
            }`}
          >
@@ -216,21 +216,21 @@ const Products: React.FC = () => {
 
       {showForm && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in relative">
-        <div className="lg:col-span-2 bg-white border rounded-xl overflow-hidden shadow-sm">
-          <div className="bg-gray-50 px-6 py-4 border-b">
+        <div className="lg:col-span-2 bg-[#1a1a1a] border rounded-xl overflow-hidden shadow-sm">
+          <div className="bg-[#222] px-6 py-4 border-b">
              <h2 className="font-semibold text-lg">{editingId ? 'Edit Product' : 'Add New Product'}</h2>
           </div>
           <form onSubmit={handleAddProduct} className="p-6 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-gray-600 mb-1 uppercase tracking-wide">Product Name</label>
+                <label className="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Product Name</label>
                 <input required type="text" placeholder="e.g. Vintage Cotton Shirt" className="w-full border p-2.5 rounded focus:ring-2 focus:ring-black/5 outline-none transition-all" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
               </div>
               <div>
-                <label className="block text-xs font-bold text-gray-600 mb-1 uppercase tracking-wide">Category</label>
+                <label className="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Category</label>
                 <select 
                   required 
-                  className="w-full border p-2.5 rounded focus:ring-2 focus:ring-black/5 outline-none appearance-none bg-white" 
+                  className="w-full border p-2.5 rounded focus:ring-2 focus:ring-black/5 outline-none appearance-none bg-[#1a1a1a]" 
                   value={formData.category} 
                   onChange={e => setFormData({...formData, category: e.target.value})}
                 >
@@ -242,11 +242,11 @@ const Products: React.FC = () => {
               </div>
               <div className="flex gap-4">
                 <div className="flex-1">
-                  <label className="block text-xs font-bold text-gray-600 mb-1 uppercase tracking-wide">Price (₹)</label>
+                  <label className="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Price (₹)</label>
                   <input required type="number" min="0" className="w-full border p-2.5 rounded" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
                 </div>
                 <div className="flex-1">
-                  <label className="block text-xs font-bold text-gray-600 mb-1 uppercase tracking-wide">Stock Quantity</label>
+                  <label className="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Stock Quantity</label>
                   <input required type="number" min="0" className="w-full border p-2.5 rounded" value={formData.quantity} onChange={e => setFormData({...formData, quantity: e.target.value})} />
                 </div>
               </div>
@@ -254,24 +254,24 @@ const Products: React.FC = () => {
 
             <div className="space-y-4">
                <div>
-                  <label className="block text-xs font-bold text-gray-600 mb-1 uppercase tracking-wide">Primary Cover Image</label>
+                  <label className="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Primary Cover Image</label>
                   <div className="flex flex-col sm:flex-row gap-2">
                     <input required type="text" placeholder="Direct URL or upload ->" className="flex-1 border p-2.5 rounded w-full" value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} />
                     <input type="file" accept="image/*" id="primaryUpload" className="hidden" onChange={(e) => uploadFileHandler(e, true)} />
-                    <label htmlFor="primaryUpload" className={`px-4 py-2 bg-gray-100 hover:bg-gray-200 font-medium rounded cursor-pointer flex items-center justify-center gap-2 shrink-0 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                    <label htmlFor="primaryUpload" className={`px-4 py-2 bg-[#2a2a2a] hover:bg-[#333] font-medium rounded cursor-pointer flex items-center justify-center gap-2 shrink-0 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
                       {uploading ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />}
                       {uploading ? 'Uploading...' : 'Upload'}
                     </label>
                   </div>
-                  {formData.image && <img src={formData.image} className="mt-2 h-20 rounded border bg-gray-50 object-cover" alt="preview" />}
+                  {formData.image && <img src={formData.image} className="mt-2 h-20 rounded border bg-[#222] object-cover" alt="preview" />}
                </div>
                
                <div>
-                  <label className="block text-xs font-bold text-gray-600 mb-1 uppercase tracking-wide">Gallery Images</label>
+                  <label className="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Gallery Images</label>
                   <div className="flex flex-col sm:flex-row gap-2">
                     <input type="text" placeholder="Urls separated by commas" className="flex-1 border p-2.5 rounded w-full" value={formData.galleryUrls} onChange={e => setFormData({...formData, galleryUrls: e.target.value})} />
                     <input type="file" accept="image/*" multiple id="galleryUpload" className="hidden" onChange={uploadMultipleHandler} />
-                    <label htmlFor="galleryUpload" className={`px-4 py-2 bg-gray-100 hover:bg-gray-200 font-medium rounded cursor-pointer flex items-center justify-center gap-2 shrink-0 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                    <label htmlFor="galleryUpload" className={`px-4 py-2 bg-[#2a2a2a] hover:bg-[#333] font-medium rounded cursor-pointer flex items-center justify-center gap-2 shrink-0 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
                       {uploading ? <Loader2 size={16} className="animate-spin" /> : <UploadCloud size={16} />}
                       {uploading ? 'Uploading...' : 'Upload Many'}
                     </label>
@@ -280,13 +280,13 @@ const Products: React.FC = () => {
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-xs font-bold text-gray-600 mb-1 uppercase tracking-wide">Detailed Description</label>
+              <label className="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Detailed Description</label>
               <textarea required placeholder="Write a description for the product..." className="w-full border p-2.5 rounded h-32 resize-y" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
             </div>
 
             <div className="md:col-span-2 border-t pt-4">
               <div className="flex justify-between items-center mb-2">
-                <label className="block text-xs font-bold text-gray-600 uppercase tracking-wide">Color Variants (Optional)</label>
+                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide">Color Variants (Optional)</label>
                 <button type="button" onClick={addColorVariant} className="text-xs text-blue-600 font-bold hover:underline">+ Add Variant</button>
               </div>
               {formData.colors.map((c, index) => (
@@ -301,7 +301,7 @@ const Products: React.FC = () => {
                       ))}
                     </div>
                     <input type="file" accept="image/*" multiple id={`colorUpload-${index}`} className="hidden" onChange={(e) => uploadMultipleColorImagesHandler(e, index)} />
-                    <label htmlFor={`colorUpload-${index}`} className={`px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-xs font-medium rounded cursor-pointer flex items-center justify-center gap-1 shrink-0 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                    <label htmlFor={`colorUpload-${index}`} className={`px-3 py-1.5 bg-[#2a2a2a] hover:bg-[#333] text-xs font-medium rounded cursor-pointer flex items-center justify-center gap-1 shrink-0 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
                       <UploadCloud size={14} /> <span className="hidden sm:inline">Upload Photos</span>
                     </label>
                   </div>
@@ -314,7 +314,7 @@ const Products: React.FC = () => {
             </div>
 
             <div className="md:col-span-2 flex justify-end gap-3 pt-4 border-t">
-               <button type="button" onClick={cancelForm} className="px-5 py-2 text-gray-600 bg-gray-100 rounded hover:bg-gray-200 transition">Cancel</button>
+               <button type="button" onClick={cancelForm} className="px-5 py-2 text-gray-400 bg-[#2a2a2a] rounded hover:bg-[#333] transition">Cancel</button>
                <button type="submit" disabled={isAdding || uploading} className="px-6 py-2 bg-black text-white rounded hover:bg-gray-800 transition disabled:opacity-70 disabled:cursor-wait">
                  {isAdding ? 'Saving...' : (editingId ? 'Save Changes' : 'Create Product')}
                </button>
@@ -323,8 +323,8 @@ const Products: React.FC = () => {
         </div>
         
         {/* Product Status Overview */}
-        <div className="bg-white border rounded-xl overflow-hidden shadow-sm flex flex-col h-full max-h-[800px]">
-          <div className="bg-gray-50 px-6 py-4 border-b shrink-0">
+        <div className="bg-[#1a1a1a] border rounded-xl overflow-hidden shadow-sm flex flex-col h-full max-h-[800px]">
+          <div className="bg-[#222] px-6 py-4 border-b shrink-0">
              <h2 className="font-semibold text-lg">Product Status Overview</h2>
           </div>
           <div className="p-6 overflow-y-auto flex-1 space-y-6">
@@ -332,13 +332,13 @@ const Products: React.FC = () => {
               <h3 className="text-sm font-bold text-red-600 uppercase tracking-wide mb-3 flex items-center gap-2"><Trash2 size={16}/> Deleted Products</h3>
               <div className="space-y-3">
                 {adminProducts.filter(p => p.isDeleted).length === 0 ? (
-                  <p className="text-xs text-gray-500">No deleted products.</p>
+                  <p className="text-xs text-gray-400">No deleted products.</p>
                 ) : (
                   adminProducts.filter(p => p.isDeleted).map(p => (
                     <div key={p._id} className="flex items-center gap-3 bg-red-50 p-2 rounded border border-red-100">
                       <img src={p.image} className="w-10 h-10 object-cover rounded" alt={p.name} />
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs text-gray-900 font-semibold truncate">{p.name}</p>
+                        <p className="text-xs text-gray-100 font-semibold truncate">{p.name}</p>
                         <p className="text-[10px] text-red-600 font-bold">Deleted</p>
                       </div>
                     </div>
@@ -350,13 +350,13 @@ const Products: React.FC = () => {
               <h3 className="text-sm font-bold text-orange-600 uppercase tracking-wide mb-3 flex items-center gap-2"><Loader2 size={16}/> Sold Out</h3>
               <div className="space-y-3">
                 {adminProducts.filter(p => !p.isDeleted && p.quantity === 0 && (!p.colors || p.colors.length === 0 || p.colors.every((c: any) => c.stock === 0))).length === 0 ? (
-                  <p className="text-xs text-gray-500">No sold out products.</p>
+                  <p className="text-xs text-gray-400">No sold out products.</p>
                 ) : (
                   adminProducts.filter(p => !p.isDeleted && p.quantity === 0 && (!p.colors || p.colors.length === 0 || p.colors.every((c: any) => c.stock === 0))).map(p => (
                     <div key={p._id} className="flex items-center gap-3 bg-orange-50 p-2 rounded border border-orange-100">
                       <img src={p.image} className="w-10 h-10 object-cover rounded" alt={p.name} />
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs text-gray-900 font-semibold truncate">{p.name}</p>
+                        <p className="text-xs text-gray-100 font-semibold truncate">{p.name}</p>
                         <p className="text-[10px] text-orange-600 font-bold">Sold Out</p>
                       </div>
                     </div>
@@ -371,36 +371,36 @@ const Products: React.FC = () => {
 
       {/* Product List Grid/Table */}
       {!showForm && (
-         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+         <div className="bg-[#1a1a1a] rounded-xl shadow-sm border border-[#333] overflow-hidden">
           <div>
             {/* Desktop Table View */}
             <div className="hidden lg:block overflow-x-auto">
                <table className="w-full text-left min-w-[800px]">
-                 <thead className="bg-gray-50 border-b border-gray-100">
+                 <thead className="bg-[#222] border-b border-[#333]">
                    <tr>
-                     <th className="p-4 font-semibold text-gray-600 text-sm">Product</th>
-                     <th className="p-4 font-semibold text-gray-600 text-sm">Category</th>
-                     <th className="p-4 font-semibold text-gray-600 text-sm">Stock</th>
-                     <th className="p-4 font-semibold text-gray-600 text-sm">Price</th>
-                     <th className="p-4 font-semibold text-gray-600 text-sm w-32">Actions</th>
+                     <th className="p-4 font-semibold text-gray-400 text-sm">Product</th>
+                     <th className="p-4 font-semibold text-gray-400 text-sm">Category</th>
+                     <th className="p-4 font-semibold text-gray-400 text-sm">Stock</th>
+                     <th className="p-4 font-semibold text-gray-400 text-sm">Price</th>
+                     <th className="p-4 font-semibold text-gray-400 text-sm w-32">Actions</th>
                    </tr>
                  </thead>
                  <tbody className="divide-y divide-gray-100">
                     {adminProducts.length === 0 ? (
                       <tr>
-                        <td colSpan={5} className="p-12 text-center text-gray-500">
+                        <td colSpan={5} className="p-12 text-center text-gray-400">
                            No products found. Start by adding a new one!
                         </td>
                       </tr>
                     ) : (
                       adminProducts.map((product) => (
-                        <tr key={product._id} className={`hover:bg-gray-50/50 transition-colors ${product.isDeleted ? 'opacity-50' : ''}`}>
+                        <tr key={product._id} className={`hover:bg-[#222]/50 transition-colors ${product.isDeleted ? 'opacity-50' : ''}`}>
                            <td className="p-4 w-1/3">
                               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                                  <img src={product.image} alt={product.name} className="w-16 h-16 object-cover rounded shadow-sm border" />
                                  <div className="flex-1 min-w-0">
-                                    <h3 className="font-medium text-gray-900 truncate" title={product.name}>{product.name}</h3>
-                                    <p className="text-xs text-gray-500 line-clamp-1 mt-0.5" title={product.description}>{product.description}</p>
+                                    <h3 className="font-medium text-gray-100 truncate" title={product.name}>{product.name}</h3>
+                                    <p className="text-xs text-gray-400 line-clamp-1 mt-0.5" title={product.description}>{product.description}</p>
                                  </div>
                               </div>
                            </td>
@@ -415,7 +415,7 @@ const Products: React.FC = () => {
                                   product.colors.map((c: any, i: number) => (
                                     <div key={i} className="flex items-center gap-2 text-xs">
                                      <span className={`w-1.5 h-1.5 rounded-full ${product.isDeleted ? 'bg-gray-400' : c.stock > 5 ? 'bg-green-500' : c.stock > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
-                                      <span className="font-medium text-gray-700">{c.color}: {c.stock}</span>
+                                      <span className="font-medium text-gray-300">{c.color}: {c.stock}</span>
                                     </div>
                                   ))
                                 ) : (
@@ -451,7 +451,7 @@ const Products: React.FC = () => {
             {/* Mobile Card View */}
             <div className="lg:hidden flex flex-col divide-y divide-gray-100">
                {adminProducts.length === 0 ? (
-                  <div className="p-12 text-center text-gray-500">
+                  <div className="p-12 text-center text-gray-400">
                      No products found. Start by adding a new one!
                   </div>
                ) : (
@@ -460,7 +460,7 @@ const Products: React.FC = () => {
                        <img src={product.image} alt={product.name} className="w-20 h-24 object-cover rounded shadow-sm border shrink-0" />
                        <div className="flex-1 min-w-0">
                           <div className="flex justify-between items-start gap-2 mb-1">
-                             <h3 className="font-bold text-gray-900 text-sm leading-snug line-clamp-2">{product.name}</h3>
+                             <h3 className="font-bold text-gray-100 text-sm leading-snug line-clamp-2">{product.name}</h3>
                              <div className="flex gap-1 shrink-0">
                                <button onClick={() => handleEditProduct(product)} disabled={product.isDeleted} className="p-2 text-blue-600 hover:bg-blue-50 bg-blue-50/50 rounded transition flex items-center justify-center h-8 w-8 disabled:opacity-30" aria-label="Edit">
                                  <Pencil size={14} />
@@ -477,18 +477,18 @@ const Products: React.FC = () => {
                           </div>
                           <p className="text-emerald-600 font-bold mb-2 text-sm">{formatPrice(product.price)}</p>
                            <div className="flex flex-wrap items-center gap-2 mb-2">
-                             <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-600 uppercase tracking-wide">
+                             <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-[#2a2a2a] text-gray-400 uppercase tracking-wide">
                                {product.category}
                              </span>
                              {product.colors && product.colors.length > 0 ? (
                                product.colors.map((c: any, i: number) => (
-                                 <span key={i} className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${product.isDeleted ? 'bg-gray-100 text-gray-500' : c.stock > 5 ? 'bg-green-50 text-green-700' : c.stock > 0 ? 'bg-orange-50 text-orange-700' : 'bg-red-50 text-red-700'}`}>
+                                 <span key={i} className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${product.isDeleted ? 'bg-[#2a2a2a] text-gray-400' : c.stock > 5 ? 'bg-green-50 text-green-700' : c.stock > 0 ? 'bg-orange-50 text-orange-700' : 'bg-red-50 text-red-700'}`}>
                                    <span className={`w-1.5 h-1.5 rounded-full ${product.isDeleted ? 'bg-gray-400' : c.stock > 5 ? 'bg-green-500' : c.stock > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
                                    {c.color}: {c.stock}
                                  </span>
                                ))
                              ) : (
-                               <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${product.isDeleted ? 'bg-gray-100 text-gray-500' : product.quantity > 5 ? 'bg-green-50 text-green-700' : product.quantity > 0 ? 'bg-orange-50 text-orange-700' : 'bg-red-50 text-red-700'}`}>
+                               <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${product.isDeleted ? 'bg-[#2a2a2a] text-gray-400' : product.quantity > 5 ? 'bg-green-50 text-green-700' : product.quantity > 0 ? 'bg-orange-50 text-orange-700' : 'bg-red-50 text-red-700'}`}>
                                  <span className={`w-1.5 h-1.5 rounded-full ${product.isDeleted ? 'bg-gray-400' : product.quantity > 5 ? 'bg-green-500' : product.quantity > 0 ? 'bg-orange-500' : 'bg-red-500'}`}></span>
                                  Stock: {product.quantity}
                                </span>
@@ -505,7 +505,7 @@ const Products: React.FC = () => {
 
       {/* Delete History Section */}
       {!showForm && adminProducts.some(p => p.isDeleted) && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mt-8 animate-fade-in">
+        <div className="bg-[#1a1a1a] rounded-xl shadow-sm border border-[#333] overflow-hidden mt-8 animate-fade-in">
           <div className="bg-red-50/50 px-6 py-4 border-b border-red-100">
              <h2 className="font-semibold text-lg text-red-900 flex items-center gap-2">
                <Trash2 size={20} className="text-red-500" /> Delete History
@@ -515,12 +515,12 @@ const Products: React.FC = () => {
           <div className="p-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {adminProducts.filter(p => p.isDeleted).map(product => (
-                <div key={product._id} className="flex flex-col border border-red-100 bg-white rounded-lg p-3 relative shadow-sm">
+                <div key={product._id} className="flex flex-col border border-red-100 bg-[#1a1a1a] rounded-lg p-3 relative shadow-sm">
                   <div className="flex gap-3 items-center mb-3">
-                    <img src={product.image} alt={product.name} className="w-12 h-12 rounded object-cover border border-gray-100 bg-gray-50" />
+                    <img src={product.image} alt={product.name} className="w-12 h-12 rounded object-cover border border-[#333] bg-[#222]" />
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-bold text-sm text-gray-900 truncate" title={product.name}>{product.name}</h4>
-                      <p className="text-xs text-gray-500 truncate">{product.category}</p>
+                      <h4 className="font-bold text-sm text-gray-100 truncate" title={product.name}>{product.name}</h4>
+                      <p className="text-xs text-gray-400 truncate">{product.category}</p>
                     </div>
                   </div>
                   <div className="mt-auto pt-3 border-t border-gray-50 flex justify-between items-center text-xs">

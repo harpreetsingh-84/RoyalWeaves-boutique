@@ -30,11 +30,11 @@ const Login = () => {
   };
 
   return (
-    <div className={`min-h-[80vh] flex items-center justify-center fade-in bg-gray-50 px-6 ${isLoading ? 'opacity-60 pointer-events-none' : ''}`}>
-      <div className="max-w-md w-full bg-white p-6 sm:p-8 md:p-12 rounded-sm shadow-xl border border-gray-100">
+    <div className={`min-h-[80vh] flex items-center justify-center fade-in bg-[#222] px-6 ${isLoading ? 'opacity-60 pointer-events-none' : ''}`}>
+      <div className="max-w-md w-full bg-[#1a1a1a] p-6 sm:p-8 md:p-12 rounded-sm shadow-xl border border-[#333]">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-serif text-gray-900 mb-2">Welcome Back</h2>
-          <p className="text-gray-500 text-sm tracking-wide">Sign in to access your curated collection.</p>
+          <h2 className="text-3xl font-serif text-gray-100 mb-2">Welcome Back</h2>
+          <p className="text-gray-400 text-sm tracking-wide">Sign in to access your curated collection.</p>
         </div>
         
         {error && <div className="bg-red-50 text-red-600 p-4 rounded-sm mb-6 text-sm font-medium border border-red-100">{error}</div>}
@@ -56,7 +56,7 @@ const Login = () => {
             />
           )}
         </div>
-        <p className="mt-8 text-center text-gray-500 text-sm">
+        <p className="mt-8 text-center text-gray-400 text-sm">
           Don't have an account? <Link to="/register" className="text-accent font-semibold hover:underline">Create one</Link>
         </p>
       </div>

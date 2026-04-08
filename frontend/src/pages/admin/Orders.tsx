@@ -49,27 +49,27 @@ const Orders: React.FC = () => {
     <div className="fade-in space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
-            <p className="text-sm text-gray-500 mt-1">Manage all incoming orders and statuses.</p>
+            <h1 className="text-2xl font-bold text-gray-100">Orders</h1>
+            <p className="text-sm text-gray-400 mt-1">Manage all incoming orders and statuses.</p>
          </div>
-         <button onClick={fetchOrders} className="px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 font-medium rounded-md transition flex items-center gap-2">
+         <button onClick={fetchOrders} className="px-4 py-2 bg-[#2a2a2a] text-gray-300 hover:bg-[#333] font-medium rounded-md transition flex items-center gap-2">
            <RefreshCw size={16} className={loading ? "animate-spin" : ""} /> Refresh
          </button>
       </div>
 
-      <div className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-[#1a1a1a] border border-[#333] rounded-xl shadow-sm overflow-hidden">
         {loading ? (
-          <div className="p-12 flex justify-center text-gray-500">Loading orders...</div>
+          <div className="p-12 flex justify-center text-gray-400">Loading orders...</div>
         ) : orders.length === 0 ? (
           <div className="p-12 text-center">
-            <p className="text-gray-500 mb-2">No orders have been placed yet.</p>
+            <p className="text-gray-400 mb-2">No orders have been placed yet.</p>
           </div>
         ) : (
           <div>
             {/* Desktop Table View */}
             <div className="hidden lg:block overflow-x-auto">
               <table className="w-full text-left min-w-[800px]">
-                <thead className="bg-gray-50 border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500 font-bold">
+                <thead className="bg-[#222] border-b border-[#333] text-xs uppercase tracking-wider text-gray-400 font-bold">
                   <tr>
                     <th className="p-4">Order Info</th>
                     <th className="p-4">Customer</th>
@@ -81,21 +81,21 @@ const Orders: React.FC = () => {
                 </thead>
                 <tbody className="divide-y divide-gray-100 text-sm">
                   {orders.map((order: any) => (
-                    <tr key={order._id} className="hover:bg-gray-50/50 transition-colors">
+                    <tr key={order._id} className="hover:bg-[#222]/50 transition-colors">
                        <td className="p-4">
-                          <div className="font-mono text-xs text-gray-500 mb-1">
+                          <div className="font-mono text-xs text-gray-400 mb-1">
                             #{order._id.substring(order._id.length - 8).toUpperCase()}
                           </div>
-                          <div className="text-gray-900 font-medium">
+                          <div className="text-gray-100 font-medium">
                             {new Date(order.createdAt).toLocaleDateString()}
                           </div>
-                          <div className="text-xs text-gray-500 mt-0.5">
+                          <div className="text-xs text-gray-400 mt-0.5">
                             {order.items?.length || 0} items
                           </div>
                        </td>
                        <td className="p-4">
-                          <div className="font-medium text-gray-900">{order.user?.name || 'Guest'}</div>
-                          <div className="text-gray-500 text-xs">{order.user?.email || 'N/A'}</div>
+                          <div className="font-medium text-gray-100">{order.user?.name || 'Guest'}</div>
+                          <div className="text-gray-400 text-xs">{order.user?.email || 'N/A'}</div>
                        </td>
                        <td className="p-4 font-bold text-emerald-600">
                           {formatPrice(order.totalAmount)}
@@ -113,7 +113,7 @@ const Orders: React.FC = () => {
                        <td className="p-4 text-center">
                           <button 
                             onClick={() => navigate(`/admin/order/${order._id}`)} 
-                            className="px-4 py-2 bg-gray-900 text-white rounded hover:bg-gray-800 transition text-xs font-semibold shadow-sm"
+                            className="px-4 py-2 bg-primary text-white rounded hover:bg-gray-800 transition text-xs font-semibold shadow-sm"
                           >
                             Manage →
                           </button>
@@ -130,10 +130,10 @@ const Orders: React.FC = () => {
                 <div key={order._id} className="p-5 flex flex-col gap-4">
                   <div className="flex justify-between items-start">
                     <div>
-                      <div className="font-mono text-xs text-gray-500 mb-1">
+                      <div className="font-mono text-xs text-gray-400 mb-1">
                         #{order._id.substring(order._id.length - 8).toUpperCase()}
                       </div>
-                      <div className="text-gray-900 font-bold">
+                      <div className="text-gray-100 font-bold">
                         {new Date(order.createdAt).toLocaleDateString()}
                       </div>
                     </div>
@@ -147,18 +147,18 @@ const Orders: React.FC = () => {
                     </div>
                   </div>
                   
-                  <div className="bg-gray-50 rounded p-3 text-sm">
+                  <div className="bg-[#222] rounded p-3 text-sm">
                     <div className="flex justify-between mb-1">
-                       <span className="text-gray-500 text-xs font-semibold uppercase tracking-wide">Customer</span>
-                       <span className="font-medium text-gray-900">{order.user?.name || 'Guest'}</span>
+                       <span className="text-gray-400 text-xs font-semibold uppercase tracking-wide">Customer</span>
+                       <span className="font-medium text-gray-100">{order.user?.name || 'Guest'}</span>
                     </div>
                     <div className="flex justify-between mb-1">
-                       <span className="text-gray-500 text-xs font-semibold uppercase tracking-wide">Email</span>
-                       <span className="text-gray-600 text-xs">{order.user?.email || 'N/A'}</span>
+                       <span className="text-gray-400 text-xs font-semibold uppercase tracking-wide">Email</span>
+                       <span className="text-gray-400 text-xs">{order.user?.email || 'N/A'}</span>
                     </div>
                     <div className="flex justify-between">
-                       <span className="text-gray-500 text-xs font-semibold uppercase tracking-wide">Items</span>
-                       <span className="text-gray-900 text-xs font-medium">{order.items?.length || 0}</span>
+                       <span className="text-gray-400 text-xs font-semibold uppercase tracking-wide">Items</span>
+                       <span className="text-gray-100 text-xs font-medium">{order.items?.length || 0}</span>
                     </div>
                   </div>
 
@@ -168,7 +168,7 @@ const Orders: React.FC = () => {
                     </span>
                     <button 
                       onClick={() => navigate(`/admin/order/${order._id}`)} 
-                      className="w-full flex justify-center items-center gap-2 py-3 bg-gray-900 text-white rounded-lg hover:bg-black active:scale-95 transition text-xs font-bold uppercase tracking-widest shadow-md"
+                      className="w-full flex justify-center items-center gap-2 py-3 bg-primary text-white rounded-lg hover:bg-black active:scale-95 transition text-xs font-bold uppercase tracking-widest shadow-md"
                     >
                       Manage Order <ArrowRight size={14} />
                     </button>

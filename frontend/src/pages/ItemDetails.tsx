@@ -51,8 +51,8 @@ const ItemDetails = () => {
 
   if (!product) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center bg-[#faf9f8]">
-        <div className="text-center animate-pulse text-sm font-medium text-gray-500 tracking-[0.2em] uppercase">
+      <div className="min-h-[80vh] flex items-center justify-center bg-darkBg">
+        <div className="text-center animate-pulse text-sm font-medium text-secondaryAction tracking-[0.2em] uppercase">
           Curating details...
         </div>
       </div>
@@ -126,15 +126,15 @@ const ItemDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf9f8] selection:bg-gray-900 selection:text-white pb-32 font-sans text-gray-900">
+    <div className="min-h-screen bg-darkBg selection:bg-primaryAction selection:text-lightText pb-32 font-sans text-lightText">
       
       {/* Navigation Bar */}
       <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4">
         <button 
           onClick={() => navigate(-1)}
-          className="group flex items-center gap-3 text-xs font-semibold tracking-[0.15em] text-gray-500 hover:text-gray-900 transition-colors duration-500 uppercase"
+          className="group flex items-center gap-3 text-xs font-semibold tracking-[0.15em] text-lightText/60 hover:text-secondaryAction transition-colors duration-500 uppercase"
         >
-          <span className="w-8 h-[1px] bg-gray-400 group-hover:bg-gray-900 group-hover:w-12 transition-all duration-500"></span> 
+          <span className="w-8 h-[1px] bg-lightText/60 group-hover:bg-secondaryAction group-hover:w-12 transition-all duration-500"></span> 
           Back to Collection
         </button>
       </div>
@@ -145,10 +145,10 @@ const ItemDetails = () => {
           {/* Left Column: Premium Image Slider */}
           <div className={`w-full lg:w-[55%] flex flex-col gap-6 transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
             
-            <div className="relative w-full bg-gray-100 overflow-hidden group cursor-crosshair shadow-2xl shadow-gray-200/50">
+            <div className="relative w-full premium-card !rounded-sm overflow-hidden group cursor-crosshair">
               {/* Primary Image Container */}
               <div 
-                className="w-full aspect-[4/5] overflow-hidden"
+                className="w-full aspect-[4/5] overflow-hidden bg-darkBg"
                 onClick={() => setFullscreenIndex(currentIndex)}
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
@@ -165,14 +165,14 @@ const ItemDetails = () => {
               {allImages.length > 1 && (
                 <>
                   <button 
-                    className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm text-gray-900 p-4 rounded-full shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 z-10"
+                    className="absolute left-6 top-1/2 -translate-y-1/2 bg-darkBg/90 backdrop-blur-sm border border-secondaryAction/20 text-lightText p-4 rounded-full shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 hover:text-primaryAction z-10"
                     onClick={prevImage}
                     aria-label="Previous Image"
                   >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
                   </button>
                   <button 
-                    className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm text-gray-900 p-4 rounded-full shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 z-10"
+                    className="absolute right-6 top-1/2 -translate-y-1/2 bg-darkBg/90 backdrop-blur-sm border border-secondaryAction/20 text-lightText p-4 rounded-full shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 hover:text-primaryAction z-10"
                     onClick={nextImage}
                     aria-label="Next Image"
                   >
@@ -188,7 +188,7 @@ const ItemDetails = () => {
                     <button
                       key={idx}
                       onClick={(e) => { e.stopPropagation(); setCurrentIndex(idx); }}
-                      className={`h-1 transition-all duration-500 ${idx === currentIndex ? 'w-8 bg-gray-900' : 'w-2 bg-gray-400 opacity-50'}`}
+                      className={`h-1.5 rounded-full transition-all duration-500 ${idx === currentIndex ? 'w-8 bg-secondaryAction shadow-[0_0_10px_rgba(46,196,182,0.8)]' : 'w-2 bg-secondaryAction/30'}`}
                       aria-label={`Go to slide ${idx + 1}`}
                     />
                   ))}
@@ -197,7 +197,7 @@ const ItemDetails = () => {
 
               {/* Floating Expand Hint */}
               <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10">
-                <div className="bg-white/80 backdrop-blur-sm p-3 rounded-full text-gray-900 shadow-md border border-white/20">
+                <div className="bg-darkBg/80 backdrop-blur-sm p-3 rounded-full text-secondaryAction shadow-md border border-secondaryAction/20">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>
                 </div>
               </div>
@@ -212,7 +212,7 @@ const ItemDetails = () => {
                     onClick={() => setCurrentIndex(idx)}
                     className={`snap-center relative w-16 h-20 sm:w-20 sm:h-24 flex-shrink-0 overflow-hidden transition-all duration-500 ${
                       currentIndex === idx 
-                        ? 'ring-2 ring-gray-900 ring-offset-2 ring-offset-[#faf9f8] opacity-100' 
+                        ? 'ring-2 ring-secondaryAction ring-offset-2 ring-offset-darkBg opacity-100' 
                         : 'opacity-40 hover:opacity-100 grayscale hover:grayscale-0'
                     }`}
                   >
@@ -228,28 +228,28 @@ const ItemDetails = () => {
             <div className={`lg:sticky lg:top-24 flex flex-col transition-all duration-1000 delay-300 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
               
               <div className="flex items-center gap-4 mb-6">
-                <span className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">
+                <span className="text-[10px] font-bold tracking-[0.2em] text-secondaryAction uppercase">
                   Boutique Exclusive
                 </span>
-                <div className="w-12 h-[1px] bg-gray-300"></div>
-                <span className="text-[10px] font-bold tracking-[0.2em] text-gray-900 uppercase">
+                <div className="w-12 h-[1px] bg-secondaryAction/30"></div>
+                <span className="text-[10px] font-bold tracking-[0.2em] text-lightText uppercase">
                   {product.category}
                 </span>
               </div>
 
               {/* Title with Playfair Display for luxury feel */}
-              <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-normal text-gray-900 leading-[1.1] mb-6">
+              <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-normal text-lightText leading-[1.1] mb-6 drop-shadow-sm">
                 {product.name}
               </h1>
               
-              <p className="text-2xl font-light text-gray-600 mb-6 font-serif italic flex items-center flex-wrap gap-4">
+              <p className="text-2xl font-light text-highlight/90 mb-6 font-serif italic flex items-center flex-wrap gap-4">
                 {formatPrice(product.price)}
                 <span className={`text-xs font-sans not-italic tracking-widest uppercase px-3 py-1.5 rounded-full ${
                   maxStockForDisplay <= 0 
-                    ? 'text-red-700 bg-red-50 font-bold border border-red-100' 
+                    ? 'text-primaryAction bg-primaryAction/10 font-bold border border-primaryAction/30' 
                     : maxStockForDisplay <= 5 
-                      ? 'text-orange-700 bg-orange-50 font-bold animate-pulse border border-orange-200' 
-                      : 'text-gray-500 bg-gray-100 font-medium'
+                      ? 'text-highlight bg-highlight/10 font-bold animate-pulse border border-highlight/30' 
+                      : 'text-lightText bg-secondaryAction/20 font-medium'
                 }`}>
                   {maxStockForDisplay <= 0 
                     ? 'Out of Stock' 
@@ -263,8 +263,8 @@ const ItemDetails = () => {
               {product.colors && product.colors.length > 0 && (
                 <div className="mb-10">
                   <div className="flex justify-between items-center mb-4">
-                    <span className="text-xs font-bold tracking-[0.15em] text-gray-900 uppercase">Select Color</span>
-                    <span className="text-xs text-gray-500">{selectedColor}</span>
+                    <span className="text-xs font-bold tracking-[0.15em] text-lightText uppercase">Select Color</span>
+                    <span className="text-xs text-lightText/60">{selectedColor}</span>
                   </div>
                   <div className="flex flex-wrap gap-3">
                     {product.colors.map((c: any, idx: number) => {
@@ -277,8 +277,8 @@ const ItemDetails = () => {
                           disabled={isOutOfStock}
                           className={`
                             px-6 py-3 text-xs font-bold uppercase tracking-widest border transition-all duration-300
-                            ${isSelected ? 'border-gray-900 bg-gray-900 text-white' : 'border-gray-200 text-gray-600 hover:border-gray-900'}
-                            ${isOutOfStock ? 'opacity-40 cursor-not-allowed bg-gray-50 text-gray-400 border-gray-200 hover:border-gray-200' : ''}
+                            ${isSelected ? 'border-primaryAction bg-primaryAction text-lightText shadow-[0_0_15px_rgba(231,29,54,0.4)]' : 'border-secondaryAction/30 text-lightText/60 hover:border-secondaryAction hover:text-secondaryAction'}
+                            ${isOutOfStock ? 'opacity-40 cursor-not-allowed bg-darkBg/50 text-lightText/30 border-lightText/10 hover:border-lightText/10' : ''}
                           `}
                         >
                           {c.color} {isOutOfStock && '(Sold Out)'}
@@ -293,9 +293,9 @@ const ItemDetails = () => {
               <button 
                 onClick={handleAddToCart}
                 disabled={maxStockForDisplay <= 0}
-                className={`relative group overflow-hidden ${maxStockForDisplay > 0 ? 'bg-gray-900' : 'bg-gray-400 cursor-not-allowed'} text-white w-full py-5 mb-12 shadow-2xl shadow-gray-900/20 active:scale-[0.98] transition-all duration-500 block`}
+                className={`relative group overflow-hidden ${maxStockForDisplay > 0 ? 'bg-primaryAction shadow-[0_8px_30px_rgba(231,29,54,0.4)] hover:shadow-[0_8px_30px_rgba(231,29,54,0.6)]' : 'bg-lightText/20 cursor-not-allowed'} text-lightText w-full py-5 mb-12 shadow-2xl active:scale-[0.98] transition-all duration-500 block rounded-sm border border-transparent hover:border-white/20`}
               >
-                <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out"></div>
+                <div className="absolute inset-0 bg-lightText/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out"></div>
                 <span className="relative z-10 flex items-center justify-center gap-4 text-xs font-bold tracking-[0.2em] uppercase">
                   {maxStockForDisplay > 0 ? 'Add to Bag' : 'Sold Out'}
                   {maxStockForDisplay > 0 && (
@@ -307,20 +307,20 @@ const ItemDetails = () => {
               </button>
 
               {/* Divider */}
-              <div className="w-full h-[1px] bg-gray-200 mb-8"></div>
+              <div className="w-full h-[1px] bg-secondaryAction/20 mb-8"></div>
 
               {/* Accordion / Tabs styled like a high-end spec sheet */}
               <div className="mb-12">
-                <div className="flex gap-8 border-b border-gray-200 mb-8">
+                <div className="flex gap-8 border-b border-secondaryAction/20 mb-8">
                   <button 
                     onClick={() => setActiveTab('description')} 
                     className={`pb-4 text-[11px] font-bold uppercase tracking-[0.15em] transition-all duration-300 relative ${
-                      activeTab === 'description' ? 'text-gray-900' : 'text-gray-400 hover:text-gray-600'
+                      activeTab === 'description' ? 'text-lightText' : 'text-lightText/50 hover:text-secondaryAction'
                     }`}
                   >
                     The Details
                     {activeTab === 'description' && (
-                      <span className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900 scale-x-100 origin-left transition-transform duration-300"></span>
+                      <span className="absolute bottom-0 left-0 w-full h-[1px] bg-secondaryAction scale-x-100 origin-left transition-transform duration-300 shadow-[0_0_10px_rgba(46,196,182,0.8)]"></span>
                     )}
                   </button>
                 </div>
@@ -328,7 +328,7 @@ const ItemDetails = () => {
                 <div className="min-h-[120px]">
                   {activeTab === 'description' && (
                     <div className="animate-in fade-in duration-700">
-                      <p className="text-gray-600 leading-relaxed font-light text-[15px]">
+                      <p className="text-lightText/80 leading-relaxed font-light text-[15px]">
                         {product.description}
                       </p>
                     </div>
@@ -337,20 +337,20 @@ const ItemDetails = () => {
               </div>
 
               {/* Minimal Trust Indicators */}
-              <div className="grid grid-cols-2 gap-6 pt-8 border-t border-gray-200">
+              <div className="grid grid-cols-2 gap-6 pt-8 border-t border-secondaryAction/20">
                  <div className="group">
-                   <div className="w-10 h-10 border border-gray-200 rounded-full flex items-center justify-center mb-4 group-hover:border-gray-900 transition-colors duration-500">
-                     <svg className="w-4 h-4 text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
+                   <div className="w-10 h-10 border border-secondaryAction/30 rounded-full flex items-center justify-center mb-4 group-hover:border-secondaryAction transition-colors duration-500 bg-[#021f35]">
+                     <svg className="w-4 h-4 text-secondaryAction" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
                    </div>
-                   <h4 className="text-[11px] font-bold text-gray-900 uppercase tracking-widest mb-1">Globally Shipped</h4>
-                   <p className="text-xs text-gray-500 font-light">Complimentary on all orders</p>
+                   <h4 className="text-[11px] font-bold text-lightText uppercase tracking-widest mb-1">Globally Shipped</h4>
+                   <p className="text-xs text-lightText/60 font-light">Complimentary on all orders</p>
                  </div>
                  <div className="group">
-                   <div className="w-10 h-10 border border-gray-200 rounded-full flex items-center justify-center mb-4 group-hover:border-gray-900 transition-colors duration-500">
-                     <svg className="w-4 h-4 text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                   <div className="w-10 h-10 border border-secondaryAction/30 rounded-full flex items-center justify-center mb-4 group-hover:border-secondaryAction transition-colors duration-500 bg-[#021f35]">
+                     <svg className="w-4 h-4 text-secondaryAction" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
                    </div>
-                   <h4 className="text-[11px] font-bold text-gray-900 uppercase tracking-widest mb-1">Easy Returns</h4>
-                   <p className="text-xs text-gray-500 font-light">30-day hassle-free policy</p>
+                   <h4 className="text-[11px] font-bold text-lightText uppercase tracking-widest mb-1">Easy Returns</h4>
+                   <p className="text-xs text-lightText/60 font-light">30-day hassle-free policy</p>
                  </div>
               </div>
 
@@ -362,11 +362,11 @@ const ItemDetails = () => {
       {/* Cinematic Fullscreen Overlay */}
       {isFullscreen && allImages.length > 0 && (
         <div 
-          className="fixed inset-0 z-[100] bg-white/95 backdrop-blur-xl flex items-center justify-center cursor-zoom-out animate-in fade-in duration-500"
+          className="fixed inset-0 z-[100] bg-darkBg/95 backdrop-blur-xl flex items-center justify-center cursor-zoom-out animate-in fade-in duration-500"
           onClick={closeFullscreen}
         >
           <button 
-            className="absolute top-6 right-6 md:top-10 md:right-10 text-gray-900 p-4 hover:scale-110 transition-transform duration-300 z-[110]"
+            className="absolute top-6 right-6 md:top-10 md:right-10 text-lightText p-4 hover:scale-110 hover:text-primaryAction transition-all duration-300 z-[110]"
             onClick={closeFullscreen}
           >
             <span className="sr-only">Close</span>
@@ -375,7 +375,7 @@ const ItemDetails = () => {
           
           {allImages.length > 1 && (
             <button 
-              className="absolute left-4 md:left-12 text-gray-900 p-4 hover:-translate-x-2 transition-transform duration-300 z-[110]"
+              className="absolute left-4 md:left-12 text-lightText hover:text-primaryAction p-4 hover:-translate-x-2 transition-all duration-300 z-[110]"
               onClick={prevImage}
             >
               <svg className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M15 19l-7-7 7-7" /></svg>
@@ -393,7 +393,7 @@ const ItemDetails = () => {
 
           {allImages.length > 1 && (
             <button 
-              className="absolute right-4 md:right-12 text-gray-900 p-4 hover:translate-x-2 transition-transform duration-300 z-[110]"
+              className="absolute right-4 md:right-12 text-lightText hover:text-primaryAction p-4 hover:translate-x-2 transition-all duration-300 z-[110]"
               onClick={nextImage}
             >
               <svg className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 5l7 7-7 7" /></svg>
@@ -406,8 +406,8 @@ const ItemDetails = () => {
               {allImages.map((_, idx) => (
                 <div 
                   key={idx} 
-                  className={`h-1 transition-all duration-300 ${
-                    idx === fullscreenIndex ? 'w-8 bg-gray-900' : 'w-2 bg-gray-300'
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    idx === fullscreenIndex ? 'w-8 bg-secondaryAction shadow-[0_0_10px_rgba(46,196,182,0.8)]' : 'w-2 bg-secondaryAction/40'
                   }`}
                 />
               ))}

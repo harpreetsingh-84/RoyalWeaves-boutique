@@ -46,7 +46,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative overflow-hidden bg-gray-100 aspect-[3/4] mb-5 rounded-sm shadow-sm group-hover:shadow-2xl transition-all duration-500">
+      <div className="relative overflow-hidden premium-card aspect-[3/4] mb-5 shadow-sm group-hover:shadow-xl transition-all duration-500">
         
         {allImages.map((img, idx) => (
           <img 
@@ -60,9 +60,9 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
           />
         ))}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-darkBg/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-6 group-hover:translate-y-0 z-20">
-          <span className="bg-white/95 text-gray-900 px-8 py-3 rounded-sm font-semibold shadow-2xl text-xs tracking-widest uppercase">
+          <span className="bg-primaryAction text-lightText px-8 py-3 rounded-full font-semibold shadow-[0_4px_14px_0_rgba(231,29,54,0.39)] text-xs tracking-widest uppercase">
             View Details
           </span>
         </div>
@@ -73,16 +73,16 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
             {allImages.map((_, idx) => (
               <div 
                 key={idx} 
-                className={`h-1 rounded-full transition-all duration-500 ${idx === currentImageIndex ? 'bg-white w-4' : 'bg-white/50 w-1.5'}`} 
+                className={`h-1.5 rounded-full transition-all duration-500 shadow-sm ${idx === currentImageIndex ? 'bg-secondaryAction w-5' : 'bg-secondaryAction/40 w-1.5'}`}
               />
             ))}
           </div>
         )}
       </div>
       <div className="px-1 text-center">
-        <p className="text-gray-400 text-xs mb-2 uppercase tracking-widest font-medium">{product.category}</p>
-        <h3 className="text-lg font-serif text-gray-900 mb-2 group-hover:text-accent transition-colors truncate">{product.name}</h3>
-        <p className="font-medium text-gray-900 tracking-wide">{formatPrice(product.price)}</p>
+        <p className="text-secondaryAction text-xs mb-2 uppercase tracking-widest font-medium">{product.category}</p>
+        <h3 className="text-lg font-serif text-lightText mb-2 group-hover:text-primaryAction transition-colors truncate">{product.name}</h3>
+        <p className="font-semibold text-highlight tracking-wide">{formatPrice(product.price)}</p>
       </div>
     </Link>
   );

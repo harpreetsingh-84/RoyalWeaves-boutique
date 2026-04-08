@@ -72,17 +72,17 @@ const Categories: React.FC = () => {
     <div className="fade-in space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Categories</h1>
-            <p className="text-sm text-gray-500 mt-1">Organize products structurally.</p>
+            <h1 className="text-2xl font-bold text-gray-100">Categories</h1>
+            <p className="text-sm text-gray-400 mt-1">Organize products structurally.</p>
          </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-         <div className="md:col-span-1 border border-gray-100 bg-white p-6 rounded-xl shadow-sm h-fit">
-            <h2 className="font-semibold text-lg mb-4 text-gray-800">Add New Category</h2>
+         <div className="md:col-span-1 border border-[#333] bg-[#1a1a1a] p-6 rounded-xl shadow-sm h-fit">
+            <h2 className="font-semibold text-lg mb-4 text-gray-200">Add New Category</h2>
             <form onSubmit={handleAddCategory} className="flex flex-col gap-4">
                <div>
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Category Name</label>
+                  <label className="text-xs font-bold text-gray-400 uppercase tracking-wide">Category Name</label>
                   <input 
                     type="text" 
                     value={newCategoryName}
@@ -102,23 +102,23 @@ const Categories: React.FC = () => {
             </form>
          </div>
 
-         <div className="md:col-span-2 border border-gray-100 bg-white rounded-xl shadow-sm overflow-hidden">
-            <div className="bg-gray-50 px-6 py-4 border-b flex justify-between items-center">
-              <h2 className="font-semibold text-gray-800">Existing Categories</h2>
-              <span className="text-xs font-bold bg-gray-200 text-gray-600 px-2 py-1 rounded-full">{categories.length} Categories</span>
+         <div className="md:col-span-2 border border-[#333] bg-[#1a1a1a] rounded-xl shadow-sm overflow-hidden">
+            <div className="bg-[#222] px-6 py-4 border-b flex justify-between items-center">
+              <h2 className="font-semibold text-gray-200">Existing Categories</h2>
+              <span className="text-xs font-bold bg-[#333] text-gray-400 px-2 py-1 rounded-full">{categories.length} Categories</span>
             </div>
             
             {loading ? (
-               <div className="p-8 text-center text-gray-500 animate-pulse">Loading categories...</div>
+               <div className="p-8 text-center text-gray-400 animate-pulse">Loading categories...</div>
             ) : categories.length === 0 ? (
-               <div className="p-12 text-center text-gray-500">No categories found.</div>
+               <div className="p-12 text-center text-gray-400">No categories found.</div>
             ) : (
                <ul className="divide-y divide-gray-100">
                   {categories.map((cat) => (
-                    <li key={cat._id} className="p-4 px-6 flex items-center justify-between hover:bg-gray-50 transition-colors group">
+                    <li key={cat._id} className="p-4 px-6 flex items-center justify-between hover:bg-[#222] transition-colors group">
                        <div className="flex items-center gap-3">
                          <span className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">#</span>
-                         <span className="font-medium text-gray-800">{cat.name}</span>
+                         <span className="font-medium text-gray-200">{cat.name}</span>
                        </div>
                        <button 
                          onClick={() => handleDeleteCategory(cat._id, cat.name)}

@@ -63,22 +63,22 @@ const Users: React.FC = () => {
     <div className="fade-in space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Manage Users</h1>
-            <p className="text-sm text-gray-500 mt-1">View, block or remove customer accounts.</p>
+            <h1 className="text-2xl font-bold text-gray-100">Manage Users</h1>
+            <p className="text-sm text-gray-400 mt-1">View, block or remove customer accounts.</p>
          </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-[#1a1a1a] rounded-xl shadow-sm border border-[#333] overflow-hidden">
         {loading ? (
            <div className="p-12 text-center text-gray-400 animate-pulse">Loading users...</div>
         ) : users.length === 0 ? (
-           <div className="p-12 text-center text-gray-500">No users registered yet.</div>
+           <div className="p-12 text-center text-gray-400">No users registered yet.</div>
         ) : (
            <div>
              {/* Desktop Table View */}
              <div className="hidden lg:block overflow-x-auto">
                <table className="w-full text-left min-w-[700px]">
-                 <thead className="bg-gray-50 border-b border-gray-100 uppercase text-[10px] font-bold tracking-wider text-gray-500">
+                 <thead className="bg-[#222] border-b border-[#333] uppercase text-[10px] font-bold tracking-wider text-gray-400">
                    <tr>
                      <th className="p-4 px-6">Name</th>
                      <th className="p-4">Email</th>
@@ -88,14 +88,14 @@ const Users: React.FC = () => {
                  </thead>
                  <tbody className="divide-y divide-gray-100">
                    {users.map((user) => (
-                     <tr key={user._id} className={`hover:bg-gray-50 transition-colors ${user.isBlocked ? 'bg-red-50/30' : ''}`}>
-                       <td className="p-4 px-6 font-medium text-gray-900 flex items-center gap-3">
+                     <tr key={user._id} className={`hover:bg-[#222] transition-colors ${user.isBlocked ? 'bg-red-50/30' : ''}`}>
+                       <td className="p-4 px-6 font-medium text-gray-100 flex items-center gap-3">
                          <span className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${user.isBlocked ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
                            {user.name.charAt(0).toUpperCase()}
                          </span>
                          {user.name}
                        </td>
-                       <td className="p-4 text-gray-600 text-sm">{user.email}</td>
+                       <td className="p-4 text-gray-400 text-sm">{user.email}</td>
                        <td className="p-4 text-center">
                          {user.isBlocked ? (
                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-red-100 text-red-700 text-xs font-bold uppercase tracking-wider">
@@ -141,8 +141,8 @@ const Users: React.FC = () => {
                        {user.name.charAt(0).toUpperCase()}
                      </span>
                      <div className="flex-1 min-w-0">
-                       <h3 className="font-bold text-gray-900 truncate">{user.name}</h3>
-                       <p className="text-gray-500 text-xs truncate">{user.email}</p>
+                       <h3 className="font-bold text-gray-100 truncate">{user.name}</h3>
+                       <p className="text-gray-400 text-xs truncate">{user.email}</p>
                      </div>
                      <div className="shrink-0">
                        {user.isBlocked ? (

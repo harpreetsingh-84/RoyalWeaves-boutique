@@ -97,54 +97,54 @@ const Settings: React.FC = () => {
   };
 
   if (loading || !siteContent) {
-     return <div className="animate-pulse p-12 text-center text-gray-500">Loading Configuration...</div>;
+     return <div className="animate-pulse p-12 text-center text-gray-400">Loading Configuration...</div>;
   }
 
   return (
     <div className="fade-in space-y-8 max-w-6xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Platform Settings</h1>
-            <p className="text-sm text-gray-500 mt-1">Manage public landing page content and payment configurations.</p>
+            <h1 className="text-2xl font-bold text-gray-100">Platform Settings</h1>
+            <p className="text-sm text-gray-400 mt-1">Manage public landing page content and payment configurations.</p>
          </div>
       </div>
 
       <form onSubmit={handleUpdateContent} className="space-y-10">
         
         {/* UPI Config Section */}
-        <section className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-           <div className="bg-gray-50 border-b border-gray-100 p-6 flex items-center gap-3">
+        <section className="bg-[#1a1a1a] rounded-xl shadow-sm border border-[#333] overflow-hidden">
+           <div className="bg-[#222] border-b border-[#333] p-6 flex items-center gap-3">
               <span className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center"><CreditCard size={16}/></span>
-              <h2 className="text-lg font-bold text-gray-800">Payment Configuration</h2>
+              <h2 className="text-lg font-bold text-gray-200">Payment Configuration</h2>
            </div>
            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
-                <label className="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">Store UPI ID</label>
+                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Store UPI ID</label>
                 <input 
                   type="text" 
-                  className="w-full text-sm border border-gray-200 p-3 rounded-lg focus:ring-2 focus:ring-blue-500/20 font-mono" 
+                  className="w-full text-sm border border-[#444] p-3 rounded-lg focus:ring-2 focus:ring-blue-500/20 font-mono" 
                   value={siteContent.upiId || ''} 
                   onChange={(e) => setSiteContent({...siteContent, upiId: e.target.value})} 
                   placeholder="e.g. 8824656153@axl" 
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">UPI QR Code URL / Upload</label>
+                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">UPI QR Code URL / Upload</label>
                 <div className="flex flex-col sm:flex-row gap-2">
                    <input 
                      type="text" 
-                     className="flex-1 text-sm border border-gray-200 p-3 rounded-lg focus:ring-2 w-full" 
+                     className="flex-1 text-sm border border-[#444] p-3 rounded-lg focus:ring-2 w-full" 
                      value={siteContent.upiQrCode || ''} 
                      onChange={(e) => setSiteContent({...siteContent, upiQrCode: e.target.value})} 
                      placeholder="Direct URL or upload" 
                    />
                    <input type="file" accept="image/*" id="qrUpload" className="hidden" onChange={uploadUpiQr} />
-                   <label htmlFor="qrUpload" className={`px-4 py-3 bg-gray-100 text-sm font-medium rounded-lg cursor-pointer hover:bg-gray-200 transition flex items-center justify-center gap-2 shrink-0 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                   <label htmlFor="qrUpload" className={`px-4 py-3 bg-[#2a2a2a] text-sm font-medium rounded-lg cursor-pointer hover:bg-[#333] transition flex items-center justify-center gap-2 shrink-0 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
                       <Upload size={16}/> {uploading ? '...' : 'Upload'}
                    </label>
                 </div>
                 {siteContent.upiQrCode && (
-                  <div className="mt-3 p-2 bg-gray-50 inline-block border rounded-lg">
+                  <div className="mt-3 p-2 bg-[#222] inline-block border rounded-lg">
                     <img src={siteContent.upiQrCode} alt="QR Code" className="h-24 object-contain mix-blend-multiply" />
                   </div>
                 )}
@@ -153,52 +153,52 @@ const Settings: React.FC = () => {
         </section>
 
         {/* Hero Slides Section */}
-        <section className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-           <div className="bg-gray-50 border-b border-gray-100 p-6 flex items-center justify-between">
+        <section className="bg-[#1a1a1a] rounded-xl shadow-sm border border-[#333] overflow-hidden">
+           <div className="bg-[#222] border-b border-[#333] p-6 flex items-center justify-between">
               <div className="flex items-center gap-3">
                  <span className="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold"><Target size={16}/></span>
-                 <h2 className="text-lg font-bold text-gray-800">Landing Page Carousel</h2>
+                 <h2 className="text-lg font-bold text-gray-200">Landing Page Carousel</h2>
               </div>
-              <span className="text-xs bg-white border px-3 py-1 rounded-full text-gray-500 font-medium shadow-sm">3 Active Slides</span>
+              <span className="text-xs bg-[#1a1a1a] border px-3 py-1 rounded-full text-gray-400 font-medium shadow-sm">3 Active Slides</span>
            </div>
            <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
               {siteContent.heroSlides?.map((slide: any, idx: number) => (
-                <div key={idx} className="bg-gray-50 border border-gray-200 rounded-lg p-5 space-y-4 hover:border-gray-300 transition-colors relative">
+                <div key={idx} className="bg-[#222] border border-[#444] rounded-lg p-5 space-y-4 hover:border-[#555] transition-colors relative">
                    <div className="absolute top-4 right-4 text-xs font-bold text-gray-400">0{idx + 1}</div>
                    
                    {slide.image ? (
-                      <div className="w-full h-32 bg-gray-200 rounded-md overflow-hidden mb-2 border shadow-inner">
+                      <div className="w-full h-32 bg-[#333] rounded-md overflow-hidden mb-2 border shadow-inner">
                          <img src={slide.image} className="w-full h-full object-cover" alt={`Slide ${idx + 1}`} />
                       </div>
                    ) : (
-                      <div className="w-full h-32 bg-gray-200 rounded-md mb-2 flex flex-col items-center justify-center text-gray-400 text-xs border border-dashed border-gray-300">
+                      <div className="w-full h-32 bg-[#333] rounded-md mb-2 flex flex-col items-center justify-center text-gray-400 text-xs border border-dashed border-[#555]">
                          No Image Added
                       </div>
                    )}
                    
                    <div>
-                     <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-1">Image URL / Upload</label>
+                     <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-1">Image URL / Upload</label>
                      <div className="flex flex-col sm:flex-row gap-2">
                         <input required type="text" className="flex-1 text-sm border p-2 rounded focus:ring-2 outline-none w-full" value={slide.image} onChange={(e) => updateHeroSlide(idx, 'image', e.target.value)} />
                         <input type="file" accept="image/*" id={`heroUpload-${idx}`} className="hidden" onChange={(e) => uploadSiteImage(e, (url) => updateHeroSlide(idx, 'image', url))} />
-                        <label htmlFor={`heroUpload-${idx}`} className={`px-3 py-2 bg-white border text-xs font-semibold rounded cursor-pointer hover:bg-gray-50 flex items-center justify-center gap-1.5 shrink-0 ${uploading ? 'opacity-50' : ''}`}>
+                        <label htmlFor={`heroUpload-${idx}`} className={`px-3 py-2 bg-[#1a1a1a] border text-xs font-semibold rounded cursor-pointer hover:bg-[#222] flex items-center justify-center gap-1.5 shrink-0 ${uploading ? 'opacity-50' : ''}`}>
                           <Upload size={14}/> Upload
                         </label>
                      </div>
                    </div>
 
                    <div>
-                     <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-1">Subtitle Banner</label>
+                     <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-1">Subtitle Banner</label>
                      <input required type="text" className="w-full text-sm border p-2 rounded focus:ring-2 outline-none" value={slide.subtitle} onChange={(e) => updateHeroSlide(idx, 'subtitle', e.target.value)} />
                    </div>
 
                    <div>
-                     <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-1">Main Headline</label>
-                     <input required type="text" className="w-full text-sm border p-2 rounded focus:ring-2 font-bold text-gray-800 outline-none block" value={slide.title} onChange={(e) => updateHeroSlide(idx, 'title', e.target.value)} />
+                     <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-1">Main Headline</label>
+                     <input required type="text" className="w-full text-sm border p-2 rounded focus:ring-2 font-bold text-gray-200 outline-none block" value={slide.title} onChange={(e) => updateHeroSlide(idx, 'title', e.target.value)} />
                    </div>
 
                    <div>
-                     <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-1">Description Paragraph</label>
+                     <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-1">Description Paragraph</label>
                      <textarea required rows={2} className="w-full text-sm border p-2 rounded focus:ring-2 outline-none resize-none" value={slide.description} onChange={(e) => updateHeroSlide(idx, 'description', e.target.value)} />
                    </div>
                 </div>
@@ -207,29 +207,29 @@ const Settings: React.FC = () => {
         </section>
 
         {/* Categories Spotlight */}
-        <section className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-           <div className="bg-gray-50 border-b border-gray-100 p-6 flex items-center gap-3">
+        <section className="bg-[#1a1a1a] rounded-xl shadow-sm border border-[#333] overflow-hidden">
+           <div className="bg-[#222] border-b border-[#333] p-6 flex items-center gap-3">
               <span className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold"><Sparkles size={16}/></span>
-              <h2 className="text-lg font-bold text-gray-800">Featured Categories Spotlight</h2>
+              <h2 className="text-lg font-bold text-gray-200">Featured Categories Spotlight</h2>
            </div>
            <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
               {siteContent.featuredCategories?.map((cat: any, idx: number) => (
-                <div key={idx} className="bg-white border rounded-lg p-5 space-y-4 shadow-sm">
+                <div key={idx} className="bg-[#1a1a1a] border rounded-lg p-5 space-y-4 shadow-sm">
                    {cat.image && (
-                      <div className="w-full h-40 bg-gray-100 rounded-md overflow-hidden mb-2 border">
+                      <div className="w-full h-40 bg-[#2a2a2a] rounded-md overflow-hidden mb-2 border">
                          <img src={cat.image} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" alt={cat.name} />
                       </div>
                    )}
                    <div>
-                     <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-1">Category Target Name</label>
-                     <input required type="text" className="w-full text-sm border p-2 rounded bg-gray-50 outline-none" value={cat.name} onChange={(e) => updateCategory(idx, 'name', e.target.value)} />
+                     <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-1">Category Target Name</label>
+                     <input required type="text" className="w-full text-sm border p-2 rounded bg-[#222] outline-none" value={cat.name} onChange={(e) => updateCategory(idx, 'name', e.target.value)} />
                    </div>
                    <div>
-                     <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-1">Spotlight Image</label>
+                     <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-1">Spotlight Image</label>
                      <div className="flex flex-col sm:flex-row gap-2">
                         <input required type="text" className="flex-1 text-sm border p-2 rounded outline-none w-full" value={cat.image} onChange={(e) => updateCategory(idx, 'image', e.target.value)} />
                         <input type="file" accept="image/*" id={`catUpload-${idx}`} className="hidden" onChange={(e) => uploadSiteImage(e, (url) => updateCategory(idx, 'image', url))} />
-                        <label htmlFor={`catUpload-${idx}`} className={`px-3 py-2 bg-gray-100 border text-xs font-semibold rounded cursor-pointer hover:bg-gray-200 flex items-center justify-center gap-1.5 shrink-0 ${uploading ? 'opacity-50' : ''}`}>
+                        <label htmlFor={`catUpload-${idx}`} className={`px-3 py-2 bg-[#2a2a2a] border text-xs font-semibold rounded cursor-pointer hover:bg-[#333] flex items-center justify-center gap-1.5 shrink-0 ${uploading ? 'opacity-50' : ''}`}>
                           <Upload size={14}/> Upload
                         </label>
                      </div>
@@ -239,7 +239,7 @@ const Settings: React.FC = () => {
            </div>
         </section>
 
-        <div className="flex justify-end bg-gray-50 p-4 rounded-xl border border-gray-100 mt-8">
+        <div className="flex justify-end bg-[#222] p-4 rounded-xl border border-[#333] mt-8">
            <button 
              type="submit" 
              disabled={isUpdatingContent} 
