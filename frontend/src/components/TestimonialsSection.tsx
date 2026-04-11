@@ -65,6 +65,17 @@ export const TestimonialsSection = () => {
             {/* Peeking card hint for scroll */}
             <div className="min-w-[40px] md:hidden flex-shrink-0"></div>
           </div>
+          
+          {/* Swipe Hint */}
+          <div className="flex md:hidden items-center justify-center gap-2 mt-6 text-lightText/40 text-xs tracking-widest uppercase animate-soft-pulse">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+            <span>Swipe</span>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+          </div>
         </ScrollReveal>
       </div>
 

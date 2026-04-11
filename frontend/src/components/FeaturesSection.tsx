@@ -4,22 +4,22 @@ import { ScrollReveal } from './ScrollReveal';
 export const FeaturesSection = () => {
   const features = [
     {
-      icon: <Sparkles className="w-6 h-6 text-primaryAction" />,
+      icon: <Sparkles className="w-6 h-6 text-primaryAction group-hover:animate-soft-pulse" />,
       title: "Premium Quality",
       description: "Crafted from the finest materials with meticulous attention to every stitch."
     },
     {
-      icon: <ShieldCheck className="w-6 h-6 text-secondaryAction" />,
+      icon: <ShieldCheck className="w-6 h-6 text-secondaryAction group-hover:animate-soft-pulse" />,
       title: "Secure Checkout",
       description: "State-of-the-art encryption ensures your payment details are always safe."
     },
     {
-      icon: <Truck className="w-6 h-6 text-highlight" />,
+      icon: <Truck className="w-6 h-6 text-highlight group-hover:animate-soft-pulse" />,
       title: "Fast Delivery",
       description: "Express shipping available globally so you never miss an event."
     },
     {
-      icon: <Clock className="w-6 h-6 text-lightText" />,
+      icon: <Clock className="w-6 h-6 text-lightText group-hover:animate-soft-pulse" />,
       title: "24/7 Support",
       description: "Our fashion consultants are available around the clock to assist you."
     }

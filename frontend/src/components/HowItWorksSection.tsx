@@ -50,6 +50,8 @@ export const HowItWorksSection = () => {
                       <img 
                         src={step.image} 
                         alt={step.title} 
+                        loading="lazy"
+                        onError={(e) => { e.currentTarget.src = "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22400%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%2303233c%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-family%3D%22sans-serif%22%20font-size%3D%2216%22%20fill%3D%22%23ffffff%22%20opacity%3D%220.5%22%20text-anchor%3D%22middle%22%20dy%3D%22.3em%22%3EImage%20Unavailable%3C%2Ftext%3E%3C%2Fsvg%3E"; }}
                         className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-darkBg/20 group-hover:bg-darkBg/10 transition-colors"></div>

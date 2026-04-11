@@ -52,6 +52,8 @@ export const HeroSection = () => {
               <img 
                 src="https://images.unsplash.com/photo-1515347619252-a3915155cc9c?q=80&w=1200&auto=format&fit=crop" 
                 alt="Luxury Dress Content" 
+                loading="eager"
+                onError={(e) => { e.currentTarget.src = "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22600%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%2303233c%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-family%3D%22sans-serif%22%20font-size%3D%2216%22%20fill%3D%22%23ffffff%22%20opacity%3D%220.5%22%20text-anchor%3D%22middle%22%20dy%3D%22.3em%22%3EImage%20Unavailable%3C%2Ftext%3E%3C%2Fsvg%3E"; }}
                 className="w-full h-full object-cover object-center transform scale-105 hover:scale-100 transition-transform duration-1000"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-darkBg/60 via-transparent to-transparent pointer-events-none"></div>
@@ -62,7 +64,7 @@ export const HeroSection = () => {
                   <p className="text-xs text-lightText/60 font-medium uppercase tracking-wider mb-1">New Arrival</p>
                   <p className="text-sm text-lightText font-serif font-semibold">Midnight Velvet Gown</p>
                 </div>
-                <div className="w-8 h-8 rounded-full bg-primaryAction flex items-center justify-center shadow-lg">
+                <div className="w-8 h-8 rounded-full bg-primaryAction flex items-center justify-center shadow-[0_0_15px_rgba(231,29,54,0.5)] animate-soft-pulse">
                   <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
                   </svg>

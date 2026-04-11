@@ -9,6 +9,8 @@ export const CTASection = () => {
         <img 
           src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=2000&auto=format&fit=crop" 
           alt="Fashion Background" 
+          loading="lazy"
+          onError={(e) => { e.currentTarget.style.display = 'none'; }}
           className="w-full h-full object-cover opacity-20"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-darkBg via-darkBg/90 to-darkBg/60"></div>
