@@ -39,7 +39,7 @@
     @apply bg-opacity-10 bg-lightText backdrop-filter backdrop-blur-lg border border-opacity-20 border-lightText rounded-xl shadow-lg;
   }
   .premium-card {
-    @apply bg-[#03233c] border border-secondaryAction/20 rounded-xl overflow-hidden transition-all duration-400 ease-out hover:border-secondaryAction/60 md:hover:-translate-y-2 md:hover:shadow-[0_12px_40px_rgb(0,0,0,0.2)] md:hover:shadow-secondaryAction/20 active:scale-[0.98] touch-manipulation;
+    @apply bg-[#03233c] border border-secondaryAction/20 rounded-xl overflow-hidden transition-all duration-500 ease-out hover:border-secondaryAction/60 md:hover:-translate-y-2 md:hover:shadow-[0_12px_40px_rgb(0,0,0,0.2)] md:hover:shadow-secondaryAction/20 active:scale-[0.98] touch-manipulation;
   }
 }
 
