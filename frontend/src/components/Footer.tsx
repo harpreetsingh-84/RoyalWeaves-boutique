@@ -1,4 +1,5 @@
 import { useShop } from '../context/ShopContext';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   const { user, isAuthenticated } = useShop();
@@ -13,9 +14,9 @@ const Footer = () => {
           </p>
         </div>
         <div className="flex gap-8 text-sm">
-          <a href="#" className="text-lightText/60 hover:text-secondaryAction transition-colors duration-300">Privacy Policy</a>
-          <a href="#" className="text-lightText/60 hover:text-secondaryAction transition-colors duration-300">Terms of Service</a>
-          <a href="#" className="text-lightText/60 hover:text-secondaryAction transition-colors duration-300">Contact Us</a>
+          <Link to="/privacy-policy" className="text-lightText/60 hover:text-secondaryAction transition-colors duration-300">Privacy Policy</Link>
+          <Link to="/terms-of-service" className="text-lightText/60 hover:text-secondaryAction transition-colors duration-300">Terms of Service</Link>
+          <Link to="/contact-us" className="text-lightText/60 hover:text-secondaryAction transition-colors duration-300">Contact Us</Link>
         </div>
       </div>
     </footer>

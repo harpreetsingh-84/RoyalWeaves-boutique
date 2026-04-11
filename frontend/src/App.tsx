@@ -14,6 +14,9 @@ import MyOrders from './pages/MyOrders';
 import ProtectedRoute from './components/ProtectedRoute';
 import GlobalLoader from './components/GlobalLoader';
 import LoginPromptModal from './components/LoginPromptModal';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
+import ContactUs from './pages/ContactUs';
 
 // Admin Layout & Pages
 import AdminLayout from './pages/admin/AdminLayout';
@@ -46,6 +49,9 @@ function App() {
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/myorders" element={<MyOrders />} />
               <Route path="/order/:id" element={<OrderDetails />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/contact-us" element={<ContactUs />} />
             </Routes>
           </main>
           <Footer />

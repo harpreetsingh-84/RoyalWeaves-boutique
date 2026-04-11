@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useShop, type Product } from '../context/ShopContext';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useShop, type Product } from "../context/ShopContext";
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const { formatPrice } = useShop();
-  
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -14,7 +14,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
     allImages = [...allImages, ...product.gallery];
   }
   if (product.colors) {
-    product.colors.forEach(c => {
+    product.colors.forEach((c) => {
       if (c.images && c.images.length > 0) {
         allImages = [...allImages, ...c.images];
       } else {
@@ -40,22 +40,21 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   }, [allImages.length, isHovered]);
 
   return (
-    <Link 
-      to={`/item/${product._id}`} 
+    <Link
+      to={`/item/${product._id}`}
       className="group block"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative overflow-hidden premium-card aspect-[3/4] mb-5 shadow-sm group-hover:shadow-xl transition-all duration-500">
-        
         {allImages.map((img, idx) => (
-          <img 
+          <img
             key={idx}
-            src={img} 
-            alt={`${product.name} - view ${idx + 1}`} 
+            src={img}
+            alt={`${product.name} - view ${idx + 1}`}
             loading="lazy"
             className={`absolute inset-0 w-full h-full object-cover object-top transition-all duration-1000 ease-in-out group-hover:scale-105 ${
-              idx === currentImageIndex ? 'opacity-100 z-0' : 'opacity-0 -z-10'
+              idx === currentImageIndex ? "opacity-100" : "opacity-0"
             }`}
           />
         ))}
@@ -66,23 +65,29 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
             View Details
           </span>
         </div>
-        
+
         {/* Render indicators if multiple images */}
         {allImages.length > 1 && (
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             {allImages.map((_, idx) => (
-              <div 
-                key={idx} 
-                className={`h-1.5 rounded-full transition-all duration-500 shadow-sm ${idx === currentImageIndex ? 'bg-secondaryAction w-5' : 'bg-secondaryAction/40 w-1.5'}`}
+              <div
+                key={idx}
+                className={`h-1.5 rounded-full transition-all duration-500 shadow-sm ${idx === currentImageIndex ? "bg-secondaryAction w-5" : "bg-secondaryAction/40 w-1.5"}`}
               />
             ))}
           </div>
         )}
       </div>
       <div className="px-1 text-center">
-        <p className="text-secondaryAction text-xs mb-2 uppercase tracking-widest font-medium">{product.category}</p>
-        <h3 className="text-lg font-serif text-lightText mb-2 group-hover:text-primaryAction transition-colors truncate">{product.name}</h3>
-        <p className="font-semibold text-highlight tracking-wide">{formatPrice(product.price)}</p>
+        <p className="text-secondaryAction text-xs mb-2 uppercase tracking-widest font-medium">
+          {product.category}
+        </p>
+        <h3 className="text-lg font-serif text-lightText mb-2 group-hover:text-primaryAction transition-colors truncate">
+          {product.name}
+        </h3>
+        <p className="font-semibold text-highlight tracking-wide">
+          {formatPrice(product.price)}
+        </p>
       </div>
     </Link>
   );
