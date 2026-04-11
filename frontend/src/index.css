@@ -15,16 +15,31 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-primaryAction hover:bg-opacity-90 text-lightText font-semibold py-3 px-8 rounded transition-all duration-300 transform active:scale-95 md:hover:scale-[1.05] shadow-[0_4px_14px_0_rgba(231,29,54,0.39)] hover:shadow-[0_6px_20px_rgba(231,29,54,0.4)] disabled:opacity-50 disabled:cursor-not-allowed uppercase text-sm tracking-wider;
+    @apply relative overflow-hidden bg-primaryAction hover:bg-opacity-90 text-lightText font-semibold py-3 px-8 rounded transition-all duration-300 transform active:scale-95 md:hover:scale-[1.05] shadow-[0_4px_14px_0_rgba(231,29,54,0.39)] hover:shadow-[0_6px_20px_rgba(231,29,54,0.4)] disabled:opacity-50 disabled:cursor-not-allowed uppercase text-sm tracking-wider touch-manipulation;
   }
+  .btn-primary::after {
+    content: '';
+    @apply absolute top-1/2 left-1/2 w-[300%] aspect-square bg-white/20 rounded-full -translate-x-1/2 -translate-y-1/2 scale-0 opacity-0 transition-transform duration-500 ease-out pointer-events-none;
+  }
+  .btn-primary:active::after {
+    @apply scale-100 opacity-100 transition-none;
+  }
+  
   .btn-secondary {
-    @apply bg-transparent border-2 border-secondaryAction text-secondaryAction hover:bg-secondaryAction hover:text-darkBg font-semibold py-3 px-8 rounded transition-all duration-300 transform active:scale-95 md:hover:scale-[1.05] shadow-sm disabled:opacity-50 disabled:cursor-not-allowed uppercase text-sm tracking-wider;
+    @apply relative overflow-hidden bg-transparent border-2 border-secondaryAction text-secondaryAction hover:bg-secondaryAction hover:text-darkBg font-semibold py-3 px-8 rounded transition-all duration-300 transform active:scale-95 md:hover:scale-[1.05] shadow-sm disabled:opacity-50 disabled:cursor-not-allowed uppercase text-sm tracking-wider touch-manipulation;
+  }
+  .btn-secondary::after {
+    content: '';
+    @apply absolute top-1/2 left-1/2 w-[300%] aspect-square bg-darkBg/10 rounded-full -translate-x-1/2 -translate-y-1/2 scale-0 opacity-0 transition-transform duration-500 ease-out pointer-events-none;
+  }
+  .btn-secondary:active::after {
+    @apply scale-100 opacity-100 transition-none;
   }
   .glass-panel {
     @apply bg-opacity-10 bg-lightText backdrop-filter backdrop-blur-lg border border-opacity-20 border-lightText rounded-xl shadow-lg;
   }
   .premium-card {
-    @apply bg-[#03233c] border border-secondaryAction/20 rounded-xl overflow-hidden transition-all duration-300 hover:border-secondaryAction/60 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-secondaryAction/20;
+    @apply bg-[#03233c] border border-secondaryAction/20 rounded-xl overflow-hidden transition-all duration-400 ease-out hover:border-secondaryAction/60 md:hover:-translate-y-2 md:hover:shadow-[0_12px_40px_rgb(0,0,0,0.2)] md:hover:shadow-secondaryAction/20 active:scale-[0.98] touch-manipulation;
   }
 }
 
@@ -81,4 +96,25 @@
 
 .animate-shimmer {
   animation: shimmer 1.5s infinite;
+}
+
+.text-reveal {
+  background: linear-gradient(90deg, #fdfffc 0%, #2ec4b6 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: textReveal 2s ease-out forwards;
+}
+
+@keyframes textReveal {
+  0% {
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    opacity: 0;
+  }
+  100% {
+    background-size: 200% 100%;
+    background-position: 0 0;
+    opacity: 1;
+  }
 }

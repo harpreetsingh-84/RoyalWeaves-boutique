@@ -32,10 +32,29 @@ const TermsOfService = () => {
     fetchPage();
   }, []);
 
-  if (loading) return <div className="min-h-[50vh] flex items-center justify-center text-lightText/60">Loading terms...</div>;
-  if (!pageData) return <div className="min-h-[50vh] flex items-center justify-center text-lightText/60">Terms not found.</div>;
+  const fallbackSections = [
+    {
+      icon: 'FileText',
+      title: "1. Introduction",
+      content: "These Terms of Service govern your use of the Woven Wonder Creation website and all related services.",
+      enabled: true,
+      order: 1
+    },
+    {
+      icon: 'CreditCard',
+      title: "2. Payment & Refund Policy",
+      content: "All payments are processed securely. We offer a 14-day return and refund policy for eligible physical products.",
+      enabled: true,
+      order: 2
+    }
+  ];
 
-  const sections = pageData.sections?.filter((s: any) => s.enabled).sort((a: any, b: any) => a.order - b.order) || [];
+  if (loading) return <div className="min-h-[50vh] flex items-center justify-center text-lightText/60">Loading terms...</div>;
+  if (!pageData && !loading) {
+     // fallback used below
+  }
+
+  const sections = pageData?.sections?.filter((s: any) => s.enabled).sort((a: any, b: any) => a.order - b.order) || fallbackSections;
 
   return (
     <div className="w-full text-lightText pb-20">

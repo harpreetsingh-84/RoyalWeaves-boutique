@@ -1,7 +1,28 @@
 import { ScrollReveal } from './ScrollReveal';
 
 export const HowItWorksSection = ({ steps = [] }: { steps?: any[] }) => {
-  if (!steps || steps.length === 0) return null;
+  const defaultSteps = [
+    {
+      num: "01",
+      title: "Discover Your Style",
+      desc: "Browse our exclusive collections. From modern casuals to elegant evening wear, find the perfect piece that speaks to your aesthetic.",
+      image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800&auto=format&fit=crop"
+    },
+    {
+      num: "02",
+      title: "Tailor to Perfection",
+      desc: "Ensure the perfect fit. Make use of our detailed sizing guides and customization options for a bespoke experience.",
+      image: "https://images.unsplash.com/photo-1558769132-cb1fac0840c2?q=80&w=800&auto=format&fit=crop"
+    },
+    {
+      num: "03",
+      title: "Unbox Elegance",
+      desc: "Receive your garment in luxury sustainable packaging, delivered directly to your doorstep with express worldwide shipping.",
+      image: "https://images.unsplash.com/photo-1549439602-43ebca2327af?q=80&w=800&auto=format&fit=crop"
+    }
+  ];
+
+  const dataToRender = steps && steps.length > 0 ? steps : defaultSteps;
 
   return (
     <section id="how-it-works" className="py-24 md:py-32 bg-darkBg relative overflow-hidden">
@@ -16,7 +37,7 @@ export const HowItWorksSection = ({ steps = [] }: { steps?: any[] }) => {
           <div className="hidden md:block absolute left-1/2 top-10 bottom-10 w-px bg-gradient-to-b from-primaryAction/50 via-secondaryAction/50 to-transparent -translate-x-1/2 z-0"></div>
 
           <div className="space-y-24 md:space-y-32">
-            {steps.map((step, idx) => (
+            {dataToRender.map((step, idx) => (
               <div key={idx} className={`relative z-10 flex flex-col ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-8 md:gap-16`}>
                 
                 {/* Image Side */}

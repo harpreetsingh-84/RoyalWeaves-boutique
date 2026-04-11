@@ -32,10 +32,29 @@ const PrivacyPolicy = () => {
     fetchPage();
   }, []);
 
-  if (loading) return <div className="min-h-[50vh] flex items-center justify-center text-lightText/60">Loading policy...</div>;
-  if (!pageData) return <div className="min-h-[50vh] flex items-center justify-center text-lightText/60">Policy not found.</div>;
+  const fallbackSections = [
+    {
+      icon: 'Shield',
+      title: "Introduction",
+      content: "Welcome to Woven Wonder Creation. We respect your privacy and are committed to protecting your personal data.",
+      enabled: true,
+      order: 1
+    },
+    {
+      icon: 'Eye',
+      title: "Information We Collect",
+      content: "We may collect, use, store and transfer different kinds of personal data about you to process orders and improve our service.",
+      enabled: true,
+      order: 2
+    }
+  ];
 
-  const sections = pageData.sections?.filter((s: any) => s.enabled).sort((a: any, b: any) => a.order - b.order) || [];
+  if (loading) return <div className="min-h-[50vh] flex items-center justify-center text-lightText/60">Loading policy...</div>;
+  if (!pageData && !loading) {
+     // Use fallback if api fails
+  }
+
+  const sections = pageData?.sections?.filter((s: any) => s.enabled).sort((a: any, b: any) => a.order - b.order) || fallbackSections;
 
   return (
     <div className="w-full text-lightText pb-20">
