@@ -33,6 +33,20 @@ const getOrCreateContent = async () => {
         { name: 'Evening Gowns', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600' }, 
         { name: 'Summer Dresses', image: 'https://images.unsplash.com/photo-1572804013309-82a89b4b09fd?q=80&w=600' }, 
         { name: 'Casual Luxury', image: 'https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?q=80&w=600' }
+      ],
+      features: [
+        { title: "Premium Quality", description: "Crafted from the finest materials with meticulous attention to every stitch.", icon: "Sparkles" },
+        { title: "Secure Checkout", description: "State-of-the-art encryption ensures your payment details are always safe.", icon: "ShieldCheck" },
+        { title: "Fast Delivery", description: "Express shipping available globally so you never miss an event.", icon: "Truck" },
+        { title: "24/7 Support", description: "Our fashion consultants are available around the clock to assist you.", icon: "Clock" }
+      ],
+      howItWorks: [
+        { num: "01", title: "Discover Your Style", desc: "Browse our exclusive collections.", image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800&auto=format&fit=crop" },
+        { num: "02", title: "Tailor to Perfection", desc: "Ensure the perfect fit.", image: "https://images.unsplash.com/photo-1558769132-cb1fac0840c2?q=80&w=800&auto=format&fit=crop" },
+        { num: "03", title: "Unbox Elegance", desc: "Receive your garment in luxury sustainable packaging.", image: "https://images.unsplash.com/photo-1549439602-43ebca2327af?q=80&w=800&auto=format&fit=crop" }
+      ],
+      testimonials: [
+        { name: "Sophia L.", role: "Verified Buyer", rating: 5, content: "The quality is simply unmatched. The velvet gown fits like a dream." }
       ]
     });
     await content.save();
@@ -53,14 +67,25 @@ router.get('/', async (req, res) => {
 // Update content (Admin only)
 router.put('/', verifyToken, requireAdmin, async (req, res) => {
   try {
-    const { heroSlides, featuredCategories, upiId, upiQrCode } = req.body;
+    const { 
+      heroSlides, featuredCategories, features, howItWorks, testimonials,
+      upiId, upiQrCode, contactEmail, contactPhone, contactAddress, storeHours 
+    } = req.body;
     let content = await getOrCreateContent();
     
     // Update fields if provided
     if (heroSlides) content.heroSlides = heroSlides;
     if (featuredCategories) content.featuredCategories = featuredCategories;
+    if (features) content.features = features;
+    if (howItWorks) content.howItWorks = howItWorks;
+    if (testimonials) content.testimonials = testimonials;
+
     if (upiId !== undefined) content.upiId = upiId;
     if (upiQrCode !== undefined) content.upiQrCode = upiQrCode;
+    if (contactEmail !== undefined) content.contactEmail = contactEmail;
+    if (contactPhone !== undefined) content.contactPhone = contactPhone;
+    if (contactAddress !== undefined) content.contactAddress = contactAddress;
+    if (storeHours !== undefined) content.storeHours = storeHours;
     
     await content.save();
     res.json({ message: 'Site content updated successfully', content });
