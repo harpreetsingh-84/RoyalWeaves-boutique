@@ -10,30 +10,9 @@ const iconMap: any = {
 };
 
 export const FeaturesSection = ({ features = [] }: { features?: any[] }) => {
-  const defaultFeatures = [
-    {
-      icon: 'Sparkles',
-      title: "Premium Quality",
-      description: "Crafted from the finest materials with meticulous attention to every stitch."
-    },
-    {
-      icon: 'ShieldCheck',
-      title: "Secure Checkout",
-      description: "State-of-the-art encryption ensures your payment details are always safe."
-    },
-    {
-      icon: 'Truck',
-      title: "Fast Delivery",
-      description: "Express shipping available globally so you never miss an event."
-    },
-    {
-      icon: 'Clock',
-      title: "24/7 Support",
-      description: "Our fashion consultants are available around the clock to assist you."
-    }
-  ];
+  if (!features || features.length === 0) return null;
 
-  const dataToRender = features && features.length > 0 ? features : defaultFeatures;
+  const dataToRender = features;
 
   return (
     <section className="py-24 bg-darkBg border-y border-lightText/5">

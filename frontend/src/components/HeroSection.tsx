@@ -1,7 +1,11 @@
 import { Link } from 'react-router-dom';
 import { ScrollReveal } from './ScrollReveal';
 
-export const HeroSection = () => {
+export const HeroSection = ({ slides = [] }: { slides?: any[] }) => {
+  const activeSlide = slides && slides.length > 0 ? slides[0] : null;
+
+  if (!activeSlide) return <div className="min-h-[90vh] bg-darkBg" />;
+
   return (
     <section className="relative min-h-[90vh] bg-darkBg flex items-center justify-center overflow-hidden pt-16">
       <div className="absolute inset-0 z-0">
@@ -15,20 +19,19 @@ export const HeroSection = () => {
         <div className="w-full lg:w-1/2 flex flex-col items-start text-left pt-12 lg:pt-0">
           <ScrollReveal delay={100}>
             <span className="inline-block px-3 py-1 mb-6 text-xs md:text-sm font-semibold tracking-widest text-secondaryAction bg-secondaryAction/10 rounded-full border border-secondaryAction/20 uppercase shadow-sm">
-              The Signature Collection
+              {activeSlide.subtitle}
             </span>
           </ScrollReveal>
 
           <ScrollReveal delay={200}>
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-serif text-lightText leading-[1.1] mb-6 drop-shadow-md">
-              Elegance <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-lightText via-lightText to-lightText/60">Redefined.</span>
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-serif text-lightText leading-[1.1] mb-6 drop-shadow-md whitespace-pre-wrap">
+              {activeSlide.title}
             </h1>
           </ScrollReveal>
 
           <ScrollReveal delay={300}>
             <p className="text-base sm:text-lg md:text-xl font-light text-lightText/80 max-w-lg mb-8 leading-relaxed">
-              Step into a world of curated luxury. Discover timeless dresses designed to accentuate your unique silhouette.
+              {activeSlide.description}
             </p>
           </ScrollReveal>
 
@@ -50,8 +53,8 @@ export const HeroSection = () => {
           <ScrollReveal delay={500} className="relative w-full max-w-sm sm:max-w-md">
             <div className="relative z-10 w-full aspect-[3/4] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(3,35,60,0.5)] border border-lightText/10 animate-bounce-soft">
               <img 
-                src="https://images.unsplash.com/photo-1515347619252-a3915155cc9c?q=80&w=1200&auto=format&fit=crop" 
-                alt="Luxury Dress Content" 
+                src={activeSlide.image} 
+                alt={activeSlide.title} 
                 loading="eager"
                 onError={(e) => { e.currentTarget.src = "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22600%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%2303233c%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-family%3D%22sans-serif%22%20font-size%3D%2216%22%20fill%3D%22%23ffffff%22%20opacity%3D%220.5%22%20text-anchor%3D%22middle%22%20dy%3D%22.3em%22%3EImage%20Unavailable%3C%2Ftext%3E%3C%2Fsvg%3E"; }}
                 className="w-full h-full object-cover object-center transform scale-105 hover:scale-100 transition-transform duration-1000"

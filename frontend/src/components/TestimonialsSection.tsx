@@ -2,34 +2,9 @@ import { ScrollReveal } from './ScrollReveal';
 import { Star } from 'lucide-react';
 
 export const TestimonialsSection = ({ testimonials = [] }: { testimonials?: any[] }) => {
-  const defaultReviews = [
-    {
-      name: "Sophia L.",
-      role: "Verified Buyer",
-      content: "The quality is simply unmatched. The velvet gown fits like a dream and arrived beautifully packaged.",
-      rating: 5
-    },
-    {
-      name: "Emma R.",
-      role: "Fashion Blogger",
-      content: "I've reviewed hundreds of boutiques, but the attention to detail here is on another level. Highly recommended.",
-      rating: 5
-    },
-    {
-      name: "Olivia T.",
-      role: "Verified Buyer",
-      content: "Stunning. Wore my purchase to a gala and received compliments all night long.",
-      rating: 5
-    },
-    {
-      name: "Mia C.",
-      role: "Verified Buyer",
-      content: "Fast delivery and the customer service helped me pick the perfect size. It's my new favorite store.",
-      rating: 5
-    }
-  ];
+  if (!testimonials || testimonials.length === 0) return null;
 
-  const dataToRender = testimonials && testimonials.length > 0 ? testimonials : defaultReviews;
+  const dataToRender = testimonials;
 
   return (
     <section className="py-24 bg-[#011b2e] border-y border-lightText/5 overflow-hidden">

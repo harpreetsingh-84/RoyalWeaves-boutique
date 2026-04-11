@@ -29,17 +29,8 @@ const Home = () => {
   }, []);
 
   const fallbackContent = {
-    heroSlides: [
-      {
-        image: "https://images.unsplash.com/photo-1515347619252-a3915155cc9c?q=80&w=2070&auto=format&fit=crop",
-        subtitle: "The Signature Collection",
-        title: "Elegance Redefined",
-        description: "Discover our exclusive range of luxury women's dresses."
-      }
-    ],
-    featuredCategories: [
-      { name: 'Evening Gowns', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600' }
-    ],
+    heroSlides: [],
+    featuredCategories: [],
     features: [],
     howItWorks: [],
     testimonials: []
@@ -72,7 +63,7 @@ const Home = () => {
 
   return (
     <div className="bg-darkBg overflow-x-hidden">
-      <HeroSection />
+      <HeroSection slides={content.heroSlides} />
       
       {/* Dynamic Featured Categories from API */}
       <section className="py-24 bg-darkBg relative z-10 border-t border-lightText/5">
