@@ -1,5 +1,6 @@
 import { MapPin, Mail, Phone, Send, Clock, User, MessageSquare } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { apiService } from '../services/api';
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -8,10 +9,20 @@ const ContactUs = () => {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [siteContent, setSiteContent] = useState<any>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    const fetchContent = async () => {
+      try {
+        const res = await apiService.getContent();
+        if (res.ok) setSiteContent(await res.json());
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchContent();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -21,20 +32,25 @@ const ContactUs = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmitStatus('idle');
     
-    // Simulate network request
-    setTimeout(() => {
+    try {
+      const res = await apiService.post('/api/messages', formData);
+      if (res.ok) {
+        setIsSuccess(true);
+        setFormData({ name: '', email: '', message: '' });
+        setTimeout(() => setIsSuccess(false), 5000);
+      } else {
+        alert("Failed to send message.");
+      }
+    } catch(err) {
+       console.error(err);
+       alert("An error occurred");
+    } finally {
       setIsSubmitting(false);
-      setSubmitStatus('success');
-      setFormData({ name: '', email: '', message: '' });
-      
-      // Reset success message after 5 seconds
-      setTimeout(() => setSubmitStatus('idle'), 5000);
-    }, 1500);
+    }
   };
 
   return (
@@ -64,10 +80,8 @@ const ContactUs = () => {
             </div>
             <div>
               <h3 className="font-semibold text-lg text-secondaryAction mb-1">Our Boutique</h3>
-              <p className="text-lightText/80 leading-relaxed">
-                123 Fashion Avenue, Suite 400<br />
-                New York, NY 10018<br />
-                United States
+              <p className="text-lightText/80 leading-relaxed whitespace-pre-wrap">
+                {siteContent?.contactAddress || '123 Fashion Avenue\nNew York, NY 10018'}
               </p>
             </div>
           </div>
@@ -79,8 +93,7 @@ const ContactUs = () => {
             <div>
               <h3 className="font-semibold text-lg text-secondaryAction mb-1">Email Us</h3>
               <p className="text-lightText/80 leading-relaxed">
-                support@wovenwonder.com<br />
-                info@wovenwonder.com
+                {siteContent?.contactEmail || 'support@wovenwonder.com'}
               </p>
             </div>
           </div>
@@ -92,8 +105,7 @@ const ContactUs = () => {
             <div>
               <h3 className="font-semibold text-lg text-secondaryAction mb-1">Call Us</h3>
               <p className="text-lightText/80 leading-relaxed">
-                +1 (555) 123-4567<br />
-                Toll Free: 1-800-WOVEN-CO
+                {siteContent?.contactPhone || '+1 (555) 123-4567'}
               </p>
             </div>
           </div>
@@ -104,10 +116,8 @@ const ContactUs = () => {
             </div>
             <div>
               <h3 className="font-semibold text-lg text-secondaryAction mb-1">Business Hours</h3>
-              <p className="text-lightText/80 leading-relaxed">
-                Monday - Friday: 9AM - 6PM EST<br />
-                Saturday: 10AM - 4PM EST<br />
-                Sunday: Closed
+              <p className="text-lightText/80 leading-relaxed whitespace-pre-wrap">
+                {siteContent?.storeHours || 'Monday - Friday: 9AM - 6PM EST\nSaturday: 10AM - 4PM EST\nSunday: Closed'}
               </p>
             </div>
           </div>
@@ -116,7 +126,7 @@ const ContactUs = () => {
         {/* Contact Form */}
         <div className="col-span-1 lg:col-span-7 fade-in" style={{ animationDelay: '0.2s' }}>
           <div className="premium-card p-8 md:p-10 relative">
-            {submitStatus === 'success' ? (
+            {isSuccess ? (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#03233c] z-10 p-8 text-center fade-in">
                 <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mb-6">
                  <Send className="w-10 h-10 text-green-400" />
@@ -126,7 +136,7 @@ const ContactUs = () => {
                   Thank you for reaching out. A member of our team will get back to you shortly.
                 </p>
                 <button 
-                  onClick={() => setSubmitStatus('idle')}
+                  onClick={() => setIsSuccess(false)}
                   className="mt-8 btn-secondary"
                 >
                   Send Another Message

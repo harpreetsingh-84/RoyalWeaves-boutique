@@ -1,29 +1,16 @@
 import { ShieldCheck, Sparkles, Truck, Clock } from 'lucide-react';
 import { ScrollReveal } from './ScrollReveal';
 
-export const FeaturesSection = () => {
-  const features = [
-    {
-      icon: <Sparkles className="w-6 h-6 text-primaryAction group-hover:animate-soft-pulse" />,
-      title: "Premium Quality",
-      description: "Crafted from the finest materials with meticulous attention to every stitch."
-    },
-    {
-      icon: <ShieldCheck className="w-6 h-6 text-secondaryAction group-hover:animate-soft-pulse" />,
-      title: "Secure Checkout",
-      description: "State-of-the-art encryption ensures your payment details are always safe."
-    },
-    {
-      icon: <Truck className="w-6 h-6 text-highlight group-hover:animate-soft-pulse" />,
-      title: "Fast Delivery",
-      description: "Express shipping available globally so you never miss an event."
-    },
-    {
-      icon: <Clock className="w-6 h-6 text-lightText group-hover:animate-soft-pulse" />,
-      title: "24/7 Support",
-      description: "Our fashion consultants are available around the clock to assist you."
-    }
-  ];
+// Reusable icon mapper
+const iconMap: any = {
+  Sparkles: <Sparkles className="w-6 h-6 text-primaryAction group-hover:animate-soft-pulse" />,
+  ShieldCheck: <ShieldCheck className="w-6 h-6 text-secondaryAction group-hover:animate-soft-pulse" />,
+  Truck: <Truck className="w-6 h-6 text-highlight group-hover:animate-soft-pulse" />,
+  Clock: <Clock className="w-6 h-6 text-lightText group-hover:animate-soft-pulse" />
+};
+
+export const FeaturesSection = ({ features = [] }: { features?: any[] }) => {
+  if (!features || features.length === 0) return null;
 
   return (
     <section className="py-24 bg-darkBg border-y border-lightText/5">
@@ -33,7 +20,7 @@ export const FeaturesSection = () => {
             <ScrollReveal key={idx} delay={idx * 150} className="group">
               <div className="h-full premium-card p-8 flex flex-col items-start bg-[#021526] hover:-translate-y-2 transition-all duration-300">
                 <div className="w-12 h-12 rounded-xl bg-lightText/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-inner">
-                  {feat.icon}
+                  {iconMap[feat.icon] || <Sparkles className="w-6 h-6 text-primaryAction group-hover:animate-soft-pulse" />}
                 </div>
                 <h3 className="text-xl font-serif text-lightText mb-3">{feat.title}</h3>
                 <p className="text-sm font-light text-lightText/60 leading-relaxed">

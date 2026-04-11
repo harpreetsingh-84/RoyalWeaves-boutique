@@ -1,26 +1,7 @@
 import { ScrollReveal } from './ScrollReveal';
 
-export const HowItWorksSection = () => {
-  const steps = [
-    {
-      num: "01",
-      title: "Discover Your Style",
-      desc: "Browse our exclusive collections. From modern casuals to elegant evening wear, find the perfect piece that speaks to your aesthetic.",
-      image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800&auto=format&fit=crop"
-    },
-    {
-      num: "02",
-      title: "Tailor to Perfection",
-      desc: "Ensure the perfect fit. Make use of our detailed sizing guides and customization options for a bespoke experience.",
-      image: "https://images.unsplash.com/photo-1558769132-cb1fac0840c2?q=80&w=800&auto=format&fit=crop"
-    },
-    {
-      num: "03",
-      title: "Unbox Elegance",
-      desc: "Receive your garment in luxury sustainable packaging, delivered directly to your doorstep with express worldwide shipping.",
-      image: "https://images.unsplash.com/photo-1549439602-43ebca2327af?q=80&w=800&auto=format&fit=crop"
-    }
-  ];
+export const HowItWorksSection = ({ steps = [] }: { steps?: any[] }) => {
+  if (!steps || steps.length === 0) return null;
 
   return (
     <section id="how-it-works" className="py-24 md:py-32 bg-darkBg relative overflow-hidden">

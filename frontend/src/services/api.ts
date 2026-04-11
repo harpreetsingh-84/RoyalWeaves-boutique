@@ -35,6 +35,12 @@ const apiFetch = (endpoint: string, options: RequestInit = {}) => {
 };
 
 export const apiService = {
+  // Generic Methods
+  get: (endpoint: string) => fetchWithTimeout(`${BASE_URL}${endpoint}`, { credentials: 'include' }),
+  post: (endpoint: string, data: any) => apiFetch(endpoint, { method: 'POST', body: JSON.stringify(data) }),
+  put: (endpoint: string, data: any) => apiFetch(endpoint, { method: 'PUT', body: JSON.stringify(data) }),
+  delete: (endpoint: string) => apiFetch(endpoint, { method: 'DELETE' }),
+
   // Auth
   login: (data: any) => apiFetch('/api/auth/login', {
     method: 'POST',

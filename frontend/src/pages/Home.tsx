@@ -38,9 +38,11 @@ const Home = () => {
       }
     ],
     featuredCategories: [
-      { name: 'Evening Gowns', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600' },
-      { name: 'Summer Dresses', image: 'https://images.unsplash.com/photo-1572804013309-82a89b4b09fd?q=80&w=600' }
-    ]
+      { name: 'Evening Gowns', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600' }
+    ],
+    features: [],
+    howItWorks: [],
+    testimonials: []
   };
 
   if (!content) {
@@ -98,9 +100,9 @@ const Home = () => {
         </div>
       </section>
 
-      <FeaturesSection />
-      <HowItWorksSection />
-      <TestimonialsSection />
+      <FeaturesSection features={content.features} />
+      <HowItWorksSection steps={content.howItWorks} />
+      <TestimonialsSection testimonials={content.testimonials} />
       <CTASection />
 
       {/* Sticky Mobile CTA */}

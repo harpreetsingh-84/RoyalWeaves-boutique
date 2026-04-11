@@ -27,6 +27,8 @@ import Orders from './pages/admin/Orders';
 import Users from './pages/admin/Users';
 import Admins from './pages/admin/Admins';
 import Settings from './pages/admin/Settings';
+import Pages from './pages/admin/Pages';
+import Messages from './pages/admin/Messages';
 
 function App() {
   const location = useLocation();
@@ -66,6 +68,8 @@ function App() {
               <Route path="users" element={<Users />} />
               <Route path="admins" element={<Admins />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="pages" element={<Pages />} />
+              <Route path="messages" element={<Messages />} />
               <Route path="order/:id" element={<AdminOrderDetails />} />
            </Route>
         </Routes>

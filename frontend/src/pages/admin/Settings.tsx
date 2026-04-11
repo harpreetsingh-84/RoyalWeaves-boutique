@@ -152,6 +152,52 @@ const Settings: React.FC = () => {
            </div>
         </section>
 
+        {/* Global Contact Info Section */}
+        <section className="bg-[#1a1a1a] rounded-xl shadow-sm border border-[#333] overflow-hidden">
+           <div className="bg-[#222] border-b border-[#333] p-6 flex items-center gap-3">
+              <span className="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center"><Target size={16}/></span>
+              <h2 className="text-lg font-bold text-gray-200">Global Contact Details</h2>
+           </div>
+           <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Contact Email</label>
+                <input 
+                  type="email" 
+                  className="w-full text-sm border border-[#444] p-3 rounded-lg focus:ring-2 focus:ring-blue-500/20" 
+                  value={siteContent.contactEmail || ''} 
+                  onChange={(e) => setSiteContent({...siteContent, contactEmail: e.target.value})} 
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Contact Phone</label>
+                <input 
+                  type="text" 
+                  className="w-full text-sm border border-[#444] p-3 rounded-lg focus:ring-2 focus:ring-blue-500/20" 
+                  value={siteContent.contactPhone || ''} 
+                  onChange={(e) => setSiteContent({...siteContent, contactPhone: e.target.value})} 
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Store Address</label>
+                <textarea 
+                  rows={3}
+                  className="w-full text-sm border border-[#444] p-3 rounded-lg focus:ring-2 focus:ring-blue-500/20 resize-none" 
+                  value={siteContent.contactAddress || ''} 
+                  onChange={(e) => setSiteContent({...siteContent, contactAddress: e.target.value})} 
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Store Hours</label>
+                <textarea 
+                  rows={3}
+                  className="w-full text-sm border border-[#444] p-3 rounded-lg focus:ring-2 focus:ring-blue-500/20 resize-none" 
+                  value={siteContent.storeHours || ''} 
+                  onChange={(e) => setSiteContent({...siteContent, storeHours: e.target.value})} 
+                />
+              </div>
+           </div>
+        </section>
+
         {/* Hero Slides Section */}
         <section className="bg-[#1a1a1a] rounded-xl shadow-sm border border-[#333] overflow-hidden">
            <div className="bg-[#222] border-b border-[#333] p-6 flex items-center justify-between">

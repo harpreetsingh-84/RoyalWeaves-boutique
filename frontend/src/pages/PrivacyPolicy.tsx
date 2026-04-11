@@ -1,76 +1,41 @@
 import { Shield, Eye, Database, Cookie, Globe, Lock, UserCheck, Mail } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { apiService } from '../services/api';
+
+const iconMap: Record<string, any> = {
+  Shield: <Shield className="w-6 h-6 text-primaryAction" />,
+  Eye: <Eye className="w-6 h-6 text-primaryAction" />,
+  Database: <Database className="w-6 h-6 text-primaryAction" />,
+  Cookie: <Cookie className="w-6 h-6 text-primaryAction" />,
+  Globe: <Globe className="w-6 h-6 text-primaryAction" />,
+  Lock: <Lock className="w-6 h-6 text-primaryAction" />,
+  UserCheck: <UserCheck className="w-6 h-6 text-primaryAction" />,
+  Mail: <Mail className="w-6 h-6 text-primaryAction" />
+};
 
 const PrivacyPolicy = () => {
+  const [pageData, setPageData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     window.scrollTo(0, 0);
+    const fetchPage = async () => {
+       try {
+         const res = await apiService.get('/api/pages/privacy-policy');
+         if (res.ok) setPageData(await res.json());
+       } catch (e) {
+         console.error(e);
+       } finally {
+         setLoading(false);
+       }
+    };
+    fetchPage();
   }, []);
 
-  const sections = [
-    {
-      icon: <Shield className="w-6 h-6 text-primaryAction" />,
-      title: "Introduction",
-      content: "Welcome to Woven Wonder Creation. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you as to how we look after your personal data when you visit our website and tell you about your privacy rights and how the law protects you."
-    },
-    {
-      icon: <Eye className="w-6 h-6 text-primaryAction" />,
-      title: "Information We Collect",
-      content: "We may collect, use, store and transfer different kinds of personal data about you which we have grouped together as follows:",
-      list: [
-        "Identity Data (first name, last name, username)",
-        "Contact Data (billing address, delivery address, email, telephone)",
-        "Financial Data (payment card details - securely processed by third parties)",
-        "Transaction Data (details about payments and orders)",
-        "Technical Data (IP address, browser type, time zone setting)"
-      ]
-    },
-    {
-      icon: <Database className="w-6 h-6 text-primaryAction" />,
-      title: "How We Use Information",
-      content: "We will only use your personal data when the law allows us to. Most commonly, we will use your personal data in the following circumstances:",
-      list: [
-        "To process and deliver your order",
-        "To manage our relationship with you",
-        "To improve our website, products, and services",
-        "To recommend products or services that may be of interest to you"
-      ]
-    },
-    {
-      icon: <Cookie className="w-6 h-6 text-primaryAction" />,
-      title: "Cookies Policy",
-      content: "You can set your browser to refuse all or some browser cookies, or to alert you when websites set or access cookies. If you disable or refuse cookies, please note that some parts of this website may become inaccessible or not function properly."
-    },
-    {
-      icon: <Globe className="w-6 h-6 text-primaryAction" />,
-      title: "Third-Party Services",
-      content: "We may share your personal data with third-party service providers who help us deliver our services (e.g., payment gateways, shipping providers). We require all third parties to respect the security of your personal data and to treat it in accordance with the law."
-    },
-    {
-      icon: <Lock className="w-6 h-6 text-primaryAction" />,
-      title: "Data Protection",
-      content: "We have put in place appropriate security measures to prevent your personal data from being accidentally lost, used, or accessed in an unauthorized way, altered, or disclosed. We limit access to your personal data to those employees and partners who have a business need to know."
-    },
-    {
-      icon: <UserCheck className="w-6 h-6 text-primaryAction" />,
-      title: "User Rights",
-      content: "Under certain circumstances, you have rights under data protection laws in relation to your personal data, including the right to:",
-      list: [
-        "Request access to your personal data",
-        "Request correction of your personal data",
-        "Request erasure of your personal data",
-        "Object to processing of your personal data"
-      ]
-    },
-    {
-      icon: <Mail className="w-6 h-6 text-primaryAction" />,
-      title: "Contact Information",
-      content: "If you have any questions about this privacy policy or our privacy practices, please contact us at:",
-      list: [
-        "Email: privacy@wovenwonder.com",
-        "Phone: +1 (555) 123-4567"
-      ]
-    }
-  ];
+  if (loading) return <div className="min-h-[50vh] flex items-center justify-center text-lightText/60">Loading policy...</div>;
+  if (!pageData) return <div className="min-h-[50vh] flex items-center justify-center text-lightText/60">Policy not found.</div>;
+
+  const sections = pageData.sections?.filter((s: any) => s.enabled).sort((a: any, b: any) => a.order - b.order) || [];
 
   return (
     <div className="w-full text-lightText pb-20">
@@ -88,7 +53,7 @@ const PrivacyPolicy = () => {
 
       {/* Content Section */}
       <div className="max-w-4xl mx-auto px-6 mt-16 space-y-12">
-        {sections.map((section, index) => (
+        {sections.map((section: any, index: number) => (
           <div 
             key={index} 
             className="glass-panel p-8 md:p-10 transition-all duration-300 hover:border-secondaryAction/40 fade-in"
@@ -96,24 +61,18 @@ const PrivacyPolicy = () => {
           >
             <div className="flex items-center gap-4 mb-6">
               <div className="p-3 bg-darkBg rounded-lg border border-secondaryAction/20">
-                {section.icon}
+                {iconMap[section.icon] || <Shield className="w-6 h-6 text-primaryAction" />}
               </div>
               <h2 className="text-2xl font-serif font-bold text-lightText">{section.title}</h2>
             </div>
             
-            <p className="text-lightText/80 leading-relaxed text-lg">
-              {section.content}
-            </p>
+            <div 
+              className="text-lightText/80 leading-relaxed text-lg prose prose-invert max-w-none"
+              dangerouslySetInnerHTML={{ __html: section.content }}
+            />
             
-            {section.list && (
-              <ul className="mt-6 space-y-3">
-                {section.list.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-lightText/80">
-                    <span className="text-primaryAction mt-1.5">•</span>
-                    <span className="leading-relaxed">{item}</span>
-                  </li>
-                ))}
-              </ul>
+            {section.image && (
+              <img src={section.image} alt={section.title} className="mt-6 rounded-lg w-full max-w-2xl mx-auto opacity-90" />
             )}
           </div>
         ))}

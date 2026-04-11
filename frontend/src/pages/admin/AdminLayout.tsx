@@ -5,7 +5,8 @@ import { apiService } from '../../services/api';
 import { 
   LayoutDashboard, ShoppingBag, FolderTree, Package, 
   Users, ShieldCheck, Settings as SettingsIcon, LogOut,
-  Menu, X, Home, Compass, ShoppingCart, ListOrdered
+  Menu, X, Home, Compass, ShoppingCart, ListOrdered,
+  FileText, MessageSquare
 } from 'lucide-react';
 
 const AdminLayout: React.FC = () => {
@@ -41,6 +42,8 @@ const AdminLayout: React.FC = () => {
 
   const adminNavItems = [
     { name: 'Dashboard', path: '/admin', icon: <LayoutDashboard size={20} /> },
+    { name: 'Pages', path: '/admin/pages', icon: <FileText size={20} /> },
+    { name: 'Messages', path: '/admin/messages', icon: <MessageSquare size={20} /> },
     { name: 'Products', path: '/admin/products', icon: <ShoppingBag size={20} /> },
     { name: 'Categories', path: '/admin/categories', icon: <FolderTree size={20} /> },
     { name: 'Orders', path: '/admin/orders', icon: <Package size={20} /> },
