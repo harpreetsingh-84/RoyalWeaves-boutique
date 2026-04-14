@@ -2,8 +2,8 @@ const BASE_URL = import.meta.env.VITE_API_URL || '';
 
 const fetchWithTimeout = async (url: string, options: RequestInit = {}) => {
   const controller = new AbortController();
-  // 15 seconds timeout
-  const id = setTimeout(() => controller.abort(), 15000); 
+  // 60 seconds timeout to allow backend cold starts
+  const id = setTimeout(() => controller.abort(new Error('Timeout after 60s')), 60000); 
   
   try {
     const response = await fetch(url, {

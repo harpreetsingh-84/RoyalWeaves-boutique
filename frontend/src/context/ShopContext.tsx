@@ -38,6 +38,7 @@ interface ShopContextType {
   formatPrice: (price: number) => string;
   setIsAdmin: (val: boolean) => void;
   setIsAuthenticated: (val: boolean) => void;
+  setUser: (val: User | null) => void;
   addToCart: (product: Product, color?: string) => void;
   removeFromCart: (productId: string, color?: string) => void;
   updateQuantity: (productId: string, quantity: number, color?: string) => void;
@@ -201,7 +202,7 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <ShopContext.Provider value={{ products, cart, user, isAdmin, isAuthenticated, isAuthChecking, isLoading, formatPrice, setIsAdmin, setIsAuthenticated, addToCart, removeFromCart, updateQuantity, refreshProducts, verifyAuth, loginPromptConfig, requestLoginPrompt, closeLoginPrompt }}>
+    <ShopContext.Provider value={{ products, cart, user, isAdmin, isAuthenticated, isAuthChecking, isLoading, formatPrice, setIsAdmin, setIsAuthenticated, setUser, addToCart, removeFromCart, updateQuantity, refreshProducts, verifyAuth, loginPromptConfig, requestLoginPrompt, closeLoginPrompt }}>
       {children}
     </ShopContext.Provider>
   );
