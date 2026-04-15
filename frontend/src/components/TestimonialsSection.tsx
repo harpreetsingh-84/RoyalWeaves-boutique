@@ -7,7 +7,7 @@ export const TestimonialsSection = ({ testimonials = [] }: { testimonials?: any[
   const dataToRender = testimonials;
 
   return (
-    <section className="py-24 bg-[#011b2e] border-y border-lightText/5 overflow-hidden">
+    <section className="py-24 bg-white border-y border-gray-100 overflow-hidden">
       <div className="container mx-auto px-6">
         <ScrollReveal className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-serif text-lightText mb-4">Loved by Women Worldwide</h2>
@@ -22,7 +22,7 @@ export const TestimonialsSection = ({ testimonials = [] }: { testimonials?: any[
             {dataToRender.map((review, idx) => (
               <div 
                 key={idx} 
-                className="min-w-[280px] md:min-w-[350px] bg-darkBg/50 premium-card p-8 rounded-2xl snap-center flex-shrink-0"
+                className="min-w-[280px] md:min-w-[350px] bg-darkBg shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-50 p-8 rounded-2xl snap-center flex-shrink-0"
               >
                 <div className="flex gap-1 mb-4">
                   {[...Array(review.rating)].map((_, i) => (
