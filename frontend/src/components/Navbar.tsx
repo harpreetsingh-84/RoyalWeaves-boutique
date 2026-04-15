@@ -48,7 +48,7 @@ const Navbar = () => {
 
   const textClass = isHome && !scrolled ? 'text-lightText drop-shadow-md' : 'text-lightText';
   const logoAccentClass = isHome && !scrolled ? 'text-highlight' : 'text-secondaryAction';
-  const cartBadgeClass = isHome && !scrolled ? 'bg-darkBg text-lightText ring-1 ring-lightText/20' : 'bg-primaryAction text-lightText';
+  const cartBadgeClass = isHome && !scrolled ? 'bg-darkBg text-lightText ring-1 ring-lightText/20' : 'bg-primaryAction text-darkBg';
 
   const closeMenu = () => setIsMenuOpen(false);
 
@@ -160,7 +160,7 @@ const Navbar = () => {
               <Link to="/cart" onClick={closeMenu} className="flex items-center justify-between font-medium hover:text-secondaryAction transition-colors tracking-wide text-sm uppercase py-5 border-b border-lightText/10">
                 Cart
                 {cartCount > 0 && (
-                  <span className="bg-primaryAction text-lightText text-[10px] flex items-center justify-center h-6 w-6 font-bold rounded-full shadow-sm">
+                  <span className="bg-primaryAction text-darkBg text-[10px] flex items-center justify-center h-6 w-6 font-bold rounded-full shadow-sm">
                     {cartCount}
                   </span>
                 )}
@@ -170,7 +170,7 @@ const Navbar = () => {
             {!isAuthenticated && (
               <div className="flex flex-col gap-4 w-full max-w-sm mx-auto">
                 <Link to="/login" onClick={closeMenu} className="text-center font-bold hover:bg-secondaryAction/20 transition-colors tracking-widest text-sm uppercase py-4 bg-secondaryAction/10 rounded-lg border border-secondaryAction/20 block w-full text-lightText">Login</Link>
-                <Link to="/register" onClick={closeMenu} className="text-center font-bold tracking-widest text-sm uppercase px-4 py-4 bg-primaryAction text-lightText rounded-lg hover:bg-opacity-90 transition-all duration-300 shadow-[0_4px_14px_0_rgba(231,29,54,0.39)] block w-full">
+                <Link to="/register" onClick={closeMenu} className="text-center font-bold tracking-widest text-sm uppercase px-4 py-4 bg-primaryAction text-darkBg rounded-lg hover:bg-opacity-90 transition-all duration-300 shadow-[0_4px_14px_0_rgba(111,26,7,0.39)] block w-full">
                   Register
                 </Link>
               </div>

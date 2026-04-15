@@ -46,7 +46,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative overflow-hidden premium-card aspect-[3/4] mb-5 shadow-sm group-hover:shadow-xl transition-all duration-500">
+      <div className="relative overflow-hidden premium-card aspect-[3/4] mb-4 shadow-sm group-hover:shadow-lg transition-all duration-500 rounded-t-xl rounded-b-none border-b-0">
         {allImages.map((img, idx) => (
           <img
             key={idx}
@@ -59,12 +59,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
           />
         ))}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-darkBg/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-6 group-hover:translate-y-0 z-20">
-          <span className="bg-primaryAction text-lightText px-8 py-3 rounded-full font-semibold shadow-[0_4px_14px_0_rgba(231,29,54,0.39)] text-xs tracking-widest uppercase">
-            View Details
-          </span>
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-darkBg/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none"></div>
 
         {/* Render indicators if multiple images */}
         {allImages.length > 1 && (
@@ -72,22 +67,25 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
             {allImages.map((_, idx) => (
               <div
                 key={idx}
-                className={`h-1.5 rounded-full transition-all duration-500 shadow-sm ${idx === currentImageIndex ? "bg-secondaryAction w-5" : "bg-secondaryAction/40 w-1.5"}`}
+                className={`h-1.5 rounded-full transition-all duration-500 shadow-sm ${idx === currentImageIndex ? "bg-white w-5" : "bg-white/50 w-1.5"}`}
               />
             ))}
           </div>
         )}
       </div>
-      <div className="px-1 text-center">
-        <p className="text-secondaryAction text-xs mb-2 uppercase tracking-widest font-medium">
+      <div className="px-2 text-center pb-4 border border-t-0 border-gray-100 rounded-b-xl group-hover:border-secondaryAction/40 transition-colors shadow-sm group-hover:shadow-md bg-white">
+        <p className="text-secondaryAction text-[10px] mb-1.5 uppercase tracking-widest font-semibold mt-3">
           {product.category}
         </p>
-        <h3 className="text-lg font-serif text-lightText mb-2 group-hover:text-primaryAction transition-colors truncate">
+        <h3 className="text-base sm:text-lg font-serif text-lightText mb-1.5 group-hover:text-primaryAction transition-colors truncate px-2">
           {product.name}
         </h3>
-        <p className="font-semibold text-highlight tracking-wide">
+        <p className="font-semibold text-lightText/80 tracking-wide mb-4">
           {formatPrice(product.price)}
         </p>
+        <div className="w-full btn-primary py-2.5 text-xs inline-block">
+          Add to Cart
+        </div>
       </div>
     </Link>
   );

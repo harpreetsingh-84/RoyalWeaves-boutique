@@ -7,11 +7,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        darkBg: "#020126",
-        lightText: "#fffffc",
-        primaryAction: "#fffffc",
-        secondaryAction: "#fffffc",
-        highlight: "#fffffc",
+        darkBg: "#FDFBF7", // Light Beige/Cream as new main background
+        lightText: "#1e1e1e", // Dark charcoal for elegant reading
+        primaryAction: "#6f1a07", // Elegant Deep Maroon
+        secondaryAction: "#d4af37", // Royal Gold
+        highlight: "#065f46", // Emerald Green for subtle hits
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],

@@ -29,8 +29,26 @@ const Home = () => {
   }, []);
 
   const fallbackContent = {
-    heroSlides: [],
-    featuredCategories: [],
+    heroSlides: [
+      {
+        title: "Experience the\nRoyal Heritage",
+        subtitle: "Handpicked Elegance for You",
+        description: "Discover our premium collection of authentic, hand-crafted Punjabi suits and stunning ethnic wear designed for the modern woman.",
+        image: "https://images.unsplash.com/photo-1583391733958-6115fa016e78?auto=format&fit=crop&q=80"
+      },
+      {
+        title: "Premium Punjabi\nSuits Collection",
+        subtitle: "Crafted for the Modern Punjabi Woman",
+        description: "Elevate your wardrobe with luxurious silk suits, intricate embroideries, and royal designs tailored to perfection.",
+        image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&q=80"
+      }
+    ],
+    featuredCategories: [
+      { name: "Party Wear Suits", image: "https://images.unsplash.com/photo-1583391733958-6115fa016e78?auto=format&fit=crop&q=80" },
+      { name: "Casual Daily Wear", image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&q=80" },
+      { name: "Bridal Collection", image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&q=80" },
+      { name: "Premium Silk Suits", image: "https://images.unsplash.com/photo-1621005273760-b6a6552eaad7?auto=format&fit=crop&q=80" }
+    ],
     features: [],
     howItWorks: [],
     testimonials: []

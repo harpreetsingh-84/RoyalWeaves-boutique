@@ -15,7 +15,7 @@
   /* Theme optimized custom scrollbars */
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 252, 0.3) transparent;
+    scrollbar-color: rgba(30, 30, 30, 0.3) transparent;
   }
 
   ::-webkit-scrollbar {
@@ -28,12 +28,12 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 252, 0.3);
+    background-color: rgba(30, 30, 30, 0.3);
     border-radius: 20px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255, 255, 252, 0.5);
+    background-color: rgba(30, 30, 30, 0.5);
   }
 }
 
@@ -43,16 +43,16 @@
     background-color: transparent;
   }
   .hover-scrollbar:hover::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 252, 0.3);
+    background-color: rgba(30, 30, 30, 0.3);
   }
   .hover-scrollbar:hover::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255, 255, 252, 0.5);
+    background-color: rgba(30, 30, 30, 0.5);
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply relative overflow-hidden bg-primaryAction hover:bg-opacity-90 text-darkBg font-semibold py-3 px-8 rounded transition-all duration-300 transform active:scale-95 md:hover:scale-[1.05] shadow-[0_4px_14px_0_rgba(255,255,252,0.39)] hover:shadow-[0_6px_20px_rgba(255,255,252,0.4)] disabled:opacity-50 disabled:cursor-not-allowed uppercase text-sm tracking-wider touch-manipulation;
+    @apply relative overflow-hidden bg-primaryAction hover:bg-opacity-90 text-darkBg font-bold py-3 px-8 rounded transition-all duration-300 transform active:scale-95 md:hover:scale-[1.05] shadow-[0_4px_14px_0_rgba(111,26,7,0.39)] hover:shadow-[0_6px_20px_rgba(111,26,7,0.4)] disabled:opacity-50 disabled:cursor-not-allowed uppercase text-sm tracking-wider touch-manipulation;
   }
   .btn-primary::after {
     content: '';
@@ -73,10 +73,10 @@
     @apply scale-100 opacity-100 transition-none;
   }
   .glass-panel {
-    @apply bg-opacity-10 bg-lightText backdrop-filter backdrop-blur-lg border border-opacity-20 border-lightText rounded-xl shadow-lg;
+    @apply bg-opacity-70 bg-white backdrop-filter backdrop-blur-lg border border-opacity-30 border-gray-200 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.05)];
   }
   .premium-card {
-    @apply bg-[#020126] border border-secondaryAction/20 rounded-xl overflow-hidden transition-all duration-500 ease-out hover:border-secondaryAction/60 md:hover:-translate-y-2 md:hover:shadow-[0_12px_40px_rgb(255,255,252,0.2)] md:hover:shadow-secondaryAction/20 active:scale-[0.98] touch-manipulation;
+    @apply bg-white border border-gray-100 rounded-xl overflow-hidden transition-all duration-500 ease-out hover:border-secondaryAction/40 md:hover:-translate-y-2 md:hover:shadow-[0_12px_40px_rgb(0,0,0,0.1)] active:scale-[0.98] touch-manipulation;
   }
 }
 
@@ -136,7 +136,7 @@
 }
 
 .text-reveal {
-  background: linear-gradient(90deg, #fffffc 0%, #fffffc 100%);
+  background: linear-gradient(90deg, #1e1e1e 0%, #1e1e1e 100%);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
