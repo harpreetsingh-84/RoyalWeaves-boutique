@@ -1,24 +1,13 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { useState, useEffect } from 'react';
 import { apiService } from '../services/api';
 
 const Navbar = () => {
   const { cart, isAdmin, isAuthenticated, setIsAdmin, setIsAuthenticated } = useShop();
-  const location = useLocation();
-  const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const isHome = location.pathname === '/';
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   useEffect(() => {
     if (isMenuOpen) {
