@@ -41,6 +41,18 @@ const Home = () => {
         subtitle: "Crafted for the Modern Punjabi Woman",
         description: "Elevate your wardrobe with luxurious silk suits, intricate embroideries, and royal designs tailored to perfection.",
         image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&q=80"
+      },
+      {
+        title: "Timeless Bridal\nElegance",
+        subtitle: "Your Perfect Day Deserves the Best",
+        description: "Step into your new life with our exclusive array of bridal lehengas and heavily embroidered suits, crafted with love.",
+        image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&q=80"
+      },
+      {
+        title: "Everyday Luxury\nSilk Exclusives",
+        subtitle: "Comfort Meets Sophistication",
+        description: "Experience the finest silk threads woven into beautiful, breathable patterns for your stylish daily wear.",
+        image: "https://images.unsplash.com/photo-1621005273760-b6a6552eaad7?auto=format&fit=crop&q=80"
       }
     ],
     featuredCategories: [
