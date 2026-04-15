@@ -46,49 +46,49 @@ const Messages: React.FC = () => {
     }
   };
 
-  if (loading) return <div className="p-12 text-center text-gray-400">Loading messages...</div>;
+  if (loading) return <div className="p-12 text-center text-lightText/50">Loading messages...</div>;
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
       <div>
-        <h1 className="text-2xl font-bold text-gray-100 flex items-center gap-3">
+        <h1 className="text-2xl font-bold text-lightText flex items-center gap-3">
           <Mail size={24} className="text-primaryAction" /> Component Inbox
         </h1>
-        <p className="text-sm text-gray-400 mt-1">Review contact inquiries and support requests.</p>
+        <p className="text-sm text-lightText/60 mt-1">Review contact inquiries and support requests.</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4">
         {messages.length === 0 ? (
-          <div className="text-center p-12 bg-[#1a1a1a] rounded-xl border border-[#333] text-gray-500">
+          <div className="text-center p-12 bg-white rounded-xl border border-gray-100 text-lightText/50 shadow-sm">
             No messages found.
           </div>
         ) : (
           messages.map((msg) => (
-            <div key={msg._id} className={`p-6 rounded-xl border ${msg.isRead ? 'bg-[#1a1a1a] border-[#333] opacity-70' : 'bg-[#222] border-primaryAction/30 shadow-[0_0_15px_rgba(231,29,54,0.1)]'}`}>
+            <div key={msg._id} className={`p-6 rounded-xl border transition-all ${msg.isRead ? 'bg-white border-gray-100 text-lightText/70 opacity-80' : 'bg-darkBg border-gray-200 shadow-sm'}`}>
               <div className="flex justify-between items-start mb-4">
                 <div>
-                   <h3 className="font-bold text-gray-200">{msg.name}</h3>
-                   <a href={`mailto:${msg.email}`} className="text-sm text-blue-400 hover:underline">{msg.email}</a>
-                   <p className="text-xs text-gray-500 mt-1">{new Date(msg.createdAt).toLocaleString()}</p>
+                   <h3 className="font-bold text-lightText">{msg.name}</h3>
+                   <a href={`mailto:${msg.email}`} className="text-sm text-secondaryAction hover:underline">{msg.email}</a>
+                   <p className="text-xs text-lightText/50 mt-1">{new Date(msg.createdAt).toLocaleString()}</p>
                 </div>
                 <div className="flex gap-2">
                    <button 
                      onClick={() => markRead(msg._id, !msg.isRead)} 
-                     className={`p-2 rounded-lg text-xs font-bold transition-colors ${msg.isRead ? 'bg-gray-700 hover:bg-gray-600 text-gray-300' : 'bg-primaryAction/20 hover:bg-primaryAction/40 text-primaryAction'}`}
+                     className={`p-2 rounded-lg text-xs font-bold transition-colors ${msg.isRead ? 'bg-gray-100 hover:bg-gray-200 text-lightText/60' : 'bg-primaryAction/20 hover:bg-primaryAction/40 text-primaryAction'}`}
                      title={msg.isRead ? "Mark Unread" : "Mark Read"}
                    >
                      <Check size={16} />
                    </button>
                    <button 
                      onClick={() => deleteMessage(msg._id)} 
-                     className="p-2 rounded-lg bg-red-900/30 text-red-500 hover:bg-red-900/60"
+                     className="p-2 rounded-lg bg-red-50 text-red-500 hover:bg-red-100"
                      title="Delete Message"
                    >
                      <Trash2 size={16} />
                    </button>
                 </div>
               </div>
-              <p className="text-gray-300 text-sm whitespace-pre-wrap leading-relaxed">{msg.message}</p>
+              <p className="text-lightText/80 text-sm whitespace-pre-wrap leading-relaxed">{msg.message}</p>
             </div>
           ))
         )}

@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { apiService } from '../services/api';
 import { useShop } from '../context/ShopContext';
@@ -6,11 +6,11 @@ import { useShop } from '../context/ShopContext';
 export default function AdminOrderDetails() {
   const { id } = useParams<{ id: string }>();
   const { formatPrice, isAdmin } = useShop();
-  
+
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState('');
   const [verifyingPayment, setVerifyingPayment] = useState(false);
@@ -26,7 +26,7 @@ export default function AdminOrderDetails() {
         if (res.ok) {
           const data = await res.json();
           setOrder(data);
-          
+
           // Map legacy to new if needed
           const orderSt = data.orderStatus || 'pending';
           setSelectedStatus(orderSt);
@@ -67,23 +67,23 @@ export default function AdminOrderDetails() {
     if (!id || verifyingPayment) return;
     setVerifyingPayment(true);
     try {
-       const payload = newStatus === 'paid' 
-           ? { paymentStatus: 'paid', orderStatus: 'confirmed' }
-           : { paymentStatus: 'failed', orderStatus: 'cancelled' };
-       const res = await apiService.updateOrderStatus(id, payload);
-       if (res.ok) {
-           const updatedOrder = await res.json();
-           setOrder(updatedOrder);
-           setSelectedStatus(updatedOrder.orderStatus);
-           alert(`Payment marked as ${newStatus.toUpperCase()}`);
-       } else {
-           const err = await res.json();
-           alert(err.message || 'Failed to verify payment');
-       }
+      const payload = newStatus === 'paid'
+        ? { paymentStatus: 'paid', orderStatus: 'confirmed' }
+        : { paymentStatus: 'failed', orderStatus: 'cancelled' };
+      const res = await apiService.updateOrderStatus(id, payload);
+      if (res.ok) {
+        const updatedOrder = await res.json();
+        setOrder(updatedOrder);
+        setSelectedStatus(updatedOrder.orderStatus);
+        alert(`Payment marked as ${newStatus.toUpperCase()}`);
+      } else {
+        const err = await res.json();
+        alert(err.message || 'Failed to verify payment');
+      }
     } catch (err) {
-       alert('Error verifying payment');
+      alert('Error verifying payment');
     } finally {
-       setVerifyingPayment(false);
+      setVerifyingPayment(false);
     }
   };
 
@@ -116,13 +116,13 @@ export default function AdminOrderDetails() {
 
   const steps = ["Order Placed", "Confirmed", "Shipped", "Delivered"];
   // orderStatus overrides legacy status
-  let mappedStatus = order.orderStatus === 'pending' ? 'Order Placed' : 
-                     (order.orderStatus === 'confirmed' || order.orderStatus === 'processing') ? 'Confirmed' : 
-                     (order.orderStatus === 'shipped') ? 'Shipped' : 
-                     (order.orderStatus === 'delivered') ? 'Delivered' : 'Order Placed';
-                     
-  const currentStep = mappedStatus === 'Delivered' ? 3 : mappedStatus === 'Shipped' ? 2 : mappedStatus === 'Confirmed' ? 1 : 0; 
-  
+  let mappedStatus = order.orderStatus === 'pending' ? 'Order Placed' :
+    (order.orderStatus === 'confirmed' || order.orderStatus === 'processing') ? 'Confirmed' :
+      (order.orderStatus === 'shipped') ? 'Shipped' :
+        (order.orderStatus === 'delivered') ? 'Delivered' : 'Order Placed';
+
+  const currentStep = mappedStatus === 'Delivered' ? 3 : mappedStatus === 'Shipped' ? 2 : mappedStatus === 'Confirmed' ? 1 : 0;
+
   const d = new Date(order.createdAt);
   const orderDate = d.toLocaleDateString('en-IN', {
     day: 'numeric',
@@ -148,43 +148,43 @@ export default function AdminOrderDetails() {
 
       {order.paymentStatus === 'pending' && (
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8 shadow-sm">
-           <h2 className="text-xl font-bold text-blue-900 mb-4 flex items-center gap-2">
-             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
-             Manual UPI Verification Required
-           </h2>
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                 <p className="text-sm text-blue-800 mb-2">The customer has placed an order and claims to have paid via UPI. Please check your bank app to confirm you received the exact amount.</p>
-                 <div className="bg-[#1a1a1a] p-4 rounded border border-blue-100 mb-4 space-y-2">
-                    <div className="flex justify-between items-center text-sm">
-                       <span className="text-gray-400 font-bold tracking-widest uppercase">Amount Due</span>
-                       <span className="font-bold text-lg text-emerald-600">{formatPrice(order.totalAmount)}</span>
-                    </div>
-                    <div className="flex flex-col text-sm border-t border-blue-50 pt-2">
-                       <span className="text-gray-400 font-bold tracking-widest uppercase mb-1">Transaction ID (UTR)</span>
-                       <span className="font-mono text-lg font-bold select-all bg-[#2a2a2a] p-2 rounded tracking-wider">{order.transactionId || 'NOT PROVIDED'}</span>
-                    </div>
-                 </div>
-                 <div className="flex gap-4">
-                    <button disabled={verifyingPayment} onClick={() => handlePaymentVerification('paid')} className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-sm flex-1 transition-colors">
-                       Confirm Received
-                    </button>
-                    <button disabled={verifyingPayment} onClick={() => handlePaymentVerification('failed')} className="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold py-3 px-6 rounded-lg flex-1 transition-colors">
-                       Reject / Not Found
-                    </button>
-                 </div>
+          <h2 className="text-xl font-bold text-blue-900 mb-4 flex items-center gap-2">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+            Manual UPI Verification Required
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <p className="text-sm text-blue-800 mb-2">The customer has placed an order and claims to have paid via UPI. Please check your bank app to confirm you received the exact amount.</p>
+              <div className="bg-[#1a1a1a] p-4 rounded border border-blue-100 mb-4 space-y-2">
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-gray-400 font-bold tracking-widest uppercase">Amount Due</span>
+                  <span className="font-bold text-lg text-emerald-600">{formatPrice(order.totalAmount)}</span>
+                </div>
+                <div className="flex flex-col text-sm border-t border-blue-50 pt-2">
+                  <span className="text-gray-400 font-bold tracking-widest uppercase mb-1">Transaction ID (UTR)</span>
+                  <span className="font-mono text-lg font-bold select-all bg-[#2a2a2a] p-2 rounded tracking-wider">{order.transactionId || 'NOT PROVIDED'}</span>
+                </div>
               </div>
-              <div className="flex flex-col items-center justify-center border-2 border-dashed border-blue-200 rounded-xl bg-[#1a1a1a] p-2">
-                 {order.paymentScreenshot ? (
-                    <img src={order.paymentScreenshot} alt="Payment Proof" className="max-h-64 object-contain rounded" />
-                 ) : (
-                    <div className="text-center p-8 text-blue-300">
-                       <svg className="w-12 h-12 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                       <span className="text-sm font-medium">No screenshot uploaded<br/>by customer.</span>
-                    </div>
-                 )}
+              <div className="flex gap-4">
+                <button disabled={verifyingPayment} onClick={() => handlePaymentVerification('paid')} className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-sm flex-1 transition-colors">
+                  Confirm Received
+                </button>
+                <button disabled={verifyingPayment} onClick={() => handlePaymentVerification('failed')} className="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold py-3 px-6 rounded-lg flex-1 transition-colors">
+                  Reject / Not Found
+                </button>
               </div>
-           </div>
+            </div>
+            <div className="flex flex-col items-center justify-center border-2 border-dashed border-blue-200 rounded-xl bg-[#1a1a1a] p-2">
+              {order.paymentScreenshot ? (
+                <img src={order.paymentScreenshot} alt="Payment Proof" className="max-h-64 object-contain rounded" />
+              ) : (
+                <div className="text-center p-8 text-blue-300">
+                  <svg className="w-12 h-12 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                  <span className="text-sm font-medium">No screenshot uploaded<br />by customer.</span>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
 
@@ -196,7 +196,7 @@ export default function AdminOrderDetails() {
         <div className="flex flex-col sm:flex-row gap-4 items-end">
           <div className="flex-grow w-full">
             <label className="block text-sm font-medium text-gray-200 mb-1 leading-none">Order Status</label>
-            <select 
+            <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
               className="w-full bg-[#1a1a1a] border border-[#555] text-gray-100 text-sm rounded-lg focus:ring-accent focus:border-accent block p-2.5 capitalize"
@@ -206,12 +206,12 @@ export default function AdminOrderDetails() {
               ))}
             </select>
           </div>
-          <button 
+          <button
             onClick={handleStatusUpdate}
             disabled={updatingStatus || selectedStatus === order.orderStatus}
             className={`w-full sm:w-auto px-6 py-2.5 rounded-lg font-bold shadow-sm flex-shrink-0 transition-colors
-              ${updatingStatus || selectedStatus === order.orderStatus 
-                ? 'bg-[#333] text-gray-400 cursor-not-allowed' 
+              ${updatingStatus || selectedStatus === order.orderStatus
+                ? 'bg-[#333] text-gray-400 cursor-not-allowed'
                 : 'bg-black text-white hover:bg-gray-800'
               }`}
           >
@@ -225,11 +225,11 @@ export default function AdminOrderDetails() {
         <h2 className="text-lg font-semibold mb-6">Customer Timeline View</h2>
         <div className="relative opacity-70">
           <div className="absolute top-1/2 left-0 w-full h-1 bg-[#333] -translate-y-1/2 z-0 hidden sm:block"></div>
-          <div 
+          <div
             className="absolute top-1/2 left-0 h-1 bg-green-500 -translate-y-1/2 z-0 hidden sm:block transition-all duration-500"
             style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
           ></div>
-          
+
           <div className="relative z-10 flex flex-col sm:flex-row justify-between gap-6 sm:gap-0">
             {steps.map((step, index) => {
               const isCompleted = index <= currentStep;
@@ -259,13 +259,13 @@ export default function AdminOrderDetails() {
           <div className="bg-[#222] p-6 rounded-xl border">
             <h3 className="text-lg font-semibold mb-4 border-b pb-2">Customer Account</h3>
             {order.user ? (
-               <div className="text-gray-300 text-sm space-y-1">
-                 <p className="font-bold text-black">{order.user.name}</p>
-                 <p className="text-gray-400">{order.user.email}</p>
-                 <p className="text-xs text-gray-400 font-mono mt-2 pt-2 border-t">ID: {order.user._id}</p>
-               </div>
+              <div className="text-gray-300 text-sm space-y-1">
+                <p className="font-bold text-black">{order.user.name}</p>
+                <p className="text-gray-400">{order.user.email}</p>
+                <p className="text-xs text-gray-400 font-mono mt-2 pt-2 border-t">ID: {order.user._id}</p>
+              </div>
             ) : (
-               <p className="text-gray-400 italic">Guest Checkout (No Account)</p>
+              <p className="text-gray-400 italic">Guest Checkout (No Account)</p>
             )}
           </div>
 
@@ -282,16 +282,16 @@ export default function AdminOrderDetails() {
               </p>
             </div>
           </div>
-          
+
           <div className="bg-[#222] p-6 rounded-xl border">
             <h3 className="text-lg font-semibold mb-4 border-b pb-2">Financials</h3>
             <div className="text-gray-300 text-sm space-y-2">
               <p className="flex justify-between items-center text-gray-400 text-xs font-bold uppercase tracking-widest border-b pb-1 mb-2">
                 <span>Payment Verification</span>
                 <span className={`px-2 py-0.5 rounded text-[10px] uppercase
-                   ${order.paymentStatus === 'paid' ? 'bg-green-100 text-green-700' : 
-                     order.paymentStatus === 'failed' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700 animate-pulse'}`}>
-                   {order.paymentStatus || 'pending'}
+                   ${order.paymentStatus === 'paid' ? 'bg-green-100 text-green-700' :
+                    order.paymentStatus === 'failed' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700 animate-pulse'}`}>
+                  {order.paymentStatus || 'pending'}
                 </span>
               </p>
               <p className="flex justify-between items-center">
@@ -318,11 +318,11 @@ export default function AdminOrderDetails() {
                 <div key={idx} className="p-6 flex flex-col sm:flex-row items-start sm:items-center gap-6">
                   <div className="w-20 h-20 bg-[#2a2a2a] rounded-lg overflow-hidden flex-shrink-0 border">
                     {item.product?.image || item.image ? (
-                        <img 
-                          src={(item.product?.image || item.image).startsWith('http') ? (item.product?.image || item.image) : `http://localhost:5000${item.product?.image || item.image}`} 
-                          alt={item.name} 
-                          className="w-full h-full object-cover" 
-                        />
+                      <img
+                        src={(item.product?.image || item.image).startsWith('http') ? (item.product?.image || item.image) : `http://localhost:5000${item.product?.image || item.image}`}
+                        alt={item.name}
+                        className="w-full h-full object-cover"
+                      />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-400 bg-[#222]">
                         <span className="text-[10px] uppercase font-bold tracking-widest text-gray-300">No Img</span>
@@ -348,7 +348,7 @@ export default function AdminOrderDetails() {
                 </div>
               ))}
             </div>
-            
+
             <div className="p-6 bg-[#222] border-t">
               <div className="space-y-3 ms-auto max-w-sm w-full">
                 <div className="flex justify-between text-gray-400 text-sm">

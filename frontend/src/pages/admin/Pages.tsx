@@ -95,7 +95,7 @@ const Pages: React.FC = () => {
           <p className="text-sm text-lightText/60 mt-1">Manage sections and rich text for informational pages.</p>
         </div>
         <select 
-          className="bg-darkBg border border-secondaryAction/20 rounded-lg p-3 text-sm text-lightText outline-none"
+          className="bg-white border border-gray-200 rounded-lg p-3 text-sm text-lightText outline-none shadow-sm"
           value={selectedSlug}
           onChange={(e) => setSelectedSlug(e.target.value)}
         >
@@ -104,10 +104,10 @@ const Pages: React.FC = () => {
       </div>
 
       {loading ? (
-        <div className="animate-pulse p-12 text-center text-lightText/60 bg-[#03233c] rounded-xl">Loading Page Contents...</div>
+        <div className="animate-pulse p-12 text-center text-lightText/60 bg-white border border-gray-100 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)]">Loading Page Contents...</div>
       ) : activePage && (
         <div className="space-y-8">
-           <div className="flex justify-between items-center bg-[#03233c] p-4 rounded-xl border border-secondaryAction/20">
+           <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-gray-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
               <h2 className="text-lg font-bold">Editing: {activePage.title}</h2>
               <div className="flex gap-3">
                  <button onClick={addSection} className="btn-secondary px-4 py-2 flex items-center gap-2">
@@ -126,12 +126,12 @@ const Pages: React.FC = () => {
                  </div>
               )}
               {activePage.sections.map((section: any, idx: number) => (
-                <div key={section.id} className={`bg-darkBg border border-secondaryAction/20 rounded-xl overflow-hidden transition-opacity ${section.enabled ? 'opacity-100' : 'opacity-60'}`}>
-                   <div className="bg-[#03233c] border-b border-secondaryAction/20 px-4 py-3 flex items-center justify-between">
+                <div key={section.id} className={`bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden transition-opacity ${section.enabled ? 'opacity-100' : 'opacity-60'}`}>
+                   <div className="bg-gray-50 border-b border-gray-200 px-4 py-3 flex items-center justify-between">
                      <div className="flex items-center gap-3">
-                        <div className="flex flex-col gap-1 pr-3 border-r border-secondaryAction/20">
-                          <button onClick={() => moveSection(idx, -1)} disabled={idx === 0} className="text-lightText/40 hover:text-white disabled:opacity-30"><ArrowUp size={14}/></button>
-                          <button onClick={() => moveSection(idx, 1)} disabled={idx === activePage.sections.length - 1} className="text-lightText/40 hover:text-white disabled:opacity-30"><ArrowDown size={14}/></button>
+                        <div className="flex flex-col gap-1 pr-3 border-r border-gray-200">
+                          <button onClick={() => moveSection(idx, -1)} disabled={idx === 0} className="text-lightText/40 hover:text-black disabled:opacity-30"><ArrowUp size={14}/></button>
+                          <button onClick={() => moveSection(idx, 1)} disabled={idx === activePage.sections.length - 1} className="text-lightText/40 hover:text-black disabled:opacity-30"><ArrowDown size={14}/></button>
                         </div>
                         <input 
                            type="text" 
@@ -141,7 +141,7 @@ const Pages: React.FC = () => {
                            placeholder="Section Title"
                         />
                      </div>
-                     <div className="flex items-center gap-4 border-l border-secondaryAction/20 pl-4">
+                     <div className="flex items-center gap-4 border-l border-gray-200 pl-4">
                         <button onClick={() => updateSection(idx, 'enabled', !section.enabled)} className={`flex items-center gap-1.5 text-xs font-bold uppercase transition-colors tracking-wide ${section.enabled ? 'text-green-500 hover:text-green-400' : 'text-lightText/40 hover:text-lightText/60'}`}>
                           {section.enabled ? <><Eye size={16}/> Visible</> : <><EyeOff size={16}/> Hidden</>}
                         </button>
@@ -150,7 +150,7 @@ const Pages: React.FC = () => {
                         </button>
                      </div>
                    </div>
-                   <div className="p-4 bg-white text-black quill-dark-theme-override">
+                   <div className="p-4 bg-white text-black">
                      <ReactQuill 
                        value={section.content} 
                        onChange={(val) => updateSection(idx, 'content', val)}

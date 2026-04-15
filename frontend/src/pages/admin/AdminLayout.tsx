@@ -74,7 +74,7 @@ const AdminLayout: React.FC = () => {
       >
         <div className="flex items-center justify-between px-6 pb-4 border-b border-secondaryAction/20 shrink-0">
           <span className="text-xl font-bold bg-gradient-to-r from-primaryAction to-secondaryAction bg-clip-text text-transparent">WW Admin</span>
-          <button onClick={closeSidebar} className="lg:hidden text-lightText/60 hover:text-lightText p-2 -mr-2 bg-[#03233c] rounded-full transition-colors">
+          <button onClick={closeSidebar} className="lg:hidden text-lightText/60 hover:text-lightText p-2 -mr-2 bg-gray-100 rounded-full transition-colors">
             <X size={20} />
           </button>
         </div>

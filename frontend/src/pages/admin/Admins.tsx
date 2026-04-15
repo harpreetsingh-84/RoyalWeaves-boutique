@@ -108,36 +108,36 @@ const Admins: React.FC = () => {
     <div className="fade-in space-y-8 max-w-5xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
          <div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">Administrator Access</h1>
-            <p className="text-sm text-gray-400 mt-1">Manage platform administrators. Max 3 admins allowed securely.</p>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-lightText to-gray-600 bg-clip-text text-transparent">Administrator Access</h1>
+            <p className="text-sm text-lightText/60 mt-1">Manage platform administrators. Max 3 admins allowed securely.</p>
          </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Admin List Column */}
-        <div className="bg-[#1a1a1a] border border-[#333] rounded-xl shadow-sm overflow-hidden flex flex-col h-full fade-in">
-           <div className="bg-[#222] px-6 py-4 border-b border-[#333] flex justify-between items-center">
-             <h2 className="font-semibold text-gray-200">Current Admins</h2>
+        <div className="bg-white border border-gray-200 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden flex flex-col h-full fade-in">
+           <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+             <h2 className="font-semibold text-lightText">Current Admins</h2>
              <span className={`text-[10px] font-bold px-2 py-1 rounded-full tracking-wider uppercase ${admins.length >= 3 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
                 {admins.length} / 3 Seats Used
              </span>
            </div>
            
            {loading ? (
-             <div className="p-10 flex justify-center text-gray-400 animate-pulse">Loading admins...</div>
+             <div className="p-10 flex justify-center text-lightText/60 animate-pulse">Loading admins...</div>
            ) : admins.length === 0 ? (
-             <div className="p-10 text-center text-gray-400">No admin found (Wait, you should be one!).</div>
+             <div className="p-10 text-center text-lightText/60">No admin found (Wait, you should be one!).</div>
            ) : (
-             <ul className="divide-y divide-gray-50 flex-1">
+             <ul className="divide-y divide-gray-100 flex-1">
                 {admins.map((admin) => (
-                  <li key={admin._id} className="p-4 px-6 flex items-center justify-between hover:bg-[#222]/50 transition">
+                  <li key={admin._id} className="p-4 px-6 flex items-center justify-between hover:bg-gray-50/50 transition">
                      <div className="flex items-center gap-4">
                        <span className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold shadow-inner ring-1 ring-blue-100">
                          {admin.name.charAt(0).toUpperCase()}
                        </span>
                        <div>
-                         <p className="font-semibold text-gray-100 text-sm">{admin.name}</p>
-                         <p className="text-xs text-gray-400 truncate max-w-[150px] sm:max-w-[200px]" title={admin.email}>{admin.email}</p>
+                         <p className="font-semibold text-lightText text-sm">{admin.name}</p>
+                         <p className="text-xs text-lightText/60 truncate max-w-[150px] sm:max-w-[200px]" title={admin.email}>{admin.email}</p>
                        </div>
                      </div>
                      <button 
@@ -154,21 +154,21 @@ const Admins: React.FC = () => {
         </div>
 
         {/* Admin Management Auth Form Column */}
-        <div className="bg-[#1a1a1a] border border-[#333] rounded-xl shadow-sm p-6 sm:p-8 relative overflow-hidden h-fit">
+        <div className="bg-white border border-gray-200 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 sm:p-8 relative overflow-hidden h-fit">
            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-blue-50 to-purple-50 rounded-bl-full -z-10 opacity-70"></div>
            
-           <h2 className="text-lg font-bold mb-1 text-gray-100">Access Management Gateway</h2>
-           <p className="text-xs text-gray-400 mb-6">You must verify ownership via MAGIC LINK OTP to issue or update administrator credentials.</p>
+           <h2 className="text-lg font-bold mb-1 text-lightText">Access Management Gateway</h2>
+           <p className="text-xs text-lightText/60 mb-6">You must verify ownership via MAGIC LINK OTP to issue or update administrator credentials.</p>
 
-           <div className="flex bg-[#2a2a2a] p-1 rounded-lg mb-6 w-fit">
+           <div className="flex bg-gray-100 p-1 rounded-lg mb-6 w-fit shadow-inner border border-gray-200">
              <button 
-               className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all ${adminAction === 'add' ? 'bg-[#1a1a1a] text-gray-100 shadow-sm' : 'text-gray-400 hover:text-gray-100'}`}
+               className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all ${adminAction === 'add' ? 'bg-white text-lightText shadow-sm' : 'text-lightText/60 hover:text-lightText'}`}
                onClick={() => { setAdminAction('add'); setAdminMsg({text: '', type: ''}); }}
              >
                Grant Access
              </button>
              <button 
-               className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all ${adminAction === 'update' ? 'bg-[#1a1a1a] text-gray-100 shadow-sm' : 'text-gray-400 hover:text-gray-100'}`}
+               className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all ${adminAction === 'update' ? 'bg-white text-lightText shadow-sm' : 'text-lightText/60 hover:text-lightText'}`}
                onClick={() => { setAdminAction('update'); setAdminMsg({text: '', type: ''}); }}
              >
                Update Own Email
@@ -185,31 +185,31 @@ const Admins: React.FC = () => {
            {!otpSent ? (
               <form onSubmit={handleSendOtp} className="space-y-4">
                  <div>
-                   <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+                   <label className="block text-[10px] font-bold uppercase tracking-widest text-lightText/60 mb-1">
                      {adminAction === 'add' ? "New Admin Email Address" : "Your New Email Address"}
                    </label>
                    <input 
                      required type="email" placeholder="e.g. josh@wovenwonder.com" 
-                     className="w-full border border-[#444] p-3 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+                     className="w-full border border-gray-200 p-3 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none bg-darkBg text-lightText"
                      value={adminEmail} 
                      onChange={e => setAdminEmail(e.target.value)} 
                      disabled={isSendingOtp}
                    />
                  </div>
-                 <button type="submit" disabled={isSendingOtp || !adminEmail} className="w-full py-3 bg-black text-white text-sm font-bold tracking-wider rounded-lg hover:bg-gray-800 disabled:opacity-70 disabled:cursor-wait shadow-sm transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                 <button type="submit" disabled={isSendingOtp || !adminEmail} className="w-full py-3 btn-primary text-sm font-bold tracking-wider rounded-lg shadow-sm transition-all transform hover:-translate-y-0.5 active:translate-y-0">
                    {isSendingOtp ? 'Encrypting & Sending...' : 'Dispatch OTP Securely'}
                  </button>
               </form>
            ) : (
-              <form onSubmit={handleVerifyOtp} className="space-y-4 pt-2 border-t border-[#333]">
+              <form onSubmit={handleVerifyOtp} className="space-y-4 pt-2 border-t border-gray-200">
                  <div>
-                   <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+                   <label className="block text-[10px] font-bold uppercase tracking-widest text-lightText/60 mb-1">
                      Enter 6-Digit Code
                    </label>
-                   <p className="text-xs text-gray-400 mb-3">Verification sent to <span className="font-semibold text-gray-100">{adminEmail}</span></p>
+                   <p className="text-xs text-lightText/60 mb-3">Verification sent to <span className="font-semibold text-lightText">{adminEmail}</span></p>
                    <input 
                      required type="text" maxLength={6} placeholder="••••••" 
-                     className="w-full text-center border border-dashed border-[#555] bg-[#222]/50 p-4 rounded-lg focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all outline-none font-mono text-xl tracking-[12px] font-bold"
+                     className="w-full text-center border border-dashed border-gray-300 bg-gray-50 p-4 rounded-lg focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all outline-none font-mono text-xl tracking-[12px] font-bold text-lightText"
                      value={otpInput} 
                      onChange={e => setOtpInput(e.target.value)} 
                      disabled={isVerifyingOtp}
@@ -217,7 +217,7 @@ const Admins: React.FC = () => {
                  </div>
                  
                  <div className="flex gap-3 pt-2">
-                   <button type="button" onClick={() => setOtpSent(false)} className="px-5 py-3 border border-[#444] text-gray-400 rounded-lg text-sm font-bold hover:bg-[#222] transition flex-1">
+                   <button type="button" onClick={() => setOtpSent(false)} className="px-5 py-3 border border-gray-200 text-lightText/60 rounded-lg text-sm font-bold hover:bg-gray-50 transition flex-1">
                       Cancel
                    </button>
                    <button type="submit" disabled={isVerifyingOtp || otpInput.length < 6} className="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-bold shadow-sm shadow-emerald-500/20 transition disabled:opacity-70 flex-[2]">
