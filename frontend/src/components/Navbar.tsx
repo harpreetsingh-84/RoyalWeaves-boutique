@@ -42,13 +42,10 @@ const Navbar = () => {
     }
   };
 
-  const navClass = isHome 
-    ? (scrolled ? 'glass-panel !rounded-none py-4' : 'bg-transparent py-6')
-    : 'glass-panel !rounded-none py-4 border-b-0';
-
-  const textClass = isHome && !scrolled ? 'text-lightText drop-shadow-md' : 'text-lightText';
-  const logoAccentClass = isHome && !scrolled ? 'text-highlight' : 'text-secondaryAction';
-  const cartBadgeClass = isHome && !scrolled ? 'bg-darkBg text-lightText ring-1 ring-lightText/20' : 'bg-primaryAction text-darkBg';
+  const navClass = 'bg-darkBg py-4 shadow-sm border-b border-lightText/10';
+  const textClass = 'text-lightText';
+  const logoAccentClass = 'text-primaryAction';
+  const cartBadgeClass = 'bg-primaryAction text-darkBg';
 
   const closeMenu = () => setIsMenuOpen(false);
 
@@ -103,8 +100,7 @@ const Navbar = () => {
                 <Link to="/login" className="font-medium hover:text-secondaryAction transition-colors tracking-wide text-xs uppercase">Login</Link>
               </li>
               <li>
-                <Link to="/register" className={`font-semibold tracking-wide text-xs uppercase px-4 py-2 border transition-all duration-300 rounded-sm shadow-sm
-                ${isHome && !scrolled ? 'border-lightText text-lightText hover:bg-darkBg hover:text-lightText hover:border-darkBg' : 'border-secondaryAction text-secondaryAction hover:bg-secondaryAction hover:text-darkBg'}`}>
+                <Link to="/register" className={`font-semibold tracking-wide text-xs uppercase px-4 py-2 border transition-all duration-300 rounded-sm shadow-sm border-primaryAction text-primaryAction hover:bg-primaryAction hover:text-darkBg`}>
                   Register
                 </Link>
               </li>
@@ -169,8 +165,8 @@ const Navbar = () => {
             
             {!isAuthenticated && (
               <div className="flex flex-col gap-4 w-full max-w-sm mx-auto">
-                <Link to="/login" onClick={closeMenu} className="text-center font-bold hover:bg-secondaryAction/20 transition-colors tracking-widest text-sm uppercase py-4 bg-secondaryAction/10 rounded-lg border border-secondaryAction/20 block w-full text-lightText">Login</Link>
-                <Link to="/register" onClick={closeMenu} className="text-center font-bold tracking-widest text-sm uppercase px-4 py-4 bg-primaryAction text-darkBg rounded-lg hover:bg-opacity-90 transition-all duration-300 shadow-[0_4px_14px_0_rgba(4,22,32,0.4)] block w-full">
+                <Link to="/login" onClick={closeMenu} className="text-center font-bold hover:bg-primaryAction/20 transition-colors tracking-widest text-sm uppercase py-4 bg-primaryAction/10 rounded-lg border border-primaryAction/20 block w-full text-lightText">Login</Link>
+                <Link to="/register" onClick={closeMenu} className="text-center font-bold tracking-widest text-sm uppercase px-4 py-4 bg-primaryAction text-[#041620] rounded-lg hover:bg-opacity-90 transition-all duration-300 shadow-[0_4px_14px_0_rgba(205,160,54,0.4)] block w-full">
                   Register
                 </Link>
               </div>

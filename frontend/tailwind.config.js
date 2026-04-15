@@ -9,8 +9,8 @@ export default {
       colors: {
         darkBg: "#FDFBF7", // Light Beige/Cream as new main background
         lightText: "#181e24", // Dark charcoal for elegant reading
-        primaryAction: "#041620", // Deep Luxury Navy Teal extracted directly from brand logo icon
-        secondaryAction: "#cda036", // Elegant Gold/Mustard extracted for accents ('Creation')
+        primaryAction: "#cda036", // Premium Gold/Mustard for primary buttons
+        secondaryAction: "#041620", // Deep Luxury Navy Teal for dark accents
         highlight: "#065f46", // Emerald Green for subtle hits
       },
       fontFamily: {

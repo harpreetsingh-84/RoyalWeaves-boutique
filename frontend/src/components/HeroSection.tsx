@@ -54,25 +54,25 @@ export const HeroSection = ({ slides = [] }: { slides?: any[] }) => {
               className="w-full h-full object-cover object-center"
             />
             {/* Elegant dark overlay to ensure text is perfectly readable */}
-            <div className="absolute inset-0 bg-black/40 bg-gradient-to-t from-black/70 via-transparent to-black/30"></div>
+            <div className="absolute inset-0 bg-black/50 bg-gradient-to-t from-black/80 via-black/40 to-black/50"></div>
           </div>
 
           {/* Centered Text Overlay */}
           <div className="relative z-20 container mx-auto px-6 h-full flex flex-col items-center justify-center text-center pb-12 sm:pb-0 pt-20">
             <ScrollReveal delay={100} key={`subtitle-${index}`}>
-              <span className="inline-block px-4 py-1.5 mb-6 text-xs md:text-sm font-semibold tracking-[0.2em] text-white backdrop-blur-sm bg-black/20 rounded-full border border-white/20 uppercase shadow-lg">
+              <span className="inline-block px-4 py-1.5 mb-6 text-xs md:text-sm font-semibold tracking-[0.2em] text-darkBg backdrop-blur-sm bg-black/40 rounded-full border border-darkBg/30 uppercase shadow-lg">
                 {slide.subtitle}
               </span>
             </ScrollReveal>
 
             <ScrollReveal delay={200} key={`title-${index}`}>
-              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-serif text-white leading-tight md:leading-[1.1] mb-6 drop-shadow-2xl whitespace-pre-wrap max-w-4xl mx-auto">
+              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-serif text-darkBg leading-tight md:leading-[1.1] mb-6 drop-shadow-2xl whitespace-pre-wrap max-w-4xl mx-auto">
                 {slide.title}
               </h1>
             </ScrollReveal>
 
             <ScrollReveal delay={300} key={`desc-${index}`}>
-              <p className="text-sm sm:text-base md:text-lg lg:text-xl font-light text-white/90 max-w-2xl mx-auto mb-10 leading-relaxed drop-shadow-md">
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl font-light text-darkBg/90 max-w-2xl mx-auto mb-10 leading-relaxed drop-shadow-md">
                 {slide.description}
               </p>
             </ScrollReveal>
