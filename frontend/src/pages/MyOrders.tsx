@@ -46,10 +46,10 @@ const MyOrders = () => {
           <h2 className="text-2xl font-serif text-lightText mb-4 drop-shadow-sm">Track Your Orders</h2>
           <p className="text-lightText/60 mb-8 max-w-md mx-auto">Please log in or create an account to securely view your order history, track shipments, and manage returns.</p>
           <div className="flex gap-4 justify-center">
-             <Link to="/login" className="bg-primaryAction text-lightText px-8 py-3 rounded hover:bg-opacity-90 transition-colors shadow-[0_4px_14px_0_rgba(231,29,54,0.39)] font-medium tracking-wide text-sm uppercase inline-block border border-transparent">
+             <Link to="/login" className="btn-primary inline-block py-3">
                Log In
              </Link>
-             <Link to="/collection" className="bg-transparent text-lightText border border-secondaryAction/30 px-8 py-3 rounded hover:bg-secondaryAction/10 transition-colors shadow-sm font-medium tracking-wide text-sm uppercase inline-block">
+             <Link to="/collection" className="bg-white text-primaryAction border-2 border-primaryAction px-8 py-3 rounded hover:bg-primaryAction/10 transition-colors font-medium tracking-wide text-sm uppercase inline-block">
                Continue Shopping
              </Link>
           </div>
@@ -64,7 +64,7 @@ const MyOrders = () => {
       {orders.length === 0 ? (
         <div className="text-center py-16 premium-card !rounded-xl shadow-sm border-opacity-50">
           <p className="text-lightText/60 mb-6 text-lg">You have not placed any orders yet.</p>
-          <Link to="/collection" className="bg-primaryAction text-lightText px-8 py-3 rounded hover:bg-opacity-90 transition-colors shadow-[0_4px_14px_0_rgba(231,29,54,0.39)] font-medium tracking-wide text-sm uppercase border border-transparent">
+          <Link to="/collection" className="btn-primary inline-block py-3">
             Start Shopping
           </Link>
         </div>
