@@ -170,7 +170,7 @@ const Navbar = () => {
             {!isAuthenticated && (
               <div className="flex flex-col gap-4 w-full max-w-sm mx-auto">
                 <Link to="/login" onClick={closeMenu} className="text-center font-bold hover:bg-secondaryAction/20 transition-colors tracking-widest text-sm uppercase py-4 bg-secondaryAction/10 rounded-lg border border-secondaryAction/20 block w-full text-lightText">Login</Link>
-                <Link to="/register" onClick={closeMenu} className="text-center font-bold tracking-widest text-sm uppercase px-4 py-4 bg-primaryAction text-darkBg rounded-lg hover:bg-opacity-90 transition-all duration-300 shadow-[0_4px_14px_0_rgba(111,26,7,0.39)] block w-full">
+                <Link to="/register" onClick={closeMenu} className="text-center font-bold tracking-widest text-sm uppercase px-4 py-4 bg-primaryAction text-darkBg rounded-lg hover:bg-opacity-90 transition-all duration-300 shadow-[0_4px_14px_0_rgba(4,22,32,0.4)] block w-full">
                   Register
                 </Link>
               </div>

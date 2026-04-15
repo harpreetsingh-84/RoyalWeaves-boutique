@@ -8,9 +8,9 @@ export default {
     extend: {
       colors: {
         darkBg: "#FDFBF7", // Light Beige/Cream as new main background
-        lightText: "#1e1e1e", // Dark charcoal for elegant reading
-        primaryAction: "#6f1a07", // Elegant Deep Maroon
-        secondaryAction: "#d4af37", // Royal Gold
+        lightText: "#181e24", // Dark charcoal for elegant reading
+        primaryAction: "#041620", // Deep Luxury Navy Teal extracted directly from brand logo icon
+        secondaryAction: "#cda036", // Elegant Gold/Mustard extracted for accents ('Creation')
         highlight: "#065f46", // Emerald Green for subtle hits
       },
       fontFamily: {

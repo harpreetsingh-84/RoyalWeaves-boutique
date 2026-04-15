@@ -52,7 +52,7 @@
 
 @layer components {
   .btn-primary {
-    @apply relative overflow-hidden bg-primaryAction hover:bg-opacity-90 text-darkBg font-bold py-3 px-8 rounded transition-all duration-300 transform active:scale-95 md:hover:scale-[1.05] shadow-[0_4px_14px_0_rgba(111,26,7,0.39)] hover:shadow-[0_6px_20px_rgba(111,26,7,0.4)] disabled:opacity-50 disabled:cursor-not-allowed uppercase text-sm tracking-wider touch-manipulation;
+    @apply relative overflow-hidden bg-primaryAction hover:bg-opacity-90 text-darkBg font-bold py-3 px-8 rounded transition-all duration-300 transform active:scale-95 md:hover:scale-[1.05] shadow-[0_4px_14px_0_rgba(4,22,32,0.4)] hover:shadow-[0_6px_20px_rgba(4,22,32,0.5)] disabled:opacity-50 disabled:cursor-not-allowed uppercase text-sm tracking-wider touch-manipulation;
   }
   .btn-primary::after {
     content: '';

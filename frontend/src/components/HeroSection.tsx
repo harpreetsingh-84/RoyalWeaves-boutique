@@ -78,7 +78,7 @@ export const HeroSection = ({ slides = [] }: { slides?: any[] }) => {
             </ScrollReveal>
 
             <ScrollReveal delay={400} className="flex flex-col sm:flex-row gap-5 items-center justify-center" key={`btns-${index}`}>
-              <Link to="/collection" className="btn-primary text-center group/btn flex items-center justify-center gap-2 relative overflow-hidden backdrop-blur-md px-10 py-4 shadow-2xl hover:shadow-[0_0_20px_rgba(111,26,7,0.8)]">
+              <Link to="/collection" className="btn-primary text-center group/btn flex items-center justify-center gap-2 relative overflow-hidden backdrop-blur-md px-10 py-4 shadow-2xl hover:shadow-[0_0_20px_rgba(4,22,32,0.8)]">
                 <span className="relative z-10 text-[15px]">Explore Collection</span>
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 ease-out"></div>
                 <svg className="w-5 h-5 transition-transform group-hover/btn:translate-x-1 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
