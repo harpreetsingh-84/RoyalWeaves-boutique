@@ -31,19 +31,19 @@ const Register = () => {
   };
 
   return (
-    <div className={`min-h-[80vh] flex items-center justify-center fade-in bg-[#222] px-6 mt-10 mb-10 ${isLoading ? 'opacity-60 pointer-events-none' : ''}`}>
-      <div className="max-w-md w-full bg-[#1a1a1a] p-6 sm:p-8 md:p-12 rounded-sm shadow-xl border border-[#333]">
+    <div className={`min-h-[80vh] flex items-center justify-center fade-in bg-darkBg px-6 pt-24 pb-12 ${isLoading ? 'opacity-60 pointer-events-none' : ''}`}>
+      <div className="max-w-md w-full bg-white p-6 sm:p-8 md:p-12 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-100">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-serif text-gray-100 mb-2">Join Woven Wonder Creation</h2>
-          <p className="text-gray-400 text-sm tracking-wide">Create an account for exclusive access.</p>
+          <h2 className="text-3xl font-serif text-lightText mb-2">Join Woven Wonder Creation</h2>
+          <p className="text-lightText/70 text-sm tracking-wide">Create an account for exclusive access.</p>
         </div>
         
         {error && <div className="bg-red-50 text-red-600 p-4 rounded-sm mb-6 text-sm font-medium border border-red-100">{error}</div>}
         
         <div className="flex flex-col items-center justify-center mb-4 w-full overflow-hidden">
           {isLoading ? (
-            <div className="flex items-center gap-3 text-accent font-medium p-3">
-              <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
+            <div className="flex items-center gap-3 text-primaryAction font-medium p-3">
+              <div className="w-5 h-5 border-2 border-primaryAction border-t-transparent rounded-full animate-spin"></div>
               <span>Authenticating...</span>
             </div>
           ) : (
@@ -57,8 +57,8 @@ const Register = () => {
             />
           )}
         </div>
-        <p className="mt-8 text-center text-gray-400 text-sm">
-          Already have an account? <Link to="/login" className="text-accent font-semibold hover:underline">Sign in</Link>
+        <p className="mt-8 text-center text-lightText/70 text-sm">
+          Already have an account? <Link to="/login" className="text-primaryAction font-semibold hover:underline">Sign in</Link>
         </p>
       </div>
     </div>
