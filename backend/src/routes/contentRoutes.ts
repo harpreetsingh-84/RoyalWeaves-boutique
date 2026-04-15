@@ -4,35 +4,48 @@ import { verifyToken, requireAdmin } from '../middleware/authMiddleware';
 
 const router = express.Router();
 
-// Helper to seed default content if DB is empty
+// Helper to seed default content if DB is empty or needs boutique update
 const getOrCreateContent = async () => {
   let content = await SiteContent.findOne();
+  
+  // Force re-seed if the old western wear data is detected
+  if (content && content.heroSlides && content.heroSlides.length > 0 && content.heroSlides[0].title === "Elegance Redefined") {
+    await SiteContent.deleteMany({});
+    content = null;
+  }
+
   if (!content) {
     content = new SiteContent({
       heroSlides: [
         {
-          image: "https://images.unsplash.com/photo-1515347619252-a3915155cc9c?q=80&w=2070&auto=format&fit=crop",
-          subtitle: "The Signature Collection",
-          title: "Elegance Redefined",
-          description: "Discover our exclusive range of luxury women's dresses, crafted for those who demand nothing but absolute perfection."
+          image: "https://images.unsplash.com/photo-1583391733958-6115fa016e78?auto=format&fit=crop&q=80",
+          subtitle: "Handpicked Elegance for You",
+          title: "Experience the\nRoyal Heritage",
+          description: "Discover our premium collection of authentic, hand-crafted Punjabi suits and stunning ethnic wear designed for the modern woman."
         },
         {
-          image: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?q=80&w=2070&auto=format&fit=crop",
-          subtitle: "Evening Gowns",
-          title: "Own The Night",
-          description: "Make an unforgettable entrance with our breathtaking evening silhouettes and premium fabrics."
+          image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&q=80",
+          subtitle: "Premium Punjabi Suits",
+          title: "Royal Heritage Collection",
+          description: "Elevate your wardrobe with luxurious silk suits, intricate embroideries, and royal designs tailored to perfection."
         },
         {
-          image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop",
-          subtitle: "Autumn / Winter 2026",
-          title: "Modern Couture",
-          description: "A curated collection of premium garments designed exclusively for the modern woman."
+          image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&q=80",
+          subtitle: "Your Perfect Day Deserves the Best",
+          title: "Timeless Bridal\nElegance",
+          description: "Step into your new life with our exclusive array of bridal lehengas and heavily embroidered suits, crafted with love."
+        },
+        {
+          image: "https://images.unsplash.com/photo-1621005273760-b6a6552eaad7?auto=format&fit=crop&q=80",
+          subtitle: "Comfort Meets Sophistication",
+          title: "Everyday Luxury\nSilk Exclusives",
+          description: "Experience the finest silk threads woven into beautiful, breathable patterns for your stylish daily wear."
         }
       ],
       featuredCategories: [
-        { name: 'Evening Gowns', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600' }, 
-        { name: 'Summer Dresses', image: 'https://images.unsplash.com/photo-1572804013309-82a89b4b09fd?q=80&w=600' }, 
-        { name: 'Casual Luxury', image: 'https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?q=80&w=600' }
+        { name: 'Party Wear Suits', image: 'https://images.unsplash.com/photo-1583391733958-6115fa016e78?q=80&auto=format&fit=crop&w=600' }, 
+        { name: 'Bridal Collection', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&auto=format&fit=crop&w=600' }, 
+        { name: 'Daily Wear Casuals', image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&auto=format&fit=crop&w=600' }
       ],
       features: [
         { title: "Premium Quality", description: "Crafted from the finest materials with meticulous attention to every stitch.", icon: "Sparkles" },
@@ -41,12 +54,12 @@ const getOrCreateContent = async () => {
         { title: "24/7 Support", description: "Our fashion consultants are available around the clock to assist you.", icon: "Clock" }
       ],
       howItWorks: [
-        { num: "01", title: "Discover Your Style", desc: "Browse our exclusive collections.", image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800&auto=format&fit=crop" },
-        { num: "02", title: "Tailor to Perfection", desc: "Ensure the perfect fit.", image: "https://images.unsplash.com/photo-1558769132-cb1fac0840c2?q=80&w=800&auto=format&fit=crop" },
-        { num: "03", title: "Unbox Elegance", desc: "Receive your garment in luxury sustainable packaging.", image: "https://images.unsplash.com/photo-1549439602-43ebca2327af?q=80&w=800&auto=format&fit=crop" }
+        { num: "01", title: "Discover Your Style", desc: "Browse our exclusive collections.", image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop" },
+        { num: "02", title: "Tailor to Perfection", desc: "Ensure the perfect fit.", image: "https://images.unsplash.com/photo-1583391733958-6115fa016e78?q=80&w=800&auto=format&fit=crop" },
+        { num: "03", title: "Unbox Elegance", desc: "Receive your garment in luxury sustainable packaging.", image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=800&auto=format&fit=crop" }
       ],
       testimonials: [
-        { name: "Sophia L.", role: "Verified Buyer", rating: 5, content: "The quality is simply unmatched. The velvet gown fits like a dream." }
+        { name: "Simran K.", role: "Verified Buyer", rating: 5, content: "The quality is simply unmatched. The silk suit fits like a dream and the embroidery is stunning." }
       ]
     });
     await content.save();
