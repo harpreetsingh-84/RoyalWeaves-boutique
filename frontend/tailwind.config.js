@@ -7,11 +7,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        darkBg: "#011627", // Deep Rich Blue Main Background
-        lightText: "#fdfffc", // Crisp Off-white Text
-        primaryAction: "#e71d36", // Vibrant Red for primary CTAs
-        secondaryAction: "#2ec4b6", // Teal for secondary accents and links
-        highlight: "#ff9f1c", // Energetic orange for badges/highlights
+        darkBg: "#020126",
+        lightText: "#fffffc",
+        primaryAction: "#fffffc",
+        secondaryAction: "#fffffc",
+        highlight: "#fffffc",
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
