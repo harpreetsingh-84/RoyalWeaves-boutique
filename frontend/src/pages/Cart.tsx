@@ -70,18 +70,18 @@ const Cart = () => {
           ))}
         </div>
         
-        <div className="lg:w-1/3 premium-card !bg-[#021f35] p-8 !rounded-lg h-max border-secondaryAction/40 relative before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/5 before:to-transparent before:pointer-events-none">
-          <h2 className="text-2xl font-bold mb-6 text-lightText relative z-10 drop-shadow-sm">Order Summary</h2>
-          <div className="flex justify-between mb-4 text-lightText/60 pl-1 relative z-10">
+        <div className="lg:w-1/3 bg-white p-8 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-100 h-max relative">
+          <h2 className="text-2xl font-serif font-bold mb-6 text-lightText relative z-10 drop-shadow-sm">Order Summary</h2>
+          <div className="flex justify-between mb-4 text-lightText/70 pl-1 relative z-10 font-medium">
             <span>Subtotal</span>
-            <span className="text-lightText">{formatPrice(totalAmount)}</span>
+            <span className="text-lightText font-semibold">{formatPrice(totalAmount)}</span>
           </div>
-          <div className="flex justify-between mb-6 text-lightText/60 pl-1 relative z-10">
+          <div className="flex justify-between mb-6 text-lightText/70 pl-1 relative z-10 font-medium">
             <span>Shipping</span>
-            <span className="text-secondaryAction">Free</span>
+            <span className="text-highlight font-semibold">Free</span>
           </div>
-          <div className="flex justify-between mt-6 pt-6 border-t border-secondaryAction/20 text-xl font-bold mb-8 relative z-10 text-highlight">
-            <span className="text-lightText">Total</span>
+          <div className="flex justify-between mt-6 pt-6 border-t border-gray-200 text-xl font-bold mb-8 relative z-10 text-lightText">
+            <span>Total</span>
             <span>{formatPrice(totalAmount)}</span>
           </div>
           <button 
