@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { apiService } from '../services/api';
 
 const Navbar = () => {
-  const { cart, isAdmin, isAuthenticated, setIsAdmin, setIsAuthenticated } = useShop();
+  const { cart, isAdmin, isAuthenticated, setIsAdmin, setIsAuthenticated, clearCart } = useShop();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
@@ -25,6 +25,7 @@ const Navbar = () => {
       await apiService.logout();
       setIsAdmin(false);
       setIsAuthenticated(false);
+      clearCart();
       setIsMenuOpen(false);
     } catch (err) {
       console.error(err);

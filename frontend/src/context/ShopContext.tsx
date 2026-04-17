@@ -42,6 +42,7 @@ interface ShopContextType {
   addToCart: (product: Product, color?: string) => void;
   removeFromCart: (productId: string, color?: string) => void;
   updateQuantity: (productId: string, quantity: number, color?: string) => void;
+  clearCart: () => void;
   refreshProducts: () => void;
   verifyAuth: () => Promise<void>;
   loginPromptConfig: { isOpen: boolean; type: 'cart' | 'checkout' | null };
@@ -144,6 +145,10 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     fetchProducts();
   };
 
+  const clearCart = () => {
+    setCart([]);
+  };
+
   const addToCart = (product: Product, color?: string) => {
     let availableStock = product.quantity;
     if (color && product.colors) {
@@ -202,7 +207,7 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <ShopContext.Provider value={{ products, cart, user, isAdmin, isAuthenticated, isAuthChecking, isLoading, formatPrice, setIsAdmin, setIsAuthenticated, setUser, addToCart, removeFromCart, updateQuantity, refreshProducts, verifyAuth, loginPromptConfig, requestLoginPrompt, closeLoginPrompt }}>
+    <ShopContext.Provider value={{ products, cart, user, isAdmin, isAuthenticated, isAuthChecking, isLoading, formatPrice, setIsAdmin, setIsAuthenticated, setUser, addToCart, removeFromCart, updateQuantity, clearCart, refreshProducts, verifyAuth, loginPromptConfig, requestLoginPrompt, closeLoginPrompt }}>
       {children}
     </ShopContext.Provider>
   );
