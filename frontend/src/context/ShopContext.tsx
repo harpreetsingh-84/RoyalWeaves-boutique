@@ -54,10 +54,7 @@ const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
 export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    const savedCart = localStorage.getItem('wovenwonder_cart');
-    return savedCart ? JSON.parse(savedCart) : [];
-  });
+  const [cart, setCart] = useState<CartItem[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -116,6 +113,13 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setIsAuthenticated(true);
         setIsAdmin(!!data.isAdmin);
         setUser(data.user || null);
+        
+        if (data.user && data.user.email) {
+          const userCart = localStorage.getItem(`wovenwonder_cart_${data.user.email}`);
+          if (userCart) {
+            setCart(JSON.parse(userCart));
+          }
+        }
       } else {
         setIsAuthenticated(false);
         setIsAdmin(false);
@@ -138,10 +142,12 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     verifyAuth();
   }, []);
 
-  // Persist cart to localStorage whenever it changes
+  // Persist cart to localStorage for specific user whenever it changes
   useEffect(() => {
-    localStorage.setItem('wovenwonder_cart', JSON.stringify(cart));
-  }, [cart]);
+    if (isAuthenticated && user?.email) {
+      localStorage.setItem(`wovenwonder_cart_${user.email}`, JSON.stringify(cart));
+    }
+  }, [cart, isAuthenticated, user]);
 
   const refreshProducts = () => {
     fetchProducts();
