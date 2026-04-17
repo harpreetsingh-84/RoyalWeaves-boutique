@@ -18,6 +18,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import ContactUs from './pages/ContactUs';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import { Analytics } from '@vercel/analytics/react';
 
 // Admin Layout & Pages
 import AdminLayout from './pages/admin/AdminLayout';
@@ -77,6 +78,7 @@ function App() {
       )}
       <LoginPromptModal />
       <SpeedInsights />
+      <Analytics />
     </GlobalLoader>
   );
 }
