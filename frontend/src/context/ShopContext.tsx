@@ -120,12 +120,14 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setIsAuthenticated(false);
         setIsAdmin(false);
         setUser(null);
+        clearCart();
       }
     } catch (error) {
       console.error("Auth verification failed:", error);
       setIsAuthenticated(false);
       setIsAdmin(false);
       setUser(null);
+      clearCart();
     } finally {
       setIsAuthChecking(false);
     }
@@ -150,6 +152,12 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const addToCart = (product: Product, color?: string) => {
+    if (!isAuthenticated) {
+      alert("Please login to add items to your cart.");
+      requestLoginPrompt('checkout');
+      return;
+    }
+
     let availableStock = product.quantity;
     if (color && product.colors) {
       const colorVariant = product.colors.find(c => c.color === color);
