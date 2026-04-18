@@ -141,7 +141,7 @@ export default function OrderDetails() {
 
       {/* Timeline */}
       <div className="bg-[#1a1a1a] border rounded-xl p-6 mb-8 shadow-sm">
-        <h2 className="text-lg font-semibold mb-6">Order Status : <span className="font-bold uppercase tracking-widest text-[#B58550]">{order.orderStatus || 'pending'}</span></h2>
+        <h2 className="text-lg text-white font-semibold mb-6">Order Status : <span className="font-bold uppercase tracking-widest text-[#B58550]">{order.orderStatus || 'pending'}</span></h2>
         <div className="relative">
           <div className="absolute top-1/2 left-0 w-full h-1 bg-[#333] -translate-y-1/2 z-0 hidden sm:block"></div>
           <div 
@@ -176,9 +176,9 @@ export default function OrderDetails() {
         {/* Left Column - User Details */}
         <div className="md:col-span-1 space-y-6">
           <div className="bg-[#222] p-6 rounded-xl border border-[#333] shadow-sm">
-            <h3 className="text-lg font-semibold mb-4 border-b border-[#444] pb-2">Shipping Address</h3>
+            <h3 className="text-lg text-white font-semibold mb-4 border-b border-[#444] pb-2">Shipping Address</h3>
             <div className="text-gray-300 text-sm space-y-1">
-              <p className="font-bold text-black text-base">{order.shippingDetails?.name}</p>
+              <p className="font-bold text-white text-base">{order.shippingDetails?.name}</p>
               <p className="pt-1">{order.shippingDetails?.address}</p>
               <p>{order.shippingDetails?.city}, {order.shippingDetails?.state}</p>
               <p>PIN: {order.shippingDetails?.pincode}</p>
@@ -187,7 +187,7 @@ export default function OrderDetails() {
           </div>
           
           <div className="bg-[#222] p-6 rounded-xl border border-[#333] shadow-sm">
-            <h3 className="text-lg font-semibold mb-4 border-b border-[#444] pb-2">Payment Info</h3>
+            <h3 className="text-lg text-white font-semibold mb-4 border-b border-[#444] pb-2">Payment Info</h3>
             <div className="text-gray-300 text-sm space-y-3">
               <p className="flex flex-col gap-1">
                 <span className="text-gray-400 uppercase tracking-widest text-[10px] font-bold">Method</span>
@@ -226,7 +226,7 @@ export default function OrderDetails() {
         <div className="md:col-span-2">
           <div className="bg-[#1a1a1a] border rounded-xl overflow-hidden shadow-sm">
             <div className="py-4 px-6 border-b bg-[#222]">
-              <h3 className="text-lg font-semibold">Ordered Products</h3>
+              <h3 className="text-lg text-white font-semibold">Ordered Products</h3>
             </div>
             <div className="divide-y">
               {order.items?.map((item: any, idx: number) => (

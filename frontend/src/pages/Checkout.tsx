@@ -283,40 +283,40 @@ const Checkout = () => {
 
         {/* Order Summary Sidebar */}
         <div className="lg:w-1/3">
-          <div className="premium-card !bg-[#021f35] p-8 !rounded-lg border-secondaryAction/40 sticky top-32 relative before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/5 before:to-transparent before:pointer-events-none">
+          <div className="premium-card !bg-[#021f35] p-8 !rounded-lg border-secondaryAction/40 sticky top-32 relative text-white before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/5 before:to-transparent before:pointer-events-none">
             <h2 className="text-2xl font-bold mb-6 relative z-10 drop-shadow-sm">Order Summary</h2>
             
             <div className="space-y-4 mb-6 max-h-64 overflow-y-auto pr-2 relative z-10">
               {cart.map(item => (
                 <div key={`${item.product._id}-${item.color || 'none'}`} className="flex justify-between items-start text-sm py-1">
                   <div className="flex items-start gap-3">
-                    <span className="font-semibold text-lightText/60 mt-0.5">{item.quantity}x</span>
+                    <span className="font-semibold text-white/70 mt-0.5">{item.quantity}x</span>
                     <div className="flex flex-col">
                       <span className="truncate max-w-[150px] font-medium leading-tight" title={item.product.name}>
                         {item.product.name}
                       </span>
                       {item.color && (
-                        <span className="text-xs text-secondaryAction capitalize mt-1 drop-shadow-sm">{item.color}</span>
+                        <span className="text-xs text-primaryAction capitalize mt-1 drop-shadow-sm">{item.color}</span>
                       )}
                     </div>
                   </div>
-                  <span className="text-lightText font-medium mt-0.5">{formatPrice(item.product.price * item.quantity)}</span>
+                  <span className="text-white font-medium mt-0.5">{formatPrice(item.product.price * item.quantity)}</span>
                 </div>
               ))}
             </div>
 
-            <div className="flex justify-between mb-4 text-lightText/60 pl-1 border-t border-secondaryAction/20 pt-6 relative z-10">
+            <div className="flex justify-between mb-4 text-white/70 pl-1 border-t border-white/10 pt-6 relative z-10">
               <span>Subtotal</span>
-              <span className="text-lightText">{formatPrice(totalAmount)}</span>
+              <span className="text-white">{formatPrice(totalAmount)}</span>
             </div>
-            <div className="flex justify-between mb-6 text-lightText/60 pl-1 relative z-10">
+            <div className="flex justify-between mb-6 text-white/70 pl-1 relative z-10">
               <span>Shipping</span>
-              <span className="text-secondaryAction font-medium drop-shadow-sm">Free</span>
+              <span className="text-primaryAction font-medium drop-shadow-sm">Free</span>
             </div>
             
-            <div className="flex justify-between mt-6 pt-6 border-t border-secondaryAction/20 text-2xl font-black text-lightText mb-8 bg-darkBg/50 -mx-8 px-8 pb-4 relative z-10">
-              <span className="drop-shadow-sm">Total Pay</span>
-              <span className="text-primaryAction drop-shadow-[0_0_10px_rgba(231,29,54,0.4)]">{formatPrice(totalAmount)}</span>
+            <div className="flex justify-between mt-6 pt-6 border-t border-white/10 text-2xl font-black text-white mb-8 bg-black/20 -mx-8 px-8 pb-4 relative z-10">
+              <span className="drop-shadow-sm mt-2">Total Pay</span>
+              <span className="text-primaryAction mt-2 drop-shadow-[0_0_10px_rgba(205,160,54,0.4)]">{formatPrice(totalAmount)}</span>
             </div>
             
             <button 
@@ -324,16 +324,16 @@ const Checkout = () => {
               form="checkout-form"
               disabled={isButtonDisabled}
               className={`btn-primary w-full py-4 text-lg font-bold flex items-center justify-center gap-3 transition-all duration-300 relative z-10
-                ${isButtonDisabled ? 'opacity-50 bg-lightText/20 cursor-not-allowed hover:bg-lightText/20 shadow-none hover:shadow-none hover:-translate-y-0 text-lightText' : ''}`}
+                ${isButtonDisabled ? 'opacity-50 !bg-white/10 cursor-not-allowed hover:!bg-white/10 shadow-none hover:shadow-none hover:-translate-y-0 text-white/50' : 'text-[#041620]'}`}
             >
               {isPlacingOrder ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-white border-b-transparent rounded-full animate-spin"></div>
+                  <div className="w-5 h-5 border-2 border-[#041620] border-b-transparent rounded-full animate-spin"></div>
                   Verifying your payment...
                 </>
-              ) : 'I have paid'}
+              ) : 'I HAVE PAID'}
             </button>
-            <p className="text-xs text-center text-lightText/60 font-medium mt-4 relative z-10 drop-shadow-sm">
+            <p className="text-xs text-center text-white/50 font-medium mt-4 relative z-10 drop-shadow-sm">
               Your order will be confirmed after your payment is verified by our team (usually within 10-30 minutes).
             </p>
           </div>
