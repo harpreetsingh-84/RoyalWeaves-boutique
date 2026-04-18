@@ -91,7 +91,7 @@ export default function OrderDetails() {
           <div className="absolute top-0 left-0 w-full h-1 bg-blue-200">
              <div className="h-full bg-blue-500 animate-[pulse_2s_ease-in-out_infinite] w-1/3"></div>
           </div>
-          <div className="w-16 h-16 rounded-full bg-[#1a1a1a] flex items-center justify-center flex-shrink-0 shadow-sm border border-blue-100 relative">
+          <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center flex-shrink-0 shadow-sm border border-blue-100 relative">
              <div className="absolute inset-0 border-4 border-blue-200 rounded-full animate-ping opacity-20"></div>
              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
           </div>
@@ -155,7 +155,7 @@ export default function OrderDetails() {
               const isCurrent = index === currentStep;
               return (
                 <div key={step} className="flex sm:flex-col items-center gap-4 sm:gap-2 relative sm:bg-transparent">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors duration-300 ${isCompleted ? 'bg-primaryAction border-primaryAction text-[#041620] shadow-md' : 'bg-white border-secondaryAction/20 text-lightText/40'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors duration-300 ${isCompleted ? 'bg-primaryAction border-primaryAction text-secondaryAction shadow-md' : 'bg-white border-secondaryAction/20 text-lightText/40'}`}>
                     {isCompleted ? (
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
                     ) : (

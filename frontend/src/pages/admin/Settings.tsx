@@ -212,7 +212,7 @@ const Settings: React.FC = () => {
               <span className="w-8 h-8 rounded-full bg-secondaryAction/10 text-secondaryAction flex items-center justify-center font-bold"><Target size={16} /></span>
               <h2 className="text-lg font-bold text-lightText">Landing Page Carousel</h2>
             </div>
-            <span className="text-xs bg-[#03233c] border border-secondaryAction/20 px-3 py-1 rounded-full text-lightText/60 font-medium">
+            <span className="text-xs bg-navyHighlight border border-secondaryAction/20 px-3 py-1 rounded-full text-lightText/60 font-medium">
               {siteContent.heroSlides?.length || 0} Slides
             </span>
           </div>

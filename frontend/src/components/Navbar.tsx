@@ -156,7 +156,7 @@ const Navbar = () => {
             {!isAuthenticated && (
               <div className="flex flex-col gap-4 w-full max-w-sm mx-auto">
                 <Link to="/login" onClick={closeMenu} className="text-center font-bold hover:bg-primaryAction/20 transition-colors tracking-widest text-sm uppercase py-4 bg-primaryAction/10 rounded-lg border border-primaryAction/20 block w-full text-lightText">Login</Link>
-                <Link to="/register" onClick={closeMenu} className="text-center font-bold tracking-widest text-sm uppercase px-4 py-4 bg-primaryAction text-[#041620] rounded-lg hover:bg-opacity-90 transition-all duration-300 shadow-[0_4px_14px_0_rgba(205,160,54,0.4)] block w-full">
+                <Link to="/register" onClick={closeMenu} className="text-center font-bold tracking-widest text-sm uppercase px-4 py-4 bg-primaryAction text-secondaryAction rounded-lg hover:bg-opacity-90 transition-all duration-300 shadow-[0_4px_14px_0_rgba(205,160,54,0.4)] block w-full">
                   Register
                 </Link>
               </div>

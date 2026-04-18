@@ -84,7 +84,7 @@ const MyOrders = () => {
                 
                 <div className="flex flex-wrap gap-2">
                   {order.items.slice(0, 3).map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-3 bg-[#03233c] p-2 rounded border border-secondaryAction/20 shadow-sm">
+                    <div key={idx} className="flex items-center gap-3 bg-navyHighlight p-2 rounded border border-secondaryAction/20 shadow-sm">
                       {item.product?.image?.[0] && (
                         <div className="w-10 h-10 rounded bg-darkBg overflow-hidden flex-shrink-0">
                           <img src={item.product.image[0]} alt={item.product.name} className="w-full h-full object-cover" />

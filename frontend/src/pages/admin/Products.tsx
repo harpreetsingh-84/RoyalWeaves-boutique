@@ -476,7 +476,7 @@ const Products: React.FC = () => {
                       </div>
                       <p className="text-emerald-600 font-bold mb-2 text-sm">{formatPrice(product.price)}</p>
                       <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-[#2a2a2a] text-gray-400 uppercase tracking-wide">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-adminCardAlt text-gray-400 uppercase tracking-wide">
                           {product.category}
                         </span>
                         {product.colors && product.colors.length > 0 ? (

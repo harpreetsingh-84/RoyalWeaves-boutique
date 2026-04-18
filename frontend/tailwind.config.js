@@ -7,11 +7,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        darkBg: "#FDFBF7", // Light Beige/Cream as new main background
-        lightText: "#181e24", // Dark charcoal for elegant reading
-        primaryAction: "#cda036", // Premium Gold/Mustard for primary buttons
-        secondaryAction: "#041620", // Deep Luxury Navy Teal for dark accents
-        highlight: "#065f46", // Emerald Green for subtle hits
+        darkBg: "rgb(var(--color-dark-bg) / <alpha-value>)",
+        lightText: "rgb(var(--color-light-text) / <alpha-value>)",
+        primaryAction: "rgb(var(--color-primary-action) / <alpha-value>)",
+        secondaryAction: "rgb(var(--color-secondary-action) / <alpha-value>)",
+        highlight: "rgb(var(--color-highlight) / <alpha-value>)",
+        navyHighlight: "rgb(var(--color-navy-highlight) / <alpha-value>)",
+        accentRed: "rgb(var(--color-accent-red) / <alpha-value>)",
+        
+        // Admin Colors
+        adminBg: "rgb(var(--color-admin-bg) / <alpha-value>)",
+        adminCard: "rgb(var(--color-admin-card) / <alpha-value>)",
+        adminCardAlt: "rgb(var(--color-admin-card-alt) / <alpha-value>)",
+        adminBorder: "rgb(var(--color-admin-border) / <alpha-value>)",
+        adminBorderLight: "rgb(var(--color-admin-border-light) / <alpha-value>)",
+        adminBorderLighter: "rgb(var(--color-admin-border-lighter) / <alpha-value>)",
+        adminTextMuted: "rgb(var(--color-admin-text-muted) / <alpha-value>)",
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],

@@ -4,6 +4,26 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Main Theme Colors */
+  --color-dark-bg: 253 251 247;
+  --color-light-text: 24 30 36;
+  --color-primary-action: 205 160 54;
+  --color-secondary-action: 4 22 32;
+  --color-highlight: 6 95 70;
+  --color-navy-highlight: 3 35 60;
+  --color-accent-red: 231 29 54;
+
+  /* Admin/Dashboard Specific Colors */
+  --color-admin-bg: 26 26 26;
+  --color-admin-card: 34 34 34;
+  --color-admin-card-alt: 42 42 42;
+  --color-admin-border: 51 51 51;
+  --color-admin-border-light: 68 68 68;
+  --color-admin-border-lighter: 85 85 85;
+  --color-admin-text-muted: 136 136 136;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -52,11 +72,11 @@
 
 @layer components {
   .btn-primary {
-    @apply relative overflow-hidden bg-primaryAction hover:bg-opacity-90 text-[#041620] font-bold py-3 px-8 rounded transition-all duration-300 transform active:scale-95 md:hover:scale-[1.05] shadow-[0_4px_14px_0_rgba(205,160,54,0.4)] hover:shadow-[0_6px_20px_rgba(205,160,54,0.5)] disabled:opacity-50 disabled:cursor-not-allowed uppercase text-sm tracking-wider touch-manipulation;
+    @apply relative overflow-hidden bg-primaryAction hover:bg-opacity-90 text-secondaryAction font-bold py-3 px-8 rounded transition-all duration-300 transform active:scale-95 md:hover:scale-[1.05] shadow-[0_4px_14px_0_rgba(205,160,54,0.4)] hover:shadow-[0_6px_20px_rgba(205,160,54,0.5)] disabled:opacity-50 disabled:cursor-not-allowed uppercase text-sm tracking-wider touch-manipulation;
   }
   .btn-primary::after {
     content: '';
-    @apply absolute top-1/2 left-1/2 w-[300%] aspect-square bg-[#041620]/20 rounded-full -translate-x-1/2 -translate-y-1/2 scale-0 opacity-0 transition-transform duration-500 ease-out pointer-events-none;
+    @apply absolute top-1/2 left-1/2 w-[300%] aspect-square bg-secondaryAction/20 rounded-full -translate-x-1/2 -translate-y-1/2 scale-0 opacity-0 transition-transform duration-500 ease-out pointer-events-none;
   }
   .btn-primary:active::after {
     @apply scale-100 opacity-100 transition-none;
@@ -136,7 +156,7 @@
 }
 
 .text-reveal {
-  background: linear-gradient(90deg, #1e1e1e 0%, #1e1e1e 100%);
+  background: linear-gradient(90deg, rgb(var(--color-light-text)) 0%, rgb(var(--color-light-text)) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;

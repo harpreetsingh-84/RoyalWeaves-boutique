@@ -339,14 +339,14 @@ const ItemDetails = () => {
               {/* Minimal Trust Indicators */}
               <div className="grid grid-cols-2 gap-6 pt-8 border-t border-secondaryAction/20">
                  <div className="group">
-                   <div className="w-10 h-10 border border-secondaryAction/30 rounded-full flex items-center justify-center mb-4 group-hover:border-secondaryAction transition-colors duration-500 bg-[#021f35]">
+                   <div className="w-10 h-10 border border-secondaryAction/30 rounded-full flex items-center justify-center mb-4 group-hover:border-secondaryAction transition-colors duration-500 bg-secondaryAction">
                      <svg className="w-4 h-4 text-secondaryAction" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
                    </div>
                    <h4 className="text-[11px] font-bold text-lightText uppercase tracking-widest mb-1">Globally Shipped</h4>
                    <p className="text-xs text-lightText/60 font-light">Complimentary on all orders</p>
                  </div>
                  <div className="group">
-                   <div className="w-10 h-10 border border-secondaryAction/30 rounded-full flex items-center justify-center mb-4 group-hover:border-secondaryAction transition-colors duration-500 bg-[#021f35]">
+                   <div className="w-10 h-10 border border-secondaryAction/30 rounded-full flex items-center justify-center mb-4 group-hover:border-secondaryAction transition-colors duration-500 bg-secondaryAction">
                      <svg className="w-4 h-4 text-secondaryAction" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
                    </div>
                    <h4 className="text-[11px] font-bold text-lightText uppercase tracking-widest mb-1">Easy Returns</h4>

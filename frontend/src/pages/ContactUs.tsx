@@ -57,7 +57,7 @@ const ContactUs = () => {
     <div className="w-full text-lightText pb-20">
       {/* Hero Section */}
       <div className="relative py-24 bg-darkBg border-b border-secondaryAction/20 overflow-hidden">
-        <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 50% 50%, #e71d36 0%, transparent 50%)', backgroundSize: '100% 100%' }}></div>
+        <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 50% 50%, rgb(var(--color-accent-red)) 0%, transparent 50%)', backgroundSize: '100% 100%' }}></div>
         <div className="max-w-4xl mx-auto px-6 text-center fade-in">
           <h1 className="text-4xl md:text-5xl font-serif font-bold text-secondaryAction mb-6">Contact Us</h1>
           <p className="text-xl md:text-2xl font-light text-lightText/90 mb-4 font-serif italic">
@@ -127,7 +127,7 @@ const ContactUs = () => {
         <div className="col-span-1 lg:col-span-7 fade-in" style={{ animationDelay: '0.2s' }}>
           <div className="premium-card p-8 md:p-10 relative">
             {isSuccess ? (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#03233c] z-10 p-8 text-center fade-in">
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-navyHighlight z-10 p-8 text-center fade-in">
                 <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mb-6">
                  <Send className="w-10 h-10 text-green-400" />
                 </div>

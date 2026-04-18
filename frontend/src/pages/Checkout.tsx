@@ -154,7 +154,7 @@ const Checkout = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Phone Number *</label>
+                <label className="block text-sm font-medium text-lightText/80 mb-2">Phone Number *</label>
                 <input
                   type="text"
                   name="phone"
@@ -168,21 +168,21 @@ const Checkout = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Street Address *</label>
+              <label className="block text-sm font-medium text-lightText/80 mb-2">Street Address *</label>
               <input
                 type="text"
                 name="address"
                 required
                 value={formData.address}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-[#222] border border-[#444] rounded-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
+                className="w-full px-4 py-3 bg-white border border-secondaryAction/20 text-lightText rounded-sm focus:outline-none focus:border-primaryAction focus:ring-1 focus:ring-primaryAction"
                 placeholder="Flat No, Building Name, Street"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">City *</label>
+                <label className="block text-sm font-medium text-lightText/80 mb-2">City *</label>
                 <input
                   type="text"
                   name="city"
@@ -194,7 +194,7 @@ const Checkout = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">State *</label>
+                <label className="block text-sm font-medium text-lightText/80 mb-2">State *</label>
                 <input
                   type="text"
                   name="state"
@@ -206,7 +206,7 @@ const Checkout = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Pincode *</label>
+                <label className="block text-sm font-medium text-lightText/80 mb-2">Pincode *</label>
                 <input
                   type="text"
                   name="pincode"
@@ -323,12 +323,12 @@ const Checkout = () => {
               type="submit"
               form="checkout-form"
               disabled={isButtonDisabled}
-              className={`btn-primary w-full py-4 text-lg text-[#041620] font-bold flex items-center justify-center gap-3 transition-all duration-300 relative z-10
+              className={`btn-primary w-full py-4 text-lg text-secondaryAction font-bold flex items-center justify-center gap-3 transition-all duration-300 relative z-10
                 ${isButtonDisabled ? 'opacity-50 cursor-not-allowed shadow-none hover:shadow-none hover:-translate-y-0' : ''}`}
             >
               {isPlacingOrder ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-[#041620] border-b-transparent rounded-full animate-spin"></div>
+                  <div className="w-5 h-5 border-2 border-secondaryAction border-b-transparent rounded-full animate-spin"></div>
                   Verifying your payment...
                 </>
               ) : 'I HAVE PAID'}

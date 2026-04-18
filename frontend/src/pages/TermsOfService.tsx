@@ -106,7 +106,7 @@ const TermsOfService = () => {
     <div className="w-full text-lightText pb-20">
       {/* Hero Section */}
       <div className="relative py-24 bg-darkBg border-b border-secondaryAction/20 overflow-hidden">
-        <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+        <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
         <div className="max-w-4xl mx-auto px-6 text-center fade-in">
           <h1 className="text-4xl md:text-5xl font-serif font-bold text-secondaryAction mb-6">Terms of Service</h1>
           <p className="text-lg md:text-xl text-lightText/80 max-w-2xl mx-auto">
