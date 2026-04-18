@@ -84,10 +84,10 @@ const MyOrders = () => {
                 
                 <div className="flex flex-wrap gap-2">
                   {order.items.slice(0, 3).map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-3 bg-navyHighlight p-2 rounded border border-secondaryAction/20 shadow-sm">
+                    <div key={idx} className="flex items-center gap-3 bg-secondaryAction/5 p-2 rounded border border-secondaryAction/20 shadow-sm">
                       {item.product?.image?.[0] && (
-                        <div className="w-10 h-10 rounded bg-darkBg overflow-hidden flex-shrink-0">
-                          <img src={item.product.image[0]} alt={item.product.name} className="w-full h-full object-cover" />
+                        <div className="w-10 h-10 rounded bg-white overflow-hidden flex-shrink-0 border border-secondaryAction/10">
+                          <img src={item.product.image[0].startsWith('http') ? item.product.image[0] : `http://localhost:5000${item.product.image[0]}`} alt={item.product.name} className="w-full h-full object-cover" />
                         </div>
                       )}
                       <span className="text-sm font-medium text-lightText">{item.product?.name || 'Item'} <span className="text-lightText/50 font-normal">x {item.quantity}</span></span>
