@@ -13,10 +13,14 @@ router.get('/', verifyToken, async (req: AuthRequest, res: any): Promise<any> =>
     if (cart) {
       const validItems = cart.items.filter(item => item.product != null);
       if (validItems.length !== cart.items.length) {
-        cart.items = validItems as any;
+        cart.items = validItems.map(item => ({
+          product: (item.product as any)._id || item.product,
+          quantity: item.quantity,
+          color: item.color
+        })) as any;
         await cart.save();
       }
-      return res.json(cart.items);
+      return res.json(validItems);
     }
     
     return res.json([]);

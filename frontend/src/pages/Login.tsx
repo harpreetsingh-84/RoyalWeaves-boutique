@@ -7,7 +7,7 @@ import { apiService } from '../services/api';
 const Login = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { setIsAdmin, setIsAuthenticated } = useShop();
+  const { setIsAdmin, setIsAuthenticated, verifyAuth } = useShop();
   const navigate = useNavigate();
 
   const handleGoogleSuccess = async (credentialResponse: any) => {
@@ -18,6 +18,7 @@ const Login = () => {
       if (res.ok) {
         setIsAuthenticated(true);
         setIsAdmin(data.isAdmin);
+        await verifyAuth();
         navigate('/');
       } else {
         setError(data.message || 'Google login failed');
