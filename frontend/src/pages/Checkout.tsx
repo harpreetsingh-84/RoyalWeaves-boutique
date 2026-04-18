@@ -323,8 +323,8 @@ const Checkout = () => {
               type="submit"
               form="checkout-form"
               disabled={isButtonDisabled}
-              className={`btn-primary w-full py-4 text-lg font-bold flex items-center justify-center gap-3 transition-all duration-300 relative z-10
-                ${isButtonDisabled ? 'opacity-50 !bg-white/10 cursor-not-allowed hover:!bg-white/10 shadow-none hover:shadow-none hover:-translate-y-0 text-white/50' : 'text-[#041620]'}`}
+              className={`btn-primary w-full py-4 text-lg text-[#041620] font-bold flex items-center justify-center gap-3 transition-all duration-300 relative z-10
+                ${isButtonDisabled ? 'opacity-50 cursor-not-allowed shadow-none hover:shadow-none hover:-translate-y-0' : ''}`}
             >
               {isPlacingOrder ? (
                 <>
