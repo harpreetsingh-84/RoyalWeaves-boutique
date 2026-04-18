@@ -54,7 +54,10 @@ const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
 export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    const savedCart = localStorage.getItem('wovenwonder_cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -114,24 +117,34 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setIsAdmin(!!data.isAdmin);
         setUser(data.user || null);
         
-        if (data.user && data.user.email) {
-          const userCart = localStorage.getItem(`wovenwonder_cart_${data.user.email}`);
-          if (userCart) {
-            setCart(JSON.parse(userCart));
-          }
+        // Sync guest cart to backend
+        const guestCartData = localStorage.getItem('wovenwonder_cart');
+        let guestItems = [];
+        if (guestCartData) {
+          guestItems = JSON.parse(guestCartData);
+        }
+        
+        if (guestItems.length > 0) {
+          await apiService.syncCart(guestItems);
+          localStorage.removeItem('wovenwonder_cart');
+        }
+
+        // Fetch user's cart from backend
+        const cartRes = await apiService.getCart();
+        if (cartRes.ok) {
+           const dbCart = await cartRes.json();
+           setCart(dbCart);
         }
       } else {
         setIsAuthenticated(false);
         setIsAdmin(false);
         setUser(null);
-        clearCart();
       }
     } catch (error) {
       console.error("Auth verification failed:", error);
       setIsAuthenticated(false);
       setIsAdmin(false);
       setUser(null);
-      clearCart();
     } finally {
       setIsAuthChecking(false);
     }
@@ -142,28 +155,34 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     verifyAuth();
   }, []);
 
-  // Persist cart to localStorage for specific user whenever it changes
-  useEffect(() => {
-    if (isAuthenticated && user?.email) {
-      localStorage.setItem(`wovenwonder_cart_${user.email}`, JSON.stringify(cart));
-    }
-  }, [cart, isAuthenticated, user]);
-
   const refreshProducts = () => {
     fetchProducts();
   };
 
+  // Safe wrapper for React cart state updates + backend API updates
+  const syncCartState = (updater: (prevCart: CartItem[]) => CartItem[]) => {
+    setCart((prevCart) => {
+      const newCart = updater(prevCart);
+      
+      // Async update outside the current react cycle
+      setTimeout(() => {
+        if (isAuthenticated) {
+          apiService.updateCart(newCart).catch(e => console.error("Failed to update remote cart:", e));
+        } else {
+          localStorage.setItem('wovenwonder_cart', JSON.stringify(newCart));
+        }
+      }, 0);
+
+      return newCart;
+    });
+  };
+
   const clearCart = () => {
     setCart([]);
+    localStorage.removeItem('wovenwonder_cart');
   };
 
   const addToCart = (product: Product, color?: string) => {
-    if (!isAuthenticated) {
-      alert("Please login to add items to your cart.");
-      requestLoginPrompt('checkout');
-      return;
-    }
-
     let availableStock = product.quantity;
     if (color && product.colors) {
       const colorVariant = product.colors.find(c => c.color === color);
@@ -177,7 +196,7 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return;
     }
 
-    setCart((prevCart) => {
+    syncCartState((prevCart) => {
       const existing = prevCart.find(item => item.product._id === product._id && item.color === color);
       if (existing) {
         if (existing.quantity >= availableStock) {
@@ -193,7 +212,7 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const removeFromCart = (productId: string, color?: string) => {
-    setCart((prevCart) => prevCart.filter(item => !(item.product._id === productId && item.color === color)));
+    syncCartState((prevCart) => prevCart.filter(item => !(item.product._id === productId && item.color === color)));
   };
 
   const updateQuantity = (productId: string, quantity: number, color?: string) => {
@@ -215,7 +234,7 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     }
 
-    setCart((prevCart) => prevCart.map(item =>
+    syncCartState((prevCart) => prevCart.map(item =>
       (item.product._id === productId && item.color === color) ? { ...item, quantity } : item
     ));
   };

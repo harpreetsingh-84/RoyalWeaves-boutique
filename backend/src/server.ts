@@ -41,6 +41,7 @@ import contentRoutes from "./routes/contentRoutes";
 import userRoutes from "./routes/userRoutes";
 import pageRoutes from "./routes/pageRoutes";
 import messageRoutes from "./routes/messageRoutes";
+import cartRoutes from "./routes/cartRoutes";
 import path from "path";
 
 // Expose static multipart binary dumps
@@ -56,6 +57,7 @@ app.use("/api/content", contentRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/pages", pageRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/cart", cartRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Backend running 🚀");

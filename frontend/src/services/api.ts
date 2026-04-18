@@ -141,4 +141,15 @@ export const apiService = {
   removeAdmin: (id: string) => apiFetch(`/api/users/admins/${id}`, {
     method: 'DELETE',
   }),
+
+  // Cart
+  getCart: () => fetchWithTimeout(`${BASE_URL}/api/cart`, { credentials: 'include' }),
+  syncCart: (guestItems: any[]) => apiFetch('/api/cart/sync', {
+    method: 'POST',
+    body: JSON.stringify({ guestItems }),
+  }),
+  updateCart: (items: any[]) => apiFetch('/api/cart', {
+    method: 'PUT',
+    body: JSON.stringify({ items }),
+  }),
 };
