@@ -149,7 +149,7 @@ const Checkout = () => {
                   required
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-[#222] border border-[#444] rounded-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
+                  className="w-full px-4 py-3 bg-white border border-secondaryAction/20 text-lightText rounded-sm focus:outline-none focus:border-primaryAction focus:ring-1 focus:ring-primaryAction"
                   placeholder="e.g. Aditi Sharma"
                 />
               </div>
@@ -161,7 +161,7 @@ const Checkout = () => {
                   required
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-[#222] border border-[#444] rounded-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
+                  className="w-full px-4 py-3 bg-white border border-secondaryAction/20 text-lightText rounded-sm focus:outline-none focus:border-primaryAction focus:ring-1 focus:ring-primaryAction"
                   placeholder="e.g. +91 9876543210"
                 />
               </div>
@@ -189,7 +189,7 @@ const Checkout = () => {
                   required
                   value={formData.city}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-[#222] border border-[#444] rounded-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
+                  className="w-full px-4 py-3 bg-white border border-secondaryAction/20 text-lightText rounded-sm focus:outline-none focus:border-primaryAction focus:ring-1 focus:ring-primaryAction"
                   placeholder="Mumbai"
                 />
               </div>
@@ -201,7 +201,7 @@ const Checkout = () => {
                   required
                   value={formData.state}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-[#222] border border-[#444] rounded-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
+                  className="w-full px-4 py-3 bg-white border border-secondaryAction/20 text-lightText rounded-sm focus:outline-none focus:border-primaryAction focus:ring-1 focus:ring-primaryAction"
                   placeholder="Maharashtra"
                 />
               </div>
@@ -213,7 +213,7 @@ const Checkout = () => {
                   required
                   value={formData.pincode}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-[#222] border border-[#444] rounded-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
+                  className="w-full px-4 py-3 bg-white border border-secondaryAction/20 text-lightText rounded-sm focus:outline-none focus:border-primaryAction focus:ring-1 focus:ring-primaryAction"
                   placeholder="400001"
                 />
               </div>
@@ -231,16 +231,16 @@ const Checkout = () => {
             
             <div className="flex flex-col sm:flex-row gap-8 items-start">
               {/* QR Code Display */}
-              <div className="w-full sm:w-1/3 flex flex-col items-center justify-center bg-[#03233c] border border-secondaryAction/20 p-4 rounded-xl">
+              <div className="w-full sm:w-1/3 flex flex-col items-center justify-center bg-white border border-secondaryAction/20 p-4 rounded-xl shadow-[0_4px_20px_rgb(0,0,0,0.03)]">
                  {upiConfig?.upiQrCode ? (
-                   <img src={upiConfig.upiQrCode} alt="UPI QR Code" className="w-full max-w-[200px] h-auto object-contain mb-3 drop-shadow-sm mix-blend-screen" />
+                   <img src={upiConfig.upiQrCode} alt="UPI QR Code" className="w-full max-w-[200px] h-auto object-contain mb-3 drop-shadow-sm mix-blend-multiply" />
                  ) : (
-                   <div className="w-[180px] h-[180px] bg-darkBg border border-secondaryAction/30 flex items-center justify-center mb-3">
-                     <span className="text-secondaryAction text-sm">Scan to Pay</span>
+                   <div className="w-[180px] h-[180px] bg-darkBg border border-secondaryAction/10 flex items-center justify-center mb-3">
+                     <span className="text-lightText/50 text-sm">Scan to Pay</span>
                    </div>
                  )}
-                 <p className="text-xs font-bold text-secondaryAction tracking-wider">UPI ID</p>
-                 <p className="font-mono font-bold text-lightText bg-darkBg border border-secondaryAction/20 px-3 py-1 rounded text-sm mt-1 select-all">{upiConfig?.upiId || 'Pending...'}</p>
+                 <p className="text-xs font-bold text-lightText/60 tracking-wider">UPI ID</p>
+                 <p className="font-mono font-bold text-lightText bg-secondaryAction/5 border border-secondaryAction/20 px-3 py-1 rounded text-sm mt-1 select-all">{upiConfig?.upiId || 'Pending...'}</p>
                  <span className="text-xs font-semibold text-primaryAction mt-2 tracking-wide uppercase shadow-sm">Accepted Here</span>
               </div>
               
@@ -259,7 +259,7 @@ const Checkout = () => {
                     disabled={isPlacingOrder}
                     value={transactionId}
                     onChange={(e) => setTransactionId(e.target.value)}
-                    className="w-full px-4 py-3 bg-[#021f35] border border-secondaryAction/20 text-lightText shadow-sm font-mono tracking-wider rounded-sm focus:outline-none focus:border-secondaryAction/50 focus:ring-1 focus:ring-secondaryAction uppercase placeholder-lightText/30"
+                    className="w-full px-4 py-3 bg-white border border-secondaryAction/20 text-lightText shadow-sm font-mono tracking-wider rounded-sm focus:outline-none focus:border-primaryAction focus:ring-1 focus:ring-primaryAction uppercase placeholder-lightText/30"
                     placeholder="e.g. 312345678901"
                     maxLength={20}
                   />
@@ -283,40 +283,40 @@ const Checkout = () => {
 
         {/* Order Summary Sidebar */}
         <div className="lg:w-1/3">
-          <div className="premium-card !bg-[#021f35] p-8 !rounded-lg border-secondaryAction/40 sticky top-32 relative text-white before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/5 before:to-transparent before:pointer-events-none">
-            <h2 className="text-2xl font-bold mb-6 relative z-10 drop-shadow-sm">Order Summary</h2>
+          <div className="premium-card p-8 !rounded-lg border-secondaryAction/10 sticky top-32 shadow-[0_8px_30px_rgb(0,0,0,0.06)] bg-white relative">
+            <h2 className="text-2xl font-bold mb-6 text-lightText drop-shadow-sm">Order Summary</h2>
             
             <div className="space-y-4 mb-6 max-h-64 overflow-y-auto pr-2 relative z-10">
               {cart.map(item => (
                 <div key={`${item.product._id}-${item.color || 'none'}`} className="flex justify-between items-start text-sm py-1">
                   <div className="flex items-start gap-3">
-                    <span className="font-semibold text-white/70 mt-0.5">{item.quantity}x</span>
+                    <span className="font-semibold text-lightText/70 mt-0.5">{item.quantity}x</span>
                     <div className="flex flex-col">
-                      <span className="truncate max-w-[150px] font-medium leading-tight" title={item.product.name}>
+                      <span className="truncate max-w-[150px] font-medium leading-tight text-lightText" title={item.product.name}>
                         {item.product.name}
                       </span>
                       {item.color && (
-                        <span className="text-xs text-primaryAction capitalize mt-1 drop-shadow-sm">{item.color}</span>
+                        <span className="text-xs text-lightText/50 capitalize mt-1">{item.color}</span>
                       )}
                     </div>
                   </div>
-                  <span className="text-white font-medium mt-0.5">{formatPrice(item.product.price * item.quantity)}</span>
+                  <span className="text-lightText font-medium mt-0.5">{formatPrice(item.product.price * item.quantity)}</span>
                 </div>
               ))}
             </div>
 
-            <div className="flex justify-between mb-4 text-white/70 pl-1 border-t border-white/10 pt-6 relative z-10">
+            <div className="flex justify-between mb-4 text-lightText/70 pl-1 border-t border-secondaryAction/10 pt-6 relative z-10">
               <span>Subtotal</span>
-              <span className="text-white">{formatPrice(totalAmount)}</span>
+              <span className="text-lightText font-medium">{formatPrice(totalAmount)}</span>
             </div>
-            <div className="flex justify-between mb-6 text-white/70 pl-1 relative z-10">
+            <div className="flex justify-between mb-6 text-lightText/70 pl-1 relative z-10">
               <span>Shipping</span>
-              <span className="text-primaryAction font-medium drop-shadow-sm">Free</span>
+              <span className="text-highlight font-medium">Free</span>
             </div>
             
-            <div className="flex justify-between mt-6 pt-6 border-t border-white/10 text-2xl font-black text-white mb-8 bg-black/20 -mx-8 px-8 pb-4 relative z-10">
-              <span className="drop-shadow-sm mt-2">Total Pay</span>
-              <span className="text-primaryAction mt-2 drop-shadow-[0_0_10px_rgba(205,160,54,0.4)]">{formatPrice(totalAmount)}</span>
+            <div className="flex justify-between mt-6 pt-6 border-t border-secondaryAction/10 text-2xl font-black text-lightText mb-8 bg-secondaryAction/5 -mx-8 px-8 pb-4 relative z-10">
+              <span className="mt-2">Total Pay</span>
+              <span className="text-primaryAction mt-2">{formatPrice(totalAmount)}</span>
             </div>
             
             <button 
@@ -333,7 +333,7 @@ const Checkout = () => {
                 </>
               ) : 'I HAVE PAID'}
             </button>
-            <p className="text-xs text-center text-white/50 font-medium mt-4 relative z-10 drop-shadow-sm">
+            <p className="text-xs text-center text-lightText/50 font-medium mt-4 relative z-10 drop-shadow-sm">
               Your order will be confirmed after your payment is verified by our team (usually within 10-30 minutes).
             </p>
           </div>
