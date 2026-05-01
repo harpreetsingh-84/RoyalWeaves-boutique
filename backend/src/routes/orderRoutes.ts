@@ -12,6 +12,9 @@ router.post('/', verifyToken, async (req: AuthRequest, res: any): Promise<any> =
     if (!items || items.length === 0) {
       return res.status(400).json({ message: 'Cart is empty' });
     }
+    if (!shippingDetails || !shippingDetails.name || !shippingDetails.address || !shippingDetails.city || !shippingDetails.state || !shippingDetails.pincode) {
+      return res.status(400).json({ message: 'Valid shipping details are required' });
+    }
     if (!transactionId || transactionId.trim().length < 10) {
       return res.status(400).json({ message: 'Valid Transaction ID (UTR) is required for UPI payments' });
     }
