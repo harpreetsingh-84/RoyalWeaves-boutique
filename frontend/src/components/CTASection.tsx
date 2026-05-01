@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 import { ScrollReveal } from './ScrollReveal';
+import { useShop } from '../context/ShopContext';
 
 export const CTASection = () => {
+  const { isAuthenticated } = useShop();
   return (
     <section className="relative py-32 bg-darkBg flex items-center justify-center overflow-hidden">
       {/* Background Elements */}
@@ -36,9 +38,11 @@ export const CTASection = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </Link>
-          <Link to="/register" className="btn-secondary px-10 py-4 text-base bg-darkBg/50 backdrop-blur-sm group flex items-center justify-center">
-            Create an Account
-          </Link>
+          {!isAuthenticated && (
+            <Link to="/register" className="btn-secondary px-10 py-4 text-base bg-darkBg/50 backdrop-blur-sm group flex items-center justify-center">
+              Create an Account
+            </Link>
+          )}
         </ScrollReveal>
       </div>
     </section>
