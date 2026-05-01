@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useShop } from '../context/ShopContext';
+import { useToast } from '../context/ToastContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { apiService } from '../services/api';
 
 const Checkout = () => {
   const { cart, formatPrice } = useShop();
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
@@ -57,12 +59,12 @@ const Checkout = () => {
 
     // Basic Validation
     if (!formData.name || !formData.phone || !formData.address || !formData.city || !formData.state || !formData.pincode) {
-      alert('Please fill out all delivery fields.');
+      showToast('Please fill out all delivery fields.', 'error');
       return;
     }
     
     if (!transactionId || transactionId.trim().length < 10) {
-      alert('Missing or invalid Transaction ID (UTR). Please enter a valid 12-digit UTR from your UPI app.');
+      showToast('Missing or invalid Transaction ID (UTR). Please enter a valid 12-digit UTR from your UPI app.', 'error');
       return;
     }
 
@@ -110,12 +112,12 @@ const Checkout = () => {
         window.location.reload(); 
       } else {
         const err = await res.json();
-        alert(err.message || 'Failed to place order. Please try again.');
+        showToast(err.message || 'Failed to place order. Please try again.', 'error');
         setIsPlacingOrder(false);
       }
     } catch (error) {
       console.error("Checkout error:", error);
-      alert('Network error during checkout.');
+      showToast('Network error during checkout.', 'error');
       setIsPlacingOrder(false);
     }
   };

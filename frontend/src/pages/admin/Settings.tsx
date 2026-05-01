@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { apiService } from '../../services/api';
 import { CreditCard, Target, Sparkles, Upload, ShieldCheck, ListOrdered, MessageSquare, Plus, Trash2 } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
 
 const Settings: React.FC = () => {
+  const { showToast } = useToast();
   const [siteContent, setSiteContent] = useState<any>(null);
   const [isUpdatingContent, setIsUpdatingContent] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -31,13 +33,13 @@ const Settings: React.FC = () => {
     try {
       const res = await apiService.updateContent(siteContent);
       if (res.ok) {
-        alert('Website content updated successfully!');
+        showToast('Website content updated successfully!', 'success');
       } else {
-        alert('Failed to update content');
+        showToast('Failed to update content', 'error');
       }
     } catch (error) {
       console.error("Error updating site content:", error);
-      alert('Error updating site content');
+      showToast('Error updating site content', 'error');
     } finally {
       setIsUpdatingContent(false);
     }
@@ -75,10 +77,10 @@ const Settings: React.FC = () => {
         const data = await res.json();
         callback(data.url);
       } else {
-        alert('Upload failed');
+        showToast('Upload failed', 'error');
       }
     } catch (err) {
-      alert('Upload failed');
+      showToast('Upload failed', 'error');
     } finally {
       setUploading(false);
     }
@@ -97,7 +99,7 @@ const Settings: React.FC = () => {
         setSiteContent({ ...siteContent, upiQrCode: data.url });
       }
     } catch (err) {
-      alert('Upload failed');
+      showToast('Upload failed', 'error');
     } finally {
       setUploading(false);
     }

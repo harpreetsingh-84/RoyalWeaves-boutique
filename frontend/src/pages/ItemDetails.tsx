@@ -1,11 +1,13 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
+import { useToast } from '../context/ToastContext';
 import { useState, useEffect } from 'react';
 
 const ItemDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { products, addToCart, formatPrice, isAuthenticated, requestLoginPrompt } = useShop();
+  const { showToast } = useToast();
   
   const product = products.find(p => p._id === id);
   const [fullscreenIndex, setFullscreenIndex] = useState<number>(-1);
@@ -110,7 +112,7 @@ const ItemDetails = () => {
   };
   const handleAddToCart = () => { 
     if (product.colors && product.colors.length > 0 && !selectedColor) {
-      alert("Please select a color");
+      showToast("Please select a color", "error");
       return;
     }
     addToCart(product, selectedColor); 

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { apiService } from '../../services/api';
 import { Trash2, CheckCircle, XCircle } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
 
 const Admins: React.FC = () => {
+  const { showToast } = useToast();
   const [admins, setAdmins] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -85,7 +87,7 @@ const Admins: React.FC = () => {
 
   const handleRemoveAdmin = async (id: string, name: string) => {
     if (admins.length <= 1) {
-      alert("Cannot remove the last remaining admin in the system.");
+      showToast("Cannot remove the last remaining admin in the system.", "error");
       return;
     }
     if (!window.confirm(`Are you sure you want to remove ${name} from Admins? This user will lose dashboard access.`)) return;
@@ -96,11 +98,11 @@ const Admins: React.FC = () => {
           fetchAdmins();
        } else {
           const err = await res.json();
-          alert(err.message || "Failed to remove admin.");
+          showToast(err.message || "Failed to remove admin.", "error");
        }
     } catch (e) {
       console.error(e);
-      alert("An error occurred");
+      showToast("An error occurred", "error");
     }
   };
 

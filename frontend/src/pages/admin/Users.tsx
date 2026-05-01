@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { apiService } from '../../services/api';
 import { Ban, CheckCircle, Trash2 } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
 
 const Users: React.FC = () => {
+  const { showToast } = useToast();
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -34,11 +36,11 @@ const Users: React.FC = () => {
         setUsers(users.map(u => u._id === id ? { ...u, isBlocked: !currentStatus } : u));
       } else {
         const err = await res.json();
-        alert(err.message || `Failed to ${action} user`);
+        showToast(err.message || `Failed to ${action} user`, 'error');
       }
     } catch (e) {
       console.error(e);
-      alert(`Error trying to ${action} user.`);
+      showToast(`Error trying to ${action} user.`, 'error');
     }
   };
 
@@ -51,11 +53,11 @@ const Users: React.FC = () => {
         setUsers(users.filter(u => u._id !== id));
       } else {
          const err = await res.json();
-         alert(err.message || 'Failed to delete user');
+         showToast(err.message || 'Failed to delete user', 'error');
       }
     } catch (e) {
       console.error(e);
-      alert('Error deleting user');
+      showToast('Error deleting user', 'error');
     }
   };
 

@@ -1,8 +1,10 @@
 import { MapPin, Mail, Phone, Send, Clock, User, MessageSquare } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { apiService } from '../services/api';
+import { useToast } from '../context/ToastContext';
 
 const ContactUs = () => {
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -43,11 +45,11 @@ const ContactUs = () => {
         setFormData({ name: '', email: '', message: '' });
         setTimeout(() => setIsSuccess(false), 5000);
       } else {
-        alert("Failed to send message.");
+        showToast("Failed to send message.", "error");
       }
     } catch(err) {
        console.error(err);
-       alert("An error occurred");
+       showToast("An error occurred", "error");
     } finally {
       setIsSubmitting(false);
     }

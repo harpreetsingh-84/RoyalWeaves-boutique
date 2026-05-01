@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { apiService } from '../services/api';
 import { useShop } from '../context/ShopContext';
+import { useToast } from '../context/ToastContext';
 
 export default function AdminOrderDetails() {
   const { id } = useParams<{ id: string }>();
   const { formatPrice, isAdmin } = useShop();
+  const { showToast } = useToast();
 
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -51,13 +53,13 @@ export default function AdminOrderDetails() {
       if (res.ok) {
         const updatedOrder = await res.json();
         setOrder(updatedOrder);
-        alert('Order status updated successfully!');
+        showToast('Order status updated successfully!', 'success');
       } else {
         const errData = await res.json();
-        alert(errData.message || 'Failed to update status');
+        showToast(errData.message || 'Failed to update status', 'error');
       }
     } catch (err) {
-      alert('An error occurred while updating the status.');
+      showToast('An error occurred while updating the status.', 'error');
     } finally {
       setUpdatingStatus(false);
     }
@@ -75,13 +77,13 @@ export default function AdminOrderDetails() {
         const updatedOrder = await res.json();
         setOrder(updatedOrder);
         setSelectedStatus(updatedOrder.orderStatus);
-        alert(`Payment marked as ${newStatus.toUpperCase()}`);
+        showToast(`Payment marked as ${newStatus.toUpperCase()}`, 'success');
       } else {
         const err = await res.json();
-        alert(err.message || 'Failed to verify payment');
+        showToast(err.message || 'Failed to verify payment', 'error');
       }
     } catch (err) {
-      alert('Error verifying payment');
+      showToast('Error verifying payment', 'error');
     } finally {
       setVerifyingPayment(false);
     }

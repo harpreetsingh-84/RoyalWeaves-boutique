@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { apiService } from '../../services/api';
 import { Trash2 } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
 
 interface Category {
   _id: string;
@@ -8,6 +9,7 @@ interface Category {
 }
 
 const Categories: React.FC = () => {
+  const { showToast } = useToast();
   const [categories, setCategories] = useState<Category[]>([]);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [isAdding, setIsAdding] = useState(false);
@@ -41,7 +43,7 @@ const Categories: React.FC = () => {
         setNewCategoryName('');
       } else {
         const err = await res.json();
-        alert(err.message || 'Failed to add category');
+        showToast(err.message || 'Failed to add category', 'error');
       }
     } catch (error) {
       console.error("Error adding category:", error);
@@ -59,11 +61,11 @@ const Categories: React.FC = () => {
                  fetchCategories();
              } else {
                  const err = await res.json();
-                 alert(err.message || 'Failed to delete category');
+                 showToast(err.message || 'Failed to delete category', 'error');
              }
          } catch(e) {
              console.error("Error deleting category", e);
-             alert("Network error deleting category");
+             showToast("Network error deleting category", 'error');
          }
      }
   };

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useShop } from '../../context/ShopContext';
 import { apiService } from '../../services/api';
 import { Plus, Pencil, Trash2, Loader2, Upload, UploadCloud, ArrowLeft } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
 
 const Products: React.FC = () => {
+  const { showToast } = useToast();
   const { products: _publicProducts, refreshProducts, formatPrice } = useShop();
   const [adminProducts, setAdminProducts] = useState<any[]>([]);
 
@@ -67,7 +69,7 @@ const Products: React.FC = () => {
       }
     } catch (err) {
       console.error(err);
-      alert('File upload failed');
+      showToast('File upload failed', 'error');
     } finally {
       setUploading(false);
     }
@@ -89,7 +91,7 @@ const Products: React.FC = () => {
       setFormData({ ...formData, galleryUrls: current + data.urls.join(', ') });
     } catch (err) {
       console.error(err);
-      alert('Gallery upload failed');
+      showToast('Gallery upload failed', 'error');
     } finally {
       setUploading(false);
     }
@@ -186,7 +188,7 @@ const Products: React.FC = () => {
       setFormData({ ...formData, colors: updated });
     } catch (err) {
       console.error(err);
-      alert('Gallery upload failed');
+      showToast('Gallery upload failed', 'error');
     } finally {
       setUploading(false);
     }

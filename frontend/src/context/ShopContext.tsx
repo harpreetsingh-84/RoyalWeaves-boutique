@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { apiService } from '../services/api';
+import { useToast } from './ToastContext';
 
 export interface Product {
   _id: string;
@@ -53,6 +54,7 @@ interface ShopContextType {
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
 export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const { showToast } = useToast();
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>(() => {
     const savedCart = localStorage.getItem('wovenwonder_cart');
@@ -192,7 +194,7 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
 
     if (availableStock <= 0) {
-      alert(color ? `This color variant is out of stock` : 'This product is out of stock');
+      showToast(color ? `This color variant is out of stock` : 'This product is out of stock', 'error');
       return;
     }
 
@@ -200,7 +202,7 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const existing = prevCart.find(item => item.product._id === product._id && item.color === color);
       if (existing) {
         if (existing.quantity >= availableStock) {
-          alert(`Only ${availableStock} items available in stock`);
+          showToast(`Only ${availableStock} items available in stock`, 'error');
           return prevCart;
         }
         return prevCart.map(item =>
@@ -229,7 +231,7 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
 
       if (quantity > availableStock) {
-        alert(`Only ${availableStock} items available in stock`);
+        showToast(`Only ${availableStock} items available in stock`, 'error');
         return;
       }
     }

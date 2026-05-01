@@ -3,8 +3,10 @@ import { apiService } from '../../services/api';
 import { FileText, Save, Plus, Trash2, ArrowUp, ArrowDown, Eye, EyeOff } from 'lucide-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { useToast } from '../../context/ToastContext';
 
 const Pages: React.FC = () => {
+  const { showToast } = useToast();
   const [selectedSlug, setSelectedSlug] = useState('privacy-policy');
   const [activePage, setActivePage] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -42,10 +44,10 @@ const Pages: React.FC = () => {
     try {
       const res = await apiService.put(`/api/pages/${selectedSlug}`, activePage);
       if (res.ok) {
-        alert("Page saved successfully!");
+        showToast("Page saved successfully!", 'success');
       }
     } catch (error) {
-      alert("Error saving page");
+      showToast("Error saving page", 'error');
     } finally {
       setSaving(false);
     }

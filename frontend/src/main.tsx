@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App.tsx'
 import { ShopProvider } from './context/ShopContext.tsx'
+import { ToastProvider } from './context/ToastContext.tsx'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import './index.css'
 
@@ -12,9 +13,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <GoogleOAuthProvider clientId={googleClientId}>
       <BrowserRouter>
-        <ShopProvider>
-          <App />
-        </ShopProvider>
+        <ToastProvider>
+          <ShopProvider>
+            <App />
+          </ShopProvider>
+        </ToastProvider>
       </BrowserRouter>
     </GoogleOAuthProvider>
   </React.StrictMode>,
