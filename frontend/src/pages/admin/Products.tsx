@@ -17,6 +17,8 @@ const Products: React.FC = () => {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
 
+  const activeProducts = adminProducts.filter(p => !p.isDeleted);
+
   useEffect(() => {
     fetchCategories();
     fetchAdminProducts();
@@ -385,14 +387,14 @@ const Products: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {adminProducts.length === 0 ? (
+                  {activeProducts.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="p-12 text-center text-lightText/60">
-                        No products found. Start by adding a new one!
+                        No active products found. Start by adding a new one!
                       </td>
                     </tr>
                   ) : (
-                    adminProducts.map((product) => (
+                    activeProducts.map((product) => (
                       <tr key={product._id} className={`hover:bg-gray-50/50 transition-colors ${product.isDeleted ? 'opacity-50' : ''}`}>
                         <td className="p-4 w-1/3">
                           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -449,12 +451,12 @@ const Products: React.FC = () => {
 
             {/* Mobile Card View */}
             <div className="lg:hidden flex flex-col divide-y divide-gray-100">
-              {adminProducts.length === 0 ? (
+              {activeProducts.length === 0 ? (
                 <div className="p-12 text-center text-gray-400">
-                  No products found. Start by adding a new one!
+                  No active products found. Start by adding a new one!
                 </div>
               ) : (
-                adminProducts.map((product) => (
+                activeProducts.map((product) => (
                   <div key={product._id} className={`p-5 flex gap-4 items-start ${product.isDeleted ? 'opacity-50' : ''}`}>
                     <img src={product.image} alt={product.name} className="w-20 h-24 object-cover rounded shadow-sm border shrink-0" />
                     <div className="flex-1 min-w-0">
